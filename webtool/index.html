@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Web Request Tool</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Web Request Tool</h1>
+    <form id="getserver-form">
+        <h2>Get Servers by IPs</h2>
+        <label>Enter IPs (one per line):
+            <textarea id="ip-list" placeholder="123.4.5.66\n106.28.99\n111.222.333"></textarea>
+        </label>
+        <label>API Key:
+            <input type="password" id="api-key" placeholder="Paste your API key here" />
+        </label>
+        <button type="button" id="get-servers">Get Servers</button>
+    </form>
+    <hr>
+    <form id="proxycheck-form">
+        <h2>Proxy Checker</h2>
+        <label>Enter proxies (ip:port:user:pass, one per line):
+            <textarea id="proxy-list" placeholder="ip:port:user:pass\nip2:port2:user2:pass2"></textarea>
+        </label>
+        <label>Proxy Type:
+            <select id="proxy-type">
+                <option value="https">HTTPS</option>
+                <option value="socks5">SOCKS5</option>
+            </select>
+        </label>
+        <button type="button" id="check-proxies">Check Proxies</button>
+    </form>
+    <pre id="response"></pre>
+    <script src="script.js"></script>
+</body>
+</html>

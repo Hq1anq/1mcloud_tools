@@ -1,0 +1,28 @@
+{
+  "name": "1mcloud_requests",
+  "version": "1.0.0",
+  "description": "1mcloud manager, proxy checker",
+  "main": "./src/server/server.js",
+  "type": "module",
+  "scripts": {
+    "test": "node ./src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hq1anq/1mcloud_tools.git"
+  },
+  "author": "Trinh Hoang Giang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hq1anq/1mcloud_tools/issues"
+  },
+  "homepage": "https://github.com/Hq1anq/1mcloud_tools#readme",
+  "dependencies": {
+    "dotenv": "^17.1.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "https-proxy-agent": "^7.0.6",
+    "node-fetch": "^3.3.2",
+    "socks-proxy-agent": "^8.0.5"
+  }
+}

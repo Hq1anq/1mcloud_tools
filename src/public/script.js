@@ -1,5 +1,5 @@
-
 // Feature: Get Servers by IPs
+// (copy your working script.js here if not already in public/)
 document.getElementById('get-servers').addEventListener('click', async function() {
     const listIp = document.getElementById('ip-list').value
         .split('\n')
@@ -11,7 +11,7 @@ document.getElementById('get-servers').addEventListener('click', async function(
         apiKey: apiKey
     });
     try {
-        const res = await fetch('http://localhost:3001/api/server/list?' + params.toString());
+        const res = await fetch('/api/server/list?' + params.toString());
         const data = await res.json();
         document.getElementById('response').textContent = JSON.stringify(data.servers || data, null, 2);
     } catch (err) {
@@ -32,7 +32,7 @@ document.getElementById('check-proxies').addEventListener('click', async functio
     }
     document.getElementById('response').textContent = 'Checking proxies...';
     try {
-        const res = await fetch('http://localhost:3001/api/proxy/check', {
+        const res = await fetch('/api/proxy/check', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ proxies: proxies, type: proxyType })

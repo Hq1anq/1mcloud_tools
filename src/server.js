@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import serverRoutes from './routes/server.js';
+import serverRoutes from './routes/manager.js';
 import proxyRoutes from './routes/proxy.js';
 import configViewEngine from './config/viewEngine.js';
 

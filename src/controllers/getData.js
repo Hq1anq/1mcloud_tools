@@ -1,10 +1,6 @@
-import express from 'express';
 import fetch from 'node-fetch';
 
-const router = express.Router();
-
-// Proxy endpoint for /api/server/list
-router.get('/server/list', async (req, res) => {
+const getData = async (req, res) => {
     const { listIp = '', apiKey = '' } = req.query;
     const ipString = listIp;
     const params = {
@@ -34,6 +30,6 @@ router.get('/server/list', async (req, res) => {
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-});
+}
 
-export default router;
+export default getData;

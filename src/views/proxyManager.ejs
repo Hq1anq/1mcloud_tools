@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Web Request Tool</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <form id="getserver-form">
+        <h2>Get Servers by IPs</h2>
+        <label>Enter IPs (one per line):
+            <textarea id="ip-list" placeholder="123.4.5.66\n106.28.99\n111.222.333"></textarea>
+        </label>
+        <label>API Key:
+            <input type="password" id="api-key" placeholder="Paste your API key here" />
+        </label>
+        <button type="button" id="get-servers">Get Servers</button>
+    </form>
+    <pre id="response"></pre>
+    <script src="/script.js"></script>
+</body>
+</html>

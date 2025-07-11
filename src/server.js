@@ -15,7 +15,15 @@ configViewEngine(app);
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.render('index'); // This will render views/index.ejs
+    res.render('home'); // This will render views/home.ejs
+});
+
+app.get('/proxyChecker', (req, res) => {
+    res.render('proxyChecker'); // This will render views/proxyChecker.ejs
+});
+
+app.get('/proxyManager', (req, res) => {
+    res.render('proxyManager'); // This will render views/proxyManager.ejs
 });
 
 // API routes

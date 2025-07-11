@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Web Request Tool</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <form id="proxycheck-form">
+        <h2>Proxy Checker</h2>
+        <label>Enter proxies (ip:port:user:pass, one per line):
+            <textarea id="proxy-list" placeholder="ip:port:user:pass\nip2:port2:user2:pass2"></textarea>
+        </label>
+        <label>Proxy Type:
+            <select id="proxy-type">
+                <option value="https">HTTPS</option>
+                <option value="socks5">SOCKS5</option>
+            </select>
+        </label>
+        <button type="button" id="check-proxies">Check Proxies</button>
+    </form>
+    <pre id="response"></pre>
+    <script src="/script.js"></script>
+</body>
+</html>

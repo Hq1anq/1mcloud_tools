@@ -43,3 +43,12 @@ pre {
     border-radius: 8px;
     overflow-x: auto;
 }
+
+.form {
+    width: 500px;
+    margin: auto;
+}
+
+.input-group {
+    padding: 10px;
+}

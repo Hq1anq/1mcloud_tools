@@ -4,6 +4,10 @@ const getHomePage = (req, res) => {
     return res.render('home'); // This will render views/home.ejs
 }
 
+const getCreatePage = (req, res) => {
+    return res.render('create'); // This will render views/create.ejs
+}
+
 const postCreateUser = (req, res) => {
     // Logic to create a user can be added here
     let {email, name, password} = req.body;
@@ -21,4 +25,4 @@ const postCreateUser = (req, res) => {
     );
 }
 
-export { getHomePage, postCreateUser };
+export { getHomePage, postCreateUser, getCreatePage };

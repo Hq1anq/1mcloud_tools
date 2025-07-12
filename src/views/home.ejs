@@ -4,36 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>Welcome to 1mcloud manager</h1>
-    <nav>
-        <ul>
-            <li><a href="/proxyChecker">Proxy Checker</a></li>
-            <li><a href="/proxyManager">Proxy Manager</a></li>
-        </ul>
-    </nav>
-    <div class="form">
-        <form action="/create-user" method="post">
-            <fieldset>
-                <legend>Add new users</legend>
-                <div class="input-group">
-                    <label>Email:</label>
-                    <input type="text" name="email" placeholder="Enter email">
-                </div>
-                <div class="input-group">
-                    <label>Name:</label>
-                    <input type="text" name="name" placeholder="Enter name">
-                </div>
-                <div class="input-group">
-                    <label>Password:</label>
-                    <input type="password" name="password" placeholder="Enter password">
-                </div>
-                <button class="button">Save</button>
-            </fieldset>
-        </form>
+    <div class="topnav">
+        <a class="active" href="/">Home</a>
+        <a href="/create">Create users</a>
+        <a href="/proxyChecker">Proxy checker</a>
+        <a href="/proxyManager">Proxy manager</a>
     </div>
+    <h1>Welcome to 1mcloud manager</h1>
     <script src="javascript/home.js"></script>
 </body>
 </html>

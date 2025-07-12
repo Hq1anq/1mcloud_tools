@@ -10,7 +10,7 @@ document.getElementById('get-servers').addEventListener('click', async function(
         apiKey: apiKey
     });
     try {
-        const res = await fetch('/api/server/list?' + params.toString());
+        const res = await fetch('/server/list?' + params.toString());
         const data = await res.json();
         document.getElementById('response').textContent = JSON.stringify(data.servers || data, null, 2);
     } catch (err) {

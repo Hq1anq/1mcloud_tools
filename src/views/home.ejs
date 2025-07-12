@@ -15,22 +15,24 @@
         </ul>
     </nav>
     <div class="form">
-        <fieldset>
-            <legend>Add new users</legend>
-            <div class="input-group">
-                <label>Email:</label>
-                <input type="text">
-            </div>
-            <div class="input-group">
-                <label>Name:</label>
-                <input type="text">
-            </div>
-            <div class="input-group">
-                <label>Password:</label>
-                <input type="password">
-            </div>
-            <button class="button">Save</button>
-        </fieldset>
+        <form action="/create-user" method="post">
+            <fieldset>
+                <legend>Add new users</legend>
+                <div class="input-group">
+                    <label>Email:</label>
+                    <input type="text" name="email" placeholder="Enter email">
+                </div>
+                <div class="input-group">
+                    <label>Name:</label>
+                    <input type="text" name="name" placeholder="Enter name">
+                </div>
+                <div class="input-group">
+                    <label>Password:</label>
+                    <input type="password" name="password" placeholder="Enter password">
+                </div>
+                <button class="button">Save</button>
+            </fieldset>
+        </form>
     </div>
     <script src="javascript/home.js"></script>
 </body>

@@ -10,7 +10,7 @@ document.getElementById('check-proxies').addEventListener('click', async functio
     }
     document.getElementById('response').textContent = 'Checking proxies...';
     try {
-        const res = await fetch('/api/proxy/check', {
+        const res = await fetch('/proxy/check', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ proxies: proxies, type: proxyType })

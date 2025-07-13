@@ -1,4 +1,4 @@
-document.getElementById('check-proxies').addEventListener('click', async function() {
+document.getElementById('checkProxiesBtn').addEventListener('click', async function() {
     const proxies = document.getElementById('proxy-list').value
         .split('\n')
         .map(line => line.trim())

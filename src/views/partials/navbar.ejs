@@ -1,0 +1,27 @@
+<nav class="navbar bg-dark-800 py-3 px-4 sticky top-0 z-50 shadow-md">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <!-- Logo and Title -->
+    <div class="flex items-center space-x-4">
+      <div class="text-blue-500 text-2xl">
+        <i class="fas fa-globe"></i>
+      </div>
+      <h1 class="text-xl font-bold text-white"><%= currentPage %></h1>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="flex items-center space-x-6 text-white">
+        <a href="/" class="nav-link flex items-center <%= currentPage === 'Home' ? 'active' : '' %>">
+            <i class="fas fa-home mr-2"></i>Home
+        </a>
+        
+
+        <a href="/proxyChecker" class="nav-link flex items-center <%= currentPage === 'Proxy Checker' ? 'active' : '' %>">
+            <i class="fas fa-server mr-2"></i>Proxy Checker
+        </a>
+
+        <a href="/proxyManager" class="nav-link flex items-center <%= currentPage === 'Proxy Manager' ? 'active' : '' %>">
+            <i class="fas fa-cog mr-2"></i>Proxy Manager
+        </a>
+    </div>
+  </div>
+</nav>

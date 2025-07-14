@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+
+@theme {
+    --color-dark-900: #0f172a;
+    --color-dark-800: #1e293b;
+    --color-dark-700: #334155;
+    --color-dark-600: #475569;
+}
+
+/* Navbar styles */
+@layer components {
+  .navbar {
+    border-bottom: 1px solid #334155;
+  }
+
+  .nav-link {
+    color: #cbd5e1;
+    transition: color 0.3s ease;
+  }
+
+  .nav-link:hover {
+    color: #f8fafc;
+  }
+
+  .nav-link.active {
+    color: #60a5fa;
+    font-weight: 500;
+  }
+
+  .nav-link.active:hover {
+    color: #93c5fd;
+  }
+}

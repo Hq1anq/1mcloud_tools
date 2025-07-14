@@ -160,7 +160,7 @@
                         <!-- Top Row - Proxy Type and Check Button -->
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <div class="space-y-2">
-                                <label class="block text-sm font-medium text-gray-300 mb-1">
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
                                     <i class="fas fa-exchange-alt mr-2"></i>Proxy Type
                                 </label>
                                 <select id="proxyTypeSelect"
@@ -172,7 +172,7 @@
                             </div>
 
                             <div class="space-y-2">
-                                <label class="block text-sm font-medium text-gray-300 mb-1">
+                                <label class="block text-sm font-medium text-gray-300 mb-2">
                                     <i class="fas fa-check-circle mr-2"></i>Check Proxies
                                 </label>
                                 <button id="checkProxiesBtn"
@@ -193,11 +193,6 @@
                                 class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                 <i class="fas fa-copy mr-2"></i>Copy Full Proxies
                             </button>
-                        </div>
-
-                        <!-- Selected Count -->
-                        <div class="text-xs text-gray-400 text-right mt-3">
-                            Selected: <span id="selectedCount">0</span> proxies
                         </div>
                     </div>
                 </div>
@@ -229,6 +224,10 @@
                                 </div>
                             </div>
                             <div class="flex items-center space-x-2">
+                                <!-- Selected Count -->
+                                 <div class="text-sm text-gray-400 mr-10">
+                                    Selected: <span id="selectedCount">0</span> proxies
+                                </div>
                                 <span class="text-sm text-gray-400">Total: <span id="totalCount">0</span>
                                     proxies</span>
                                 <button id="refreshBtn"

@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import routes from './routes/web.js';
 import configViewEngine from './config/viewEngine.js';
-import { getHomePage } from './controllers/home.js';
 
 dotenv.config();
 
@@ -14,8 +13,6 @@ configViewEngine(app);
 
 app.use(express.json()) // for json
 app.use(express.urlencoded({ extended: true })) // for form data
-
-app.get('/', getHomePage);
 
 app.get('/proxyChecker', (req, res) => {
     res.render('proxyChecker'); // This will render views/proxyChecker.ejs

@@ -1,28 +1,23 @@
-import connection from "../config/database.js";
+import connection from '../config/database.js'
+import { getAllUsers } from '../services/CRUDService.js'
 
-const getHomePage = (req, res) => {
-    return res.render('home'); // This will render views/home.ejs
+export async function getHomePage(req, res) {
+    let results = await getAllUsers();
+    return res.render('home', { listUsers: results });
 }
 
-const getCreatePage = (req, res) => {
+export function getCreatePage(req, res) {
     return res.render('create'); // This will render views/create.ejs
 }
 
-const postCreateUser = (req, res) => {
+export async function postCreateUser(req, res) {
     // Logic to create a user can be added here
     let {email, name, password} = req.body;
-    connection.query(
-        'INSERT INTO Users (email, name, password) VALUES (?, ?, ?)',
-        [email, name, password],
-        function (error, results) {
-            if (error) {
-                console.error('Error creating user:', error);
-                res.send('User created failed');
-                return res.status(500).send('Error creating user');
-            }
-            res.send('User created successfully');
-        }
-    );
-}
 
-export { getHomePage, postCreateUser, getCreatePage };
+    let [results, fields] = await connection.query(
+        'INSERT INTO Users (email, name, password) VALUES (?, ?, ?)'
+        , [email, name, password]
+    );
+
+    res.send('User created successfully');
+}

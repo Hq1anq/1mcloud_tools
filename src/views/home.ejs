@@ -6,53 +6,48 @@
     <title>Home Page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .form {
+            width: 500px;
+            margin: 100px auto;
+        }
+
+        .input-group {
+            padding: 10px;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-dark-900 text-white font-sans">
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Home' }) %>
-    <div class="table-container max-h-screen overflow-y-auto">
-        <table class="w-full">
-            <thead class="bg-dark-700 sticky top-12 z-20">
-                <tr>
-                    <th
-                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        <input type="checkbox" id="selectAllCheckbox"
-                            class="w-4 h-4 bg-dark-600 border-dark-500 rounded focus:ring-blue-500 text-blue-600">
-                    </th>
-                    <th
-                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        SID</th>
-                    <th
-                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        IP:PORT</th>
-                    <th
-                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        COUNTRY</th>
-                    <th
-                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        TYPE</th>
-                    <th
-                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        FROM</th>
-                    <th
-                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        TO</th>
-                    <th
-                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        STATUS</th>
-                    <th
-                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        CHANGED_IP</th>
-                    <th
-                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                        NOTE</th>
-                </tr>
-            </thead>
-            <tbody id="dataTableBody">
-                <!-- Table rows will be populated by JavaScript -->
-            </tbody>
-        </table>
+    <%= JSON.stringify(listUsers) %>
+    <%- include('partials/table', {
+        tableTitle: 'Users',
+        headers: ['ID', 'Email', 'Name', 'Password'],
+        showActions: true, // ✅ enable action column
+        emptyMessage: 'No user".',
+        extraContent: undefined
+    }) %>
+    <div class="form">
+        <form action="/create-user" method="post">
+            <fieldset>
+                <legend>Add new users</legend>
+                <div class="input-group">
+                    <label>Email:</label>
+                    <input type="text" name="email" placeholder="Enter email">
+                </div>
+                <div class="input-group">
+                    <label>Name:</label>
+                    <input type="text" name="name" placeholder="Enter name">
+                </div>
+                <div class="input-group">
+                    <label>Password:</label>
+                    <input type="password" name="password" placeholder="Enter password">
+                </div>
+                <button class="button">Save</button>
+            </fieldset>
+        </form>
     </div>
-    <script src="javascript/home.js"></script>
+    <script type="module" src="javascript/home.js"></script>
 </body>
 </html>

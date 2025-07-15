@@ -200,88 +200,28 @@
         </div>
 
         <!-- Scrollable Table Area -->
-        <div class="flex-1 overflow-hidden">
-            <div class="max-w-7xl mx-auto px-4 py-6">
-                <div class="bg-dark-800 rounded-lg shadow-lg overflow-hidden">
-                    <!-- Table Header -->
-                    <div class="bg-dark-700 px-4 py-3 border-b-[5px] border-dark-600 sticky top-0 z-30">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-lg font-semibold text-gray-200">
-                                <i class="fas fa-table mr-2"></i>Proxy Status
-                            </h2>
-                            <!-- Selection Buttons Container (appears when table has data) -->
-                            <div id="selectionButtons" class="selection-buttons">
-                                <div class="flex space-x-4">
-                                    <button id="selectActiveBtn"
-                                        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                        <i class="fas fa-check-circle mr-2"></i>Select Active Proxies
-                                    </button>
+        <%- include('partials/table', {
+            tableTitle: 'Proxy Status',
+            headers: ['IP', 'Port', 'Username', 'Password', 'Type', 'Status'],
+            emptyMessage: 'No proxies to check. Enter your proxies and click "Check Now".',
+            showActions: false,
+            extraContent: `
+                <!-- Selection Buttons Container (appears when table has data) -->
+                <div id="selectionButtons" class="selection-buttons">
+                    <div class="flex space-x-4">
+                        <button id="selectActiveBtn"
+                            class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                            <i class="fas fa-check-circle mr-2"></i>Select Active Proxies
+                        </button>
 
-                                    <button id="selectErrorBtn"
-                                        class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                        <i class="fas fa-exclamation-circle mr-2"></i>Select Error Proxies
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <!-- Selected Count -->
-                                 <div class="text-sm text-gray-400 mr-10">
-                                    Selected: <span id="selectedCount">0</span> proxies
-                                </div>
-                                <span class="text-sm text-gray-400">Total: <span id="totalCount">0</span>
-                                    proxies</span>
-                                <button id="refreshBtn"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition-colors duration-200">
-                                    <i class="fas fa-sync-alt"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Table Container -->
-                    <div class="table-container">
-                        <table class="w-full">
-                            <thead class="bg-dark-700 sticky top-0 z-20">
-                                <tr>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        <input type="checkbox" id="selectAllCheckbox"
-                                            class="w-4 h-4 bg-dark-600 border-dark-500 rounded focus:ring-blue-500 text-blue-600">
-                                    </th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        IP</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        Port</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        Username</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        Password</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        Type</th>
-                                    <th
-                                        class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                        Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="proxyTableBody">
-                                <!-- Table rows will be populated by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Empty State -->
-                    <div id="emptyState" class="py-12 text-center">
-                        <i class="fas fa-proxy text-4xl text-gray-500 mb-4"></i>
-                        <p class="text-gray-400">No proxies to check. Enter your proxies and click "Check Now".</p>
+                        <button id="selectErrorBtn"
+                            class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                            <i class="fas fa-exclamation-circle mr-2"></i>Select Error Proxies
+                        </button>
                     </div>
                 </div>
-            </div>
-        </div>
+            `
+        }) %>
 
         <pre id="response"></pre>
         <!-- Footer -->

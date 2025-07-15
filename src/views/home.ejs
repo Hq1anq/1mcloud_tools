@@ -20,12 +20,12 @@
 <body class="bg-dark-900 text-white font-sans">
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Home' }) %>
-    <%= JSON.stringify(listUsers) %>
     <%- include('partials/table', {
         tableTitle: 'Users',
         headers: ['ID', 'Email', 'Name', 'Password'],
+        data: listUsers,
         showActions: true, // ✅ enable action column
-        emptyMessage: 'No user".',
+        emptyMessage: 'No user.',
         extraContent: undefined
     }) %>
     <div class="form">

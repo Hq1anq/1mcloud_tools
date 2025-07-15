@@ -6,6 +6,10 @@ export async function getHomePage(req, res) {
     return res.render('home', { listUsers: results });
 }
 
+// export function getHomePage(req, res) {
+//     return res.render('home', { listUsers: [] });
+// }
+
 export function getCreatePage(req, res) {
     return res.render('create'); // This will render views/create.ejs
 }

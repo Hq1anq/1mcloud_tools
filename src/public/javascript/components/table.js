@@ -4,7 +4,7 @@ export function addRow(data, includeActions = true) {
 
     let rowHTML = `
         <td class="px-4 py-2 border-b border-dark-600">
-        <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
+            <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
         </td>
         ${Object.values(data).map(v => `
         <td class="px-4 py-2 border-b border-dark-600">${v}</td>

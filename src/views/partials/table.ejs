@@ -47,7 +47,28 @@
                         </tr>
                     </thead>
                     <tbody id="proxyTableBody">
-                        <!-- Rows will be added by JS -->
+                        <% if (data && data.length > 0) { %>
+                            <% data.forEach(row => { %>
+                            <tr>
+                                <td class="px-4 py-2 border-b border-dark-600">
+                                <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
+                                </td>
+
+                                <% headers.forEach(h => { %>
+                                <td class="px-4 py-2 border-b border-dark-600">
+                                    <%= row[h.toLowerCase()] %>
+                                </td>
+                                <% }); %>
+
+                                <% if (showActions) { %>
+                                <td class="px-4 py-2 border-b border-dark-600 space-x-2">
+                                    <button class="bg-blue-600 py-1 px-4 rounded-lg hover:bg-blue-700" onclick="editRow(this)">Edit</button>
+                                    <button class="bg-red-600 py-1 px-4 rounded-lg hover:bg-red-700" onclick="deleteRow(this)">Delete</button>
+                                </td>
+                                <% } %>
+                            </tr>
+                            <% }); %>
+                        <% } %>
                     </tbody>
                 </table>
             </div>

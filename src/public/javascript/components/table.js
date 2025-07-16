@@ -1,4 +1,4 @@
-export function addRow(data, includeActions = true) {
+export function addRow(data, includeActions = false) {
     const tbody = document.getElementById('proxyTableBody');
     const tr = document.createElement('tr');
 

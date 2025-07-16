@@ -19,9 +19,9 @@ const checkProxy = async (req, res) => {
             try {
                 const response = await fetch(test_url, { agent, timeout: 8000 });
                 if (!response.ok) throw new Error('Bad response');
-                return { proxy: proxy.ip, status: 'success' };
+                return { ip: proxy.ip, port: proxy.port, username: proxy.username, password: proxy.password, type: type, status: 'success' };
             } catch (err) {
-                return { proxy: proxy.ip, status: 'fail', error: err.message };
+                return { ip: proxy.ip, port: proxy.port, username: proxy.username, password: proxy.password, type: type, status: 'fail', error: err.message };
             }
         }));
         res.json({ results });

@@ -1,3 +1,4 @@
+import { addRow, getSelectedRows, selectAllRows, updateCounts } from '/javascript/components/table.js';
 // DOM elements
 const elements = {
     proxyInput: document.getElementById('proxyInput'),
@@ -64,9 +65,9 @@ async function checkProxies() {
         });
         const data = await res.json();
         if (data.results) {
-            document.getElementById('response').textContent = data.results.map(r => `${r.proxy}: ${r.status}${r.error ? ' (' + r.error + ')' : ''}`).join('\n');
+            data.results.forEach(row => addRow(row));
         } else {
-            document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            console.log("CheckProxies: ERROR!");
         }
     } catch (err) {
         document.getElementById('response').textContent = 'Request failed: ' + err;

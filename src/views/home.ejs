@@ -20,12 +20,15 @@
 <body class="bg-dark-900 text-white font-sans">
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Home' }) %>
+    <% /* %>
     <%- include('partials/table', {
         tableTitle: 'Users',
         headers: ['ID', 'Email', 'Name', 'Password'],
         data: listUsers,
         showActions: true, // ✅ enable action column
-        emptyMessage: 'No user.',
+        emptyMessage: `
+            <p class="text-gray-400">No users!</p>
+        `,
         extraContent: undefined
     }) %>
     <div class="form">
@@ -48,6 +51,7 @@
             </fieldset>
         </form>
     </div>
+    <% */ %>
     <script type="module" src="javascript/home.js"></script>
 </body>
 </html>

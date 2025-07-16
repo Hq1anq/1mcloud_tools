@@ -26,5 +26,6 @@ app.get('/proxyManager', (req, res) => {
 app.use('/', routes);
 
 app.listen(PORT, () => {
+    console.log(`http://localhost:${PORT}`);
     console.log(`Proxy server running on port ${PORT}`);
 });

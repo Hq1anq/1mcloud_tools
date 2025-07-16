@@ -9,7 +9,7 @@
                     </h2>
                     <!-- Extra slot -->
                     <% if (typeof extraContent !== 'undefined') { %>
-                    <%- extraContent %>
+                        <%- extraContent %>
                     <% } %>
                     <div class="flex items-center space-x-2">
                         <div class="text-sm text-gray-400 mr-10">
@@ -74,8 +74,9 @@
             </div>
             <!-- Empty State -->
             <div id="emptyState" class="py-12 text-center">
-                <i class="fas fa-server text-4xl text-gray-500 mb-4"></i>
-                <p class="text-gray-400"><%= emptyMessage %></p>
+                <% if (typeof emptyMessage !== 'undefined') { %>
+                    <%- emptyMessage %>
+                <% } %>
             </div>
         </div>
     </div>

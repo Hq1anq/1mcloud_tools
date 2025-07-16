@@ -9,25 +9,19 @@ const checkProxy = async (req, res) => {
         const results = await Promise.all(proxies.map(async (proxy) => {
             let agent;
             let proxyUrl;
-            // Parse ip:port:user:pass
-            const parts = proxy.split(':');
-            if (parts.length < 4) {
-                return { proxy, status: 'fail', error: 'Invalid format (should be ip:port:user:pass)' };
-            }
-            const [ip, port, username, password] = parts;
             if (type === 'socks5') {
-                proxyUrl = `socks5://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${ip}:${port}`;
+                proxyUrl = `socks5://${encodeURIComponent(proxy.username)}:${encodeURIComponent(proxy.password)}@${proxy.ip}:${proxy.port}`;
                 agent = new SocksProxyAgent(proxyUrl);
             } else {
-                proxyUrl = `http://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${ip}:${port}`;
+                proxyUrl = `http://${encodeURIComponent(proxy.username)}:${encodeURIComponent(proxy.password)}@${proxy.ip}:${proxy.port}`;
                 agent = new HttpsProxyAgent(proxyUrl);
             }
             try {
                 const response = await fetch(test_url, { agent, timeout: 8000 });
                 if (!response.ok) throw new Error('Bad response');
-                return { proxy, status: 'success' };
+                return { proxy: proxy.ip, status: 'success' };
             } catch (err) {
-                return { proxy, status: 'fail', error: err.message };
+                return { proxy: proxy.ip, status: 'fail', error: err.message };
             }
         }));
         res.json({ results });

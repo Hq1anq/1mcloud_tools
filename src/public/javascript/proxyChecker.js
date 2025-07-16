@@ -51,14 +51,16 @@ async function checkProxies() {
 
     // Parse proxy list
     const proxyList = parseProxyList(proxyText);
+    const proxyType = proxyTypeSelect.value.trim()
     
     console.log('Parsed Proxies:', proxyList);
+    console.log(proxyType);
     // Simulate API call with random status
     try {
         const res = await fetch('/proxy/check', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ proxies: proxies, type: proxyType })
+            body: JSON.stringify({ proxies: proxyList, type: proxyType })
         });
         const data = await res.json();
         if (data.results) {
@@ -96,8 +98,7 @@ function parseProxyList(text) {
                 ip: parts[0],
                 port: parts[1],
                 username: parts[2],
-                password: parts[3],
-                type: elements.proxyTypeSelect.value
+                password: parts[3]
             };
         }
         return null;

@@ -114,7 +114,7 @@
         <!-- Scrollable Table Area -->
         <%- include('partials/table', {
             tableTitle: 'Proxy Manager',
-            headers: ['SID', 'IP:PORT', 'COUNTRY', 'TYPE', 'FROM', 'TO', 'STATUS', 'CHANGED_IP', 'NOTE'],
+            headers: ['SID', 'IP:PORT', 'COUNTRY', 'TYPE', 'FROM', 'TO', 'CHANGED_IP', 'STATUS', 'NOTE'],
             data: [],
             showActions: false,
             emptyMessage: `
@@ -129,6 +129,6 @@
     </div>
     <!-- Footer -->
     <%- include('partials/footer') %>
-    <script src="javascript/proxyManager.js"></script>
+    <script type="module" src="javascript/proxyManager.js"></script>
 </body>
 </html>

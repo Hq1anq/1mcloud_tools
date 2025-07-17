@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import routes from './routes/web.js';
-import configViewEngine from './config/viewEngine.js';
+import { configViewEngine } from './config/viewEngine.js';
 
 dotenv.config();
 

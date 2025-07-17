@@ -1,19 +1,28 @@
+import { addRow } from '/javascript/components/table.js'
 // Feature: Get Servers by IPs
-document.getElementById('get-servers').addEventListener('click', async function() {
-    const listIp = document.getElementById('ip-list').value
+document.getElementById('getDataBtn').addEventListener('click', async function() {
+    const ipList = document.getElementById('ip-list').value
         .split('\n')
         .map(ip => ip.trim())
         .filter(ip => ip.length > 0);
+    const ipString = ipList.join(',');
     const apiKey = document.getElementById('api-key').value.trim();
-    const params = new URLSearchParams({
-        listIp: listIp.join(','),
-        apiKey: apiKey
-    });
     try {
-        const res = await fetch('/server/list?' + params.toString());
-        const data = await res.json();
-        document.getElementById('response').textContent = JSON.stringify(data.servers || data, null, 2);
+        const response = await fetch('/get-data-from-ip', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ipString, apiKey })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Optional: render to table instead of pre
+            result.data.forEach(row => addRow(row));
+        } else {
+            output.textContent = `❌ Error: ${result.error}`;
+        }
     } catch (err) {
-        document.getElementById('response').textContent = 'Request failed: ' + err;
+        console.error('Fetch error:', err);
     }
 });

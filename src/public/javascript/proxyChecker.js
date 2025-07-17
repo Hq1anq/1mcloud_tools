@@ -51,27 +51,45 @@ async function checkProxies() {
     showStatus('Checking proxies...', 'loading');
 
     // Parse proxy list
-    const proxyList = parseProxyList(proxyText);
+    const proxies = parseProxyList(proxyText);
     const proxyType = proxyTypeSelect.value.trim()
-    
-    console.log('Parsed Proxies:', proxyList);
-    console.log(proxyType);
+
+    // Start the stream
+    const eventSource = new EventSource(`/proxy/check-stream?type=${proxyType}`);
+
+    eventSource.onmessage = (event) => {
+        const result = JSON.parse(event.data);
+        addRow(result);
+    };
+
+    eventSource.onerror = (err) => {
+        console.error('SSE error:', err);
+        eventSource.close();
+    };
+
+    // Send the proxies via POST
+    await fetch('/proxy/send-proxies', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ proxies })
+    });
+
     // Simulate API call with random status
-    try {
-        const res = await fetch('/proxy/check', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ proxies: proxyList, type: proxyType })
-        });
-        const data = await res.json();
-        if (data.results) {
-            data.results.forEach(row => addRow(row));
-        } else {
-            console.log("CheckProxies: ERROR!");
-        }
-    } catch (err) {
-        document.getElementById('response').textContent = 'Request failed: ' + err;
-    }
+    // try {
+    //     const res = await fetch('/proxy/check', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ proxies: proxyList, type: proxyType })
+    //     });
+    //     const data = await res.json();
+    //     if (data.results) {
+    //         data.results.forEach(row => addRow(row));
+    //     } else {
+    //         console.log("CheckProxies: ERROR!");
+    //     }
+    // } catch (err) {
+    //     document.getElementById('response').textContent = 'Request failed: ' + err;
+    // }
     // setTimeout(() => {
     //     proxyData = proxyList.map(proxy => {
     //         // Add random status for demonstration

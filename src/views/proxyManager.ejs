@@ -39,7 +39,7 @@
                                 placeholder="192.168.1.1&#10;10.0.0.1&#10;172.16.0.1"></textarea>
                         </div>
                         <!-- GetData & Change Note & Reinstall and Simple Action Buttons -->
-                        <div class="space-y-4 w-full">
+                        <div class="flex flex-col space-y-4 w-full">
                             <!-- Getdata & Change Note & Reinstall (top) -->
                             <div class="flex flex-col sm:flex-row gap-4">
                                 <!-- Get Data -->
@@ -54,7 +54,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="flex gap-4">
+                                <div class="flex flex-1 gap-4">
                                     <!-- Change Note -->
                                     <div class="space-y-2 flex-1">
                                         <input type="text" id="noteInput"
@@ -123,7 +123,6 @@
                 <i class="fas fa-server text-4xl text-gray-500 mb-4"></i>
                 <p class="text-gray-400">No data available. Click "Get Data" to load information.</p>
             `,
-            extraContent: undefined
         }) %>
                 </div>
             </div>

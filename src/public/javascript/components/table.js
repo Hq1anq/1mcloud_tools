@@ -25,10 +25,6 @@ export function addRow(data, includeActions = false) {
     updateCounts();
 }
 
-export function test(){
-    console.log('Test function called');
-}
-
 export function getSelectedRows() {
     const checkboxes = document.querySelectorAll('.rowCheckbox:checked');
     return Array.from(checkboxes).map(cb => cb.closest('tr'));

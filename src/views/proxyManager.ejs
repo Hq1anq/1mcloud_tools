@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-dark-900 text-white font-sans">
+<body class="bg-dark-900 text-white text-xs sm:text-base font-sans">
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Proxy Manager' }) %>
     <!-- Status Display -->
     <!-- ================= STATUS DISPLAY ================= -->
     <div id="statusDisplay" class="fixed top-4 right-4 z-50 hidden">
-        <div class="bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg">
+        <div class="bg-green-500 text-sm px-4 py-2 rounded-lg shadow-lg">
             <span id="statusMessage"></span>
         </div>
     </div>
@@ -21,89 +21,91 @@
     <!-- ================= MAIN CONTAINER ================= -->
     <div class="min-h-screen flex flex-col">
         <!-- ========== FIXED TOP CONTROLS ========== -->
-        <div class="bg-dark-800 border-b border-dark-600 sticky top-0 z-40 shadow-lg">
+        <div class="bg-dark-800 border-b border-dark-600 top-0 z-40 shadow-lg">
             <div class="max-w-7xl mx-auto px-4 py-4">
                 <!-- ========== FEATURE CONTROLS ========== -->
                 <div class="bg-dark-700 rounded-lg p-4 mb-4">
                     <h3 class="text-lg font-semibold mb-3 text-gray-200">
                         <i class="fas fa-cogs mr-2"></i>Actions
                     </h3>
-                    <div class="flex gap-4">
+                    <div class="flex flex-col sm:flex-row gap-4">
                         <!-- IPs Input -->
-                        <div class="w-1/2 flex flex-col">
-                            <label class="block text-sm font-medium text-gray-300 mb-2">
+                        <div class="sm:w-1/2 flex flex-col">
+                            <label class="block font-medium text-gray-300 mb-2">
                                 <i class="fas fa-server mr-2"></i>Enter IPs (one per line)
                             </label>
                             <textarea id="ip-list"
-                                class="flex-grow w-full bg-dark-700 border border-dark-500 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                class="flex-grow min-h-[6rem] bg-dark-700 border border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                                 placeholder="192.168.1.1&#10;10.0.0.1&#10;172.16.0.1"></textarea>
                         </div>
-                        <!-- GetData & Change Note & Reinstall and Simple Action Buttons (right column) -->
+                        <!-- GetData & Change Note & Reinstall and Simple Action Buttons -->
                         <div class="space-y-4 w-full">
                             <!-- Getdata & Change Note & Reinstall (top) -->
-                            <div class="flex gap-4">
-                                <!-- Amount Input & Get Data Button -->
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <!-- Get Data -->
                                 <div class="space-y-2">
-                                    <input type="number" id="amountInput"
-                                        class="w-full bg-dark-600 border border-dark-500 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    <input type="number" id="amount"
+                                        class="w-full bg-dark-600 border border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                         placeholder="Enter amount" min="0">
                                     <div class="flex items-center">
                                         <button id="getDataBtn"
-                                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
+                                            class="flex-1 bg-blue-600 hover:bg-blue-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                             <i class="fas fa-download mr-2"></i>Get Data
                                         </button>
                                     </div>
                                 </div>
-                                <!-- Change Note -->
-                                <div class="space-y-2 flex-1">
-                                    <input type="text" id="noteInput"
-                                        class="w-full bg-dark-600 border border-dark-500 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        placeholder="Enter note">
-                                    <div class="flex items-center space-x-2">
-                                        <button id="changeNoteBtn"
-                                            class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
-                                            <i class="fas fa-edit mr-2"></i>Change Note
-                                        </button>
-                                        <div class="flex items-center ml-2">
-                                            <input type="checkbox" id="replaceCheckbox"
-                                                class="w-4 h-4 bg-dark-600 border-dark-500 rounded focus:ring-blue-500 text-blue-600">
-                                            <label for="replaceCheckbox"
-                                                class="ml-2 text-sm text-gray-300">Replace?</label>
+                                <div class="flex gap-4">
+                                    <!-- Change Note -->
+                                    <div class="space-y-2 flex-1">
+                                        <input type="text" id="noteInput"
+                                            class="w-full bg-dark-600 border border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="Enter note">
+                                        <div class="flex items-center space-x-2">
+                                            <button id="changeNoteBtn"
+                                                class="flex-1 bg-purple-600 hover:bg-purple-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                                <i class="fas fa-edit mr-2"></i>Change Note
+                                            </button>
+                                            <div class="flex items-center ml-2">
+                                                <input type="checkbox" id="replaceCheckbox"
+                                                    class="w-4 h-4 bg-dark-600 border-dark-500 rounded focus:ring-blue-500">
+                                                <label for="replaceCheckbox"
+                                                    class="ml-2 text-sm text-gray-300">Replace?</label>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- Reinstall -->
-                                <div class="space-y-2">
-                                    <input type="text" id="reinstallInput"
-                                        class="w-full bg-dark-600 border border-dark-500 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        placeholder="Reinstall reason">
-                                    <button id="reinstallBtn"
-                                        class="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
-                                        <i class="fas fa-sync-alt mr-2"></i>Reinstall
-                                    </button>
+                                    <!-- Reinstall -->
+                                    <div class="space-y-2">
+                                        <input type="text" id="reinstallInput"
+                                            class="w-full bg-dark-600 border border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            placeholder="Reinstall reason">
+                                        <button id="reinstallBtn"
+                                            class="w-full bg-orange-600 hover:bg-orange-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                            <i class="fas fa-sync-alt mr-2"></i>Reinstall
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Simple Action Buttons (bottom) -->
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                 <button id="changeIpBtn"
-                                    class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
+                                    class="bg-green-600 hover:bg-green-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                     <i class="fas fa-exchange-alt mr-2"></i>Change IP
                                 </button>
                                 <button id="copyIpBtn"
-                                    class="bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-2 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
+                                    class="bg-yellow-600 hover:bg-yellow-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                     <i class="fas fa-copy mr-2"></i>Copy IP
                                 </button>
                                 <button id="pauseBtn"
-                                    class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
+                                    class="bg-red-600 hover:bg-red-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                     <i class="fas fa-pause mr-2"></i>Pause
                                 </button>
                                 <button id="refundBtn"
-                                    class="bg-pink-600 hover:bg-pink-700 text-white font-medium py-2 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
+                                    class="bg-pink-600 hover:bg-pink-700  font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                     <i class="fas fa-undo mr-2"></i>Refund
                                 </button>
                             </div>
                             <input type="password" id="api-key"
-                                class="w-full bg-dark-600 border border-dark-500 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                class="w-full bg-dark-600 border border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter API Key">
                         </div>
                     </div>

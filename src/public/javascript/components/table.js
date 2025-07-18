@@ -22,7 +22,7 @@ export function addRow(data, includeActions = false) {
             <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
         </td>
         ${Object.values(data).map(v => `
-        <td class="px-4 py-2 border-b border-dark-600">${v}</td>
+        <td class="px-4 py-2 border-b border-dark-600 whitespace-nowrap">${v}</td>
         `).join('')}
     `;
 
@@ -37,7 +37,6 @@ export function addRow(data, includeActions = false) {
 
     tr.innerHTML = rowHTML;
     tbody.appendChild(tr);
-    // adjustColumnWidths();
 }
 
 function updateCounts() {
@@ -93,29 +92,6 @@ function handleRowClick(e) {
         updateCounts();
     }
 }
-
-function adjustColumnWidths() {
-    const tbody = elements.table.querySelector('tbody');
-    const bodyRow = tbody?.querySelector('tr');
-
-    if (!bodyRow) return;
-
-    const bodyCells = bodyRow.children;
-
-    for (let i = 0; i < headerCells.length; i++) {
-        const bodyCell = bodyCells[i];
-
-        // Reset width first (important)
-        bodyCell.style.width = '';
-
-        // Force width to match the widest content
-        const bodyWidth = bodyCell.scrollWidth;
-
-        const maxWidth = Math.max(headerWidth, bodyWidth) + 12; // buffer for padding
-        bodyCell.style.width = `${maxWidth}px`;
-    }
-}
-
 
 let filterData = {};
 

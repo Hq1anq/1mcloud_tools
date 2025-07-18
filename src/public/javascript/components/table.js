@@ -63,6 +63,7 @@ function handleCount(e) {
 export function initTable() {
     bindEvents();
     updateCounts();
+    initFilters();
 }
 
 export function getSelectedRows() {
@@ -89,6 +90,49 @@ function handleRowClick(e) {
         checkbox.checked = !checkbox.checked;
         updateCounts();
     }
+}
+
+let filterData = {};
+
+// Initialize filter inputs
+function initFilters() {
+    const filterInputs = document.querySelectorAll('.filter-input');
+    filterInputs.forEach(input => {
+        input.addEventListener('input', handleFilterChange);
+    });
+}
+
+// Handle filter change
+function handleFilterChange(e) {
+    const column = e.target.parentElement.cellIndex - 1; // -1 for checkbox column
+    const value = e.target.value.toLowerCase();
+
+    console.log(value);
+    
+    filterData[column] = value;
+    filterTable();
+}
+
+// Filter table based on filter inputs
+function filterTable() {
+    const rows = elements.tbody.querySelectorAll('tr');
+    
+    rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        let visible = true;
+        
+        Object.entries(filterData).forEach(([index, val]) => {
+          console.log(val);
+          if (!val) return;
+          const cellText = (cells[+index + 1]?.innerText || '').toLowerCase(); // +1 skips checkbox
+          console.log(cellText);
+
+          if (!cellText.includes(val)) {
+            visible = false;
+          }
+        });
+       row.style.display = visible ? '' : 'none';
+    });
 }
 
 function showEmptyState(show) {

@@ -98,16 +98,23 @@ let filterData = {};
 function initFilters() {
     const filterInputs = document.querySelectorAll('.filter-input');
     filterInputs.forEach(input => {
-        input.addEventListener('input', handleFilterChange);
+        // Run filter when ENTER is pressed
+        input.addEventListener('keydown', event => {
+            if (event.key === 'Enter') {
+                handleFilterChange(event);
+            }
+        });
     });
 }
 
 // Handle filter change
 function handleFilterChange(e) {
-    const column = e.target.parentElement.cellIndex - 1; // -1 for checkbox column
-    const value = e.target.value.toLowerCase();
+    const input = e.target;
+    const value = input.value.toLowerCase();
+    const th = input.closest('th');
 
-    console.log(value);
+    const allThs = [...th.parentElement.children]; // Get all <th> in the same row
+    const column = allThs.indexOf(th);
     
     filterData[column] = value;
     filterTable();
@@ -117,21 +124,22 @@ function handleFilterChange(e) {
 function filterTable() {
     const rows = elements.tbody.querySelectorAll('tr');
     
-    rows.forEach((row, index) => {
+    rows.forEach(row => {
         const cells = row.querySelectorAll('td');
         let visible = true;
-        
-        Object.entries(filterData).forEach(([index, val]) => {
-          console.log(val);
-          if (!val) return;
-          const cellText = (cells[+index + 1]?.innerText || '').toLowerCase(); // +1 skips checkbox
-          console.log(cellText);
 
-          if (!cellText.includes(val)) {
-            visible = false;
-          }
-        });
-       row.style.display = visible ? '' : 'none';
+        for (const [colIndex, filterValue] of Object.entries(filterData)) {
+            if (!filterValue) continue;
+
+            const cell = cells[colIndex];
+            const cellText = (cell?.innerText || '').toLowerCase();
+
+            if (!cellText.includes(filterValue.toLowerCase())) {
+                visible = false;
+                break;
+            }
+        }
+        row.style.display = visible ? '' : 'none';
     });
 }
 

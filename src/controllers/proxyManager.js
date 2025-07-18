@@ -2,10 +2,10 @@ import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 dotenv.config();
 
-export async function getDataFromIP(req, res) {
+export async function getData(req, res) {
     const url = 'https://api.smartserver.vn/api/server/list';
     try {
-        const { ipString, apiKey } = req.body;
+        const { ipString, amountString, apiKey } = req.body;
 
         const headers = {
             'accept': 'application/json, text/plain, */*',
@@ -17,20 +17,18 @@ export async function getDataFromIP(req, res) {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
         };
 
-        if (!ipString) {
-            return res.status(400).json({ error: 'No IPs provided' });
-        }
-
         const params = new URLSearchParams({
             page: 1,
-            limit: 200,
+            limit: +amountString || 200,
             by_status: '',
             by_time: 'using',
             by_created: '',
             keyword: '',
-            ips: ipString,
+            ips: ipString || '',
             proxy: 'true',
         });
+
+        console.log(params);
 
         const response = await fetch(`${url}?${params.toString()}`, {
             method: 'GET',

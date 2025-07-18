@@ -24,6 +24,13 @@
         @apply bg-dark-600 border border-2 border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full;
     }
 
+    /* Hides the arrows in Chrome, Safari, Edge */
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+        @apply appearance-none;
+        margin: 0;
+    }
+
     textarea {
         @apply resize-none;
     }
@@ -31,22 +38,12 @@
 
 .filter-input {
     background-color: #1e293b;
+    text-align: center;
     border: 1px solid #334155;
     color: #e2e8f0;
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
-    width: 100%;
     transition: border-color 0.2s ease;
-}
-
-.filter-icon {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #94a3b8;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
 }
 
 /* Navbar styles */

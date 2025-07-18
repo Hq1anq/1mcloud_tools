@@ -1,17 +1,46 @@
-import { addRow } from '/javascript/components/table.js'
+import { addRow, initTable } from '/javascript/components/table.js';
+// DOM elements
+const elements = {
+    ipList: document.getElementById('ip-list'),
+    apiKey: document.getElementById('api-key'),
+    amount: document.getElementById('amount'),
+    getDataBtn: document.getElementById('getDataBtn')
+}
+
+// Initialize
+function init() {
+    bindEvents();
+    initTable();
+    // updateSelectedCount();
+    // showEmptyState(true);
+}
+
+// Bind event listeners
+function bindEvents() {
+    // elements.deleteBtn.addEventListener('click', deleteProxies);
+    elements.getDataBtn.addEventListener('click', getData);
+    // elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
+    // elements.selectActiveBtn.addEventListener('click', selectActiveProxies);
+    // elements.selectErrorBtn.addEventListener('click', selectErrorProxies);
+    // elements.copyIpBtn.addEventListener('click', copySelectedIPs);
+    // elements.copyFullProxyBtn.addEventListener('click', copyFullProxies);
+    // elements.refreshBtn.addEventListener('click', refreshProxies);
+}
+
 // Feature: Get Servers by IPs
-document.getElementById('getDataBtn').addEventListener('click', async function() {
-    const ipList = document.getElementById('ip-list').value
+async function getData() {
+    const ipString = elements.ipList.value
         .split('\n')
         .map(ip => ip.trim())
-        .filter(ip => ip.length > 0);
-    const ipString = ipList.join(',');
-    const apiKey = document.getElementById('api-key').value.trim();
+        .filter(ip => ip.length > 0)
+        .join(',');
+    const apiKeyString = elements.apiKey.value.trim();
+    const amountString = elements.amount.value.trim();
     try {
-        const response = await fetch('/get-data-from-ip', {
+        const response = await fetch('/getData', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ipString, apiKey })
+            body: JSON.stringify({ ipString, amountString, apiKeyString })
         });
 
         const result = await response.json();
@@ -25,4 +54,6 @@ document.getElementById('getDataBtn').addEventListener('click', async function()
     } catch (err) {
         console.error('Fetch error:', err);
     }
-});
+}
+
+init();

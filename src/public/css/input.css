@@ -1,33 +1,56 @@
 @import 'tailwindcss';
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @theme {
     --color-dark-900: #0f172a;
     --color-dark-800: #1e293b;
     --color-dark-700: #334155;
     --color-dark-600: #475569;
+    --color-dark-500: #64748b;
+}
+
+/* Custom base styles */
+@layer base {
+    /* button {
+        @apply bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed;
+    } */
+
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    textarea {
+        @apply bg-dark-600 border border-2 border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full;
+    }
+
+    textarea {
+        @apply resize-none;
+    }
 }
 
 /* Navbar styles */
 @layer components {
-  .navbar {
-    border-bottom: 1px solid #334155;
-  }
+    .navbar {
+        border-bottom: 1px solid #334155;
+    }
 
-  .nav-link {
-    color: #cbd5e1;
-    transition: color 0.3s ease;
-  }
+    .nav-link {
+        color: #cbd5e1;
+        transition: color 0.3s ease;
+    }
 
-  .nav-link:hover {
-    color: #f8fafc;
-  }
+    .nav-link:hover {
+        color: #f8fafc;
+    }
 
-  .nav-link.active {
-    color: #60a5fa;
-    font-weight: 500;
-  }
+    .nav-link.active {
+        color: #60a5fa;
+        font-weight: 500;
+    }
 
-  .nav-link.active:hover {
-    color: #93c5fd;
-  }
+    .nav-link.active:hover {
+        color: #93c5fd;
+    }
 }

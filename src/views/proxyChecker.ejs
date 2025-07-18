@@ -150,7 +150,6 @@
                                     </button>
                                 </div>
                                 <textarea id="proxyInput"
-                                    class="w-full bg-dark-700 border border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                                     placeholder="192.168.1.1:8080:user:pass&#10;10.0.0.1:8080:user:pass"
                                     rows="6"></textarea>
                             </div>
@@ -165,7 +164,7 @@
                                         <i class="fas fa-exchange-alt mr-2"></i>Proxy Type
                                     </label>
                                     <select id="proxyTypeSelect"
-                                        class="w-full bg-dark-700 border border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        class="w-full bg-dark-600 border border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                         <option value="auto">Auto Detect</option>
                                         <option value="https">HTTPS</option>
                                         <option value="socks5">SOCKS5</option>
@@ -219,13 +218,11 @@
             tableTitle: 'Proxy Status',
             headers: ['IP', 'Port', 'Username', 'Password', 'Type', 'Status'],
             data: [],
-            /*
             data: [
                 {"ip":"157.66.196.24","port":"64667","username":"hdwz9764","password":"ZVSfcz8760","type":"auto","status":"success"},
                 {"ip":"103.75.72.58","port":"38557","username":"skbe1362","password":"CYVang1690","type":"auto","status":"success"},
                 {"ip":"160.22.159.172","port":"58381","username":"fryq8123","password":"LMJryz8317","type":"auto","status":"success"}
             ],
-            */
             emptyMessage: `
                 <svg id="proxy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
                     style="width: 60px; height: 60px; margin: auto;">

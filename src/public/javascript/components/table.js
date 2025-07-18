@@ -8,6 +8,7 @@ const elements = {
 
 function bindEvents() {
     elements.tbody.addEventListener('change', handleCount);
+    elements.tbody.addEventListener('click', handleRowClick);
     elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
 }
 
@@ -35,14 +36,6 @@ export function addRow(data, includeActions = false) {
 
     tr.innerHTML = rowHTML;
     tbody.appendChild(tr);
-
-    // Add row click event
-    tr.addEventListener('click', (e) => {
-        if (!e.target.classList.contains('rowCheckbox')) {
-            const checkbox = tr.querySelector('.rowCheckbox');
-            checkbox.checked = !checkbox.checked;
-        }
-    });
 }
 
 function updateCounts() {
@@ -83,6 +76,19 @@ function handleSelectAll(e) {
         checkbox.checked = isChecked;
     });
     updateCounts();
+}
+
+function handleRowClick(e) {
+    const tr = e.target.closest('tr');
+    if (!tr || tr.querySelector('button')?.contains(e.target) || e.target.tagName === 'BUTTON' || e.target.tagName === 'A') {
+        return; // Ignore if clicked a button or link
+    }
+
+    const checkbox = tr.querySelector('.rowCheckbox');
+    if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        updateCounts();
+    }
 }
 
 function showEmptyState(show) {

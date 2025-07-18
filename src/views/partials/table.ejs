@@ -4,15 +4,15 @@
             <!-- Table Header -->
             <div class="bg-dark-700 px-4 py-3 border-b-[5px] border-dark-600 sticky top-0 z-30">
                 <div class="flex items-center justify-between">
-                    <h2 class="text-lg font-semibold text-gray-200">
+                    <h2 class="text-sm sm:text-lg font-semibold text-gray-200">
                         <i class="fas fa-table mr-2"></i><%= tableTitle %>
                     </h2>
                     <!-- Extra slot -->
-                    <div class="flex items-center space-x-2">
-                        <div class="text-sm text-gray-400 mr-10">
+                    <div class="flex gap-2 sm:gap-5 text-xs sm:text-sm items-center">
+                        <div class=" text-gray-400">
                             Selected: <span id="selectedCount">0</span> rows
                         </div>
-                        <span class="text-sm text-gray-400">Total: <span id="totalCount">0</span> rows</span>
+                        <span class=" text-gray-400">Total: <span id="totalCount">0</span> rows</span>
                         <button id="refreshBtn"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors duration-200">
                         <i class="fas fa-sync-alt"></i>
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <!-- Table -->
-            <div class="table-container">
+            <div class="table-container overflow-x-auto">
                 <table class="w-full">
                     <thead class="bg-dark-700 sticky top-0 z-20">
                         <tr>
@@ -43,12 +43,12 @@
                             <% } %>
                         </tr>
                     </thead>
-                    <tbody id="proxyTableBody">
+                    <tbody id="tableBody">
                         <% if (data && data.length > 0) { %>
                             <% data.forEach(row => { %>
                             <tr>
                                 <td class="px-4 py-2 border-b border-dark-600">
-                                <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
+                                    <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
                                 </td>
 
                                 <% headers.forEach(h => { %>

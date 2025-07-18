@@ -27,7 +27,7 @@ export async function startProxyCheckStream(req, res) {
     }
 
     // Close after all proxies sent
-    res.write(`event: done\ndata: all proxies checked\n\n`);
+    res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
     res.end();
 };
 

@@ -1,5 +1,18 @@
+const elements = {
+    tbody: document.getElementById('tableBody'),
+    totalCount: document.getElementById('totalCount'),
+    selectedCount: document.getElementById('selectedCount'),
+    selectAllCheckbox: document.getElementById('selectAllCheckbox'),
+    emptyState: document.getElementById('emptyState')
+}
+
+function bindEvents() {
+    elements.tbody.addEventListener('change', handleCount);
+    elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
+}
+
 export function addRow(data, includeActions = false) {
-    const tbody = document.getElementById('proxyTableBody');
+    const tbody = document.getElementById('tableBody');
     const tr = document.createElement('tr');
 
     let rowHTML = `
@@ -22,6 +35,40 @@ export function addRow(data, includeActions = false) {
 
     tr.innerHTML = rowHTML;
     tbody.appendChild(tr);
+
+    // Add row click event
+    tr.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('rowCheckbox')) {
+            const checkbox = tr.querySelector('.rowCheckbox');
+            checkbox.checked = !checkbox.checked;
+        }
+    });
+}
+
+function updateCounts() {
+    const rows = elements.tbody.querySelectorAll('tr');
+    const checkboxes = elements.tbody.querySelectorAll('.rowCheckbox');
+    const selected = [...checkboxes].filter(cb => cb.checked);
+
+    elements.totalCount.textContent = rows.length;
+    elements.selectedCount.textContent = selected.length;
+
+    showEmptyState(rows.length === 0);
+
+    if (checkboxes.length > 0) {
+        elements.selectAllCheckbox.checked = selected.length === checkboxes.length;
+        elements.selectAllCheckbox.indeterminate = selected.length > 0 && selected.length < checkboxes.length;
+    }
+}
+
+function handleCount(e) {
+    if (e.target.classList.contains('rowCheckbox')) {
+        updateCounts();
+    }
+}
+
+export function initTable() {
+    bindEvents();
     updateCounts();
 }
 
@@ -30,29 +77,14 @@ export function getSelectedRows() {
     return Array.from(checkboxes).map(cb => cb.closest('tr'));
 }
 
-export function selectAllRows(checked) {
-    document.querySelectorAll('.rowCheckbox').forEach(cb => {
-        cb.checked = checked;
+function handleSelectAll(e) {
+    const isChecked = e.target.checked;
+    document.querySelectorAll('.rowCheckbox').forEach(checkbox => {
+        checkbox.checked = isChecked;
     });
     updateCounts();
 }
 
-export function updateCounts() {
-    const total = document.querySelectorAll('#proxyTableBody tr').length;
-    const selected = document.querySelectorAll('.rowCheckbox:checked').length;
-
-    document.getElementById('totalCount').textContent = total;
-    document.getElementById('selectedCount').textContent = selected;
-}
-
-// Optional: UI callback
-window.editRow = function (button) {
-    const row = button.closest('tr');
-    alert('Edit row: ' + row.innerText);
-}
-
-window.deleteRow = function (button) {
-    const row = button.closest('tr');
-    row.remove();
-    updateCounts();
+function showEmptyState(show) {
+    elements.emptyState.style.display = show ? 'block' : 'none';
 }

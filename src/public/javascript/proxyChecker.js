@@ -1,4 +1,4 @@
-import { addRow, getSelectedRows, selectAllRows, updateCounts } from '/javascript/components/table.js';
+import { addRow, initTable } from '/javascript/components/table.js';
 // DOM elements
 const elements = {
     proxyInput: document.getElementById('proxyInput'),
@@ -10,7 +10,7 @@ const elements = {
     copyIpBtn: document.getElementById('copyIpBtn'),
     copyFullProxyBtn: document.getElementById('copyFullProxyBtn'),
     selectAllCheckbox: document.getElementById('selectAllCheckbox'),
-    proxyTableBody: document.getElementById('proxyTableBody'),
+    tableBody: document.getElementById('tableBody'),
     emptyState: document.getElementById('emptyState'),
     selectionButtons: document.getElementById('selectionButtons'),
     selectedCount: document.getElementById('selectedCount'),
@@ -23,6 +23,7 @@ const elements = {
 // Initialize
 function init() {
     bindEvents();
+    initTable();
     // updateSelectedCount();
     // showEmptyState(true);
 }
@@ -59,7 +60,13 @@ async function checkProxies() {
 
     eventSource.onmessage = (event) => {
         const result = JSON.parse(event.data);
+        if (result.done) {
+            console.log("✅ All proxies checked. Closing SSE.");
+            eventSource.close();
+            return;
+        }
         addRow(result);
+        console.log(JSON.stringify(result));
     };
 
     eventSource.onerror = (err) => {

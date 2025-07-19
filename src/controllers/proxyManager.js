@@ -228,11 +228,49 @@ export async function reinstall(req, res) {
             ];
             res.json({ proxyInfo });
         } else {
-            console.error('❌ Failed to REINSTALL for sid: ${sid}:', response.status);
-            return res.status(response.status).json({ error: 'Failed to change IP' });
+            console.error(`❌ Failed to REINSTALL for sid: ${sid}: `, response.status);
+            return res.status(response.status).json({ error: 'Failed to CHANGE IP' });
         }
     } catch (error) {
         console.error(`❌ Failed to REINSTALL for sid: ${sid}`, error.response?.data || error.message);
+        res.status(500).json({ success: false, error: 'Reinstall failed', sid });
+    }
+}
+
+export async function changeNote(req, res) {
+    const { sid, newNote, apiKey } = req.body;
+    
+    const url = "https://api.smartserver.vn/api/server/info/note"
+
+    const headers = {
+        'accept': 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
+        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+        'content-type': 'application/json',
+        'origin': 'https://manage.1mcloud.vn',
+        'referer': 'https://manage.1mcloud.vn/',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers,
+            body: JSON.stringify({
+                sid: sid,
+                note: newNote
+            })
+        });
+
+        if (response.ok) {
+            const rawData = await response.json();
+            res.json({ success: rawData.result === 'success' });
+        } else {
+            console.log(`❌ Failed to CHANGE NOTE for sid: ${sid}: `, response.status);
+            return res.status(response.status).json({ error: 'Failed to CHANGE NOTE' });
+        }
+    } catch (error) {
+        console.error(`❌ Failed to CHANGE NOTE for sid: ${sid}`, error.response?.data || error.message);
         res.status(500).json({ success: false, error: 'Reinstall failed', sid });
     }
 }

@@ -1,11 +1,15 @@
-import { addRows, initTable, getSelectedRows, clearTable } from '/javascript/components/table.js';
+import { addRows, initTable, updateCounts, getSelectedRows, clearTable } from '/javascript/components/table.js';
 // DOM elements
 const elements = {
     ipList: document.getElementById('ip-list'),
     apiKey: document.getElementById('api-key'),
     amount: document.getElementById('amount'),
     getDataBtn: document.getElementById('getDataBtn'),
+
+    noteInput: document.getElementById('noteInput'),
+    replaceCheckbox: document.getElementById('replaceCheckbox'),
     changeNoteBtn: document.getElementById('changeNoteBtn'),
+
     changeIpBtn: document.getElementById('changeIpBtn'),
     reinstallBtn: document.getElementById('reinstallBtn'),
     pauseBtn: document.getElementById('pauseBtn'),
@@ -36,7 +40,7 @@ function init() {
 function bindEvents() {
     // elements.deleteBtn.addEventListener('click', deleteProxies);
     elements.getDataBtn.addEventListener('click', getData);
-    // elements.changeNoteBtn.addEventListener('click', getSelectedRows);
+    elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.changeIpBtn.addEventListener('click', changeIp);
     elements.reinstallBtn.addEventListener('click', reinstall);
     // elements.pauseBtn.addEventListener('click', clearTable);
@@ -112,7 +116,6 @@ async function changeIp() {
 
                 updateRowContent(cells, data.proxyInfo, 'changeIp');
 
-                // Optionally update the row, for example by adding a ✅ mark
                 row.classList.add('bg-green-900/40');
             } else {
                 console.error(`❌ Failed to CHANGE IP for ${ip}:`, data.error);
@@ -125,6 +128,8 @@ async function changeIp() {
 
         await delay(2000);
     }
+
+    updateCounts();
 
     // ✅ Copy to clipboard if there are any successful proxies
     if (proxyLines.length > 0) {
@@ -172,7 +177,6 @@ async function reinstall() {
 
                 updateRowContent(cells, data.proxyInfo, 'reinstall');
 
-                // Optionally update the row, for example by adding a ✅ mark
                 row.classList.add('bg-green-900/40');
             } else {
                 console.error(`❌ Failed to REINSTALL for sid ${sid}:`, data.error);
@@ -185,6 +189,8 @@ async function reinstall() {
 
         await delay(2000);
     }
+
+    updateCounts();
 
     // ✅ Copy to clipboard if there are any successful proxies
     if (proxyLines.length > 0) {
@@ -199,26 +205,104 @@ async function reinstall() {
     }
 }
 
-function updateRowContent(cells, newProxy, action) {
-    
-    // Column indexes based on header:
-    // [checkbox, 'sid', 'ip:port', 'country', 'type', 'from', 'to', 'changed', 'status', 'note']
-    const ipPortIndex = 2;
-    const changedIndex = 7;
-    const statusIndex = 8;
+async function changeNote() {
+    const noteInput = elements.noteInput.value;
+    const isReplace = elements.replaceCheckbox.checked;
 
-    // Update ip:port
-    cells[ipPortIndex].innerText = `${newProxy[0]}:${newProxy[1]}`;
-
-    // Update 'changed' count if it's changeIp
-    if (action === 'changeIp') {
-        const changedCell = cells[changedIndex];
-        const currentValue = parseInt(changedCell.innerText.trim()) || 0;
-        changedCell.innerText = currentValue + 1;
+    console.log("Change note...");
+    const selectedRows = getSelectedRows();
+    if (selectedRows.length === 0) {
+        alert('Please select at least one row to CHANGE NOTE.');
+        return;
     }
 
-    // Update status to 'Running'
-    cells[statusIndex].innerText = 'Running';
+    const proxyLines = []; // collect proxies here
+
+    for (const row of selectedRows) {
+        let newNote;
+        const cells = row.querySelectorAll('td');
+        if (cells.length < 2) continue;
+
+        // Extract IP from the 'ip_port' column (assumed to be the second column)
+        const sid = cells[1].innerText.trim();
+        // const oldNote = cells[9].innerText.trim();
+        const oldNote = cells[9].innerText.trim();
+
+        if (isReplace) {
+            newNote = noteInput;
+        } else {
+            const firstSpaceIndex = oldNote.indexOf(' ');
+            const suffix = oldNote.slice(firstSpaceIndex + 1);
+            newNote = noteInput + suffix;
+        }
+
+        try {
+            const res = await fetch('/proxy/change-note', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sid, newNote })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                if (data.success) {
+                    updateRowContent(cells, newNote, 'changeNote');
+                }
+                row.classList.add('bg-green-900/40');
+            } else {
+                console.error(`❌ Failed to REINSTALL for sid ${sid}:`, data.error);
+                row.classList.add('bg-red-900/40');
+            }
+        } catch (err) {
+            console.error(`❌ Error REINSTALL for sid ${sid}:`, err);
+            row.classList.add('bg-red-900/40');
+        }
+
+        await delay(1000);
+    }
+
+    updateCounts();
+
+    // ✅ Copy to clipboard if there are any successful proxies
+    if (proxyLines.length > 0) {
+        const textToCopy = proxyLines.join('\n');
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+            alert('✅ Proxy list copied to clipboard!');
+        } catch (err) {
+            console.log('❌ Failed to copy to clipboard:', err);
+            showCopyDialog(textToCopy);
+        }
+    }
+}
+
+function updateRowContent(cells, text, action) {
+    cells[0].firstElementChild.checked = false;
+    if (action === 'changeNote') {
+        const newNote = text;
+        cells[9].innerText = newNote;
+    } else {
+        const newProxy = text;
+
+        // Column indexes based on header:
+        // [checkbox, 'sid', 'ip:port', 'country', 'type', 'from', 'to', 'changed', 'status', 'note']
+        const ipPortIndex = 2;
+        const changedIndex = 7;
+        const statusIndex = 8;
+
+        // Update ip:port
+        cells[ipPortIndex].innerText = `${newProxy[0]}:${newProxy[1]}`;
+
+        // Update 'changed' count if it's changeIp
+        if (action === 'changeIp') {
+            const changedCell = cells[changedIndex];
+            const currentValue = parseInt(changedCell.innerText.trim()) || 0;
+            changedCell.innerText = currentValue + 1;
+        }
+
+        // Update status to 'Running'
+        cells[statusIndex].innerText = 'Running';
+    }
 }
 
 function showCopyDialog(textToCopy) {

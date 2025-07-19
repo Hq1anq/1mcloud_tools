@@ -1,4 +1,4 @@
-import { addRow, initTable } from '/javascript/components/table.js';
+import { addRows, initTable } from '/javascript/components/table.js';
 // DOM elements
 const elements = {
     ipList: document.getElementById('ip-list'),
@@ -47,7 +47,7 @@ async function getData() {
 
         if (response.ok) {
             // Optional: render to table instead of pre
-            result.data.forEach(row => addRow(row));
+            addRows(result.data);
         } else {
             output.textContent = `❌ Error: ${result.error}`;
         }

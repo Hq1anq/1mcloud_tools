@@ -3,11 +3,20 @@
 @tailwind base;
 @tailwind utilities;
 
-@theme {
+/* @theme {
     --color-dark-900: #0f172a;
     --color-dark-800: #1e293b;
     --color-dark-700: #334155;
     --color-dark-600: #475569;
+    --color-dark-500: #64748b;
+} */
+
+@theme {
+    --color-dark-900: #14171c;
+    --color-dark-800: #282e38;
+    --color-dark-750: #323a45;
+    --color-dark-700: #3c4653;
+    --color-dark-600: #505d6f;
     --color-dark-500: #64748b;
 }
 
@@ -34,11 +43,14 @@
     textarea {
         @apply resize-none;
     }
+
+    .selected-row {
+        @apply bg-dark-700;
+    }
 }
 
 .filter-input {
     background-color: #1e293b;
-    text-align: center;
     border: 1px solid #334155;
     color: #e2e8f0;
     padding: 0.25rem 0.5rem;

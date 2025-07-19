@@ -13,18 +13,32 @@ function bindEvents() {
     elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
 }
 
+export function addRows(data, includeActions) {
+    data.forEach(row => addRow(row));
+    updateCounts();
+}
+
 export function addRow(data, includeActions = false) {
     const tbody = document.getElementById('tableBody');
     const tr = document.createElement('tr');
+
+    tr.classList.add('hover:bg-dark-750');
 
     let rowHTML = `
         <td class="px-4 py-2 border-b border-dark-600">
             <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
         </td>
-        ${Object.values(data).map(v => `
-        <td class="px-4 py-2 border-b border-dark-600 whitespace-nowrap">${v}</td>
-        `).join('')}
     `;
+
+    for (const [key, value] of Object.entries(data)) {
+        const alignment = (key === 'ip' || key === 'ip_port' || key === 'note') ? 'text-left' : 'text-center';
+
+        rowHTML += `
+        <td class="px-4 py-2 border-b border-dark-600 whitespace-nowrap ${alignment}">
+            ${value}
+        </td>
+        `;
+    }
 
     if (includeActions) {
         rowHTML += `
@@ -39,7 +53,7 @@ export function addRow(data, includeActions = false) {
     tbody.appendChild(tr);
 }
 
-function updateCounts() {
+export function updateCounts() {
     const rows = elements.tbody.querySelectorAll('tr');
     const checkboxes = elements.tbody.querySelectorAll('.rowCheckbox');
     const selected = [...checkboxes].filter(cb => cb.checked);
@@ -87,10 +101,15 @@ function handleRowClick(e) {
     }
 
     const checkbox = tr.querySelector('.rowCheckbox');
-    if (checkbox) {
-        checkbox.checked = !checkbox.checked;
-        updateCounts();
+    if (checkbox?.checked) {
+        checkbox.checked = false;
+        tr.classList.remove('selected-row');
+    } else {
+        checkbox.checked = true;
+        tr.classList.add('selected-row');
     }
+
+    updateCounts();
 }
 
 let filterData = {};

@@ -216,13 +216,8 @@
         <!-- Scrollable Table Area -->
         <%- include('partials/table', {
             tableTitle: 'Proxy Status',
-            headers: ['IP', 'Port', 'Username', 'Password', 'Type', 'Status'],
+            headers: ['ip', 'port', 'username', 'password', 'type', 'status'],
             data: [],
-            data: [
-                {"ip":"157.66.196.24","port":"64667","username":"hdwz9764","password":"ZVSfcz8760","type":"auto","status":"success"},
-                {"ip":"103.75.72.58","port":"38557","username":"skbe1362","password":"CYVang1690","type":"auto","status":"success"},
-                {"ip":"160.22.159.172","port":"58381","username":"fryq8123","password":"LMJryz8317","type":"auto","status":"success"}
-            ],
             emptyMessage: `
                 <svg id="proxy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
                     style="width: 60px; height: 60px; margin: auto;">

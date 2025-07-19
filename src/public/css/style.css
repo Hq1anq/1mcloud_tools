@@ -52,10 +52,11 @@
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
-    --color-dark-900: #0f172a;
-    --color-dark-800: #1e293b;
-    --color-dark-700: #334155;
-    --color-dark-600: #475569;
+    --color-dark-900: #14171c;
+    --color-dark-800: #282e38;
+    --color-dark-750: #323a45;
+    --color-dark-700: #3c4653;
+    --color-dark-600: #505d6f;
     --color-dark-500: #64748b;
   }
 }
@@ -268,9 +269,6 @@
   .mt-1 {
     margin-top: calc(var(--spacing) * 1);
   }
-  .mt-6 {
-    margin-top: calc(var(--spacing) * 6);
-  }
   .mr-2 {
     margin-right: calc(var(--spacing) * 2);
   }
@@ -336,6 +334,9 @@
   }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
+  }
+  .cursor-pointer {
+    cursor: pointer;
   }
   .grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -502,9 +503,6 @@
   .py-4 {
     padding-block: calc(var(--spacing) * 4);
   }
-  .py-6 {
-    padding-block: calc(var(--spacing) * 6);
-  }
   .py-12 {
     padding-block: calc(var(--spacing) * 12);
   }
@@ -621,6 +619,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-blue-700);
+      }
+    }
+  }
+  .hover\:bg-dark-750 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-dark-750);
       }
     }
   }
@@ -818,10 +823,12 @@
   textarea {
     resize: none;
   }
+  .selected-row {
+    background-color: var(--color-dark-700);
+  }
 }
 .filter-input {
   background-color: #1e293b;
-  text-align: center;
   border: 1px solid #334155;
   color: #e2e8f0;
   padding: 0.25rem 0.5rem;

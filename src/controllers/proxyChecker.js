@@ -50,7 +50,7 @@ export async function checkSingleProxy(proxy, type) {
 
         return { ...proxy, type, status: 'success' };
     } catch (err) {
-        return { ...proxy, type, status: 'fail', error: err.message };
+        return { ...proxy, type, status: 'fail' };
     }
 };
 

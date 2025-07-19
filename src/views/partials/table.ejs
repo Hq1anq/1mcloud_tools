@@ -1,5 +1,5 @@
 <div class="flex-1 overflow-hidden text-xs sm:text-sm">
-    <div class="max-w-7xl mx-auto px-4 py-6">
+    <div class="max-w-7xl mx-auto px-4 py-3">
         <div class="bg-dark-800 rounded-lg shadow-lg overflow-hidden">
             <!-- Table Header -->
             <div class="bg-dark-700 px-4 py-3 border-b-[5px] border-dark-600 sticky top-0 z-30">
@@ -30,13 +30,13 @@
                                     class="w-4 h-4 bg-dark-600 border-dark-500 rounded focus:ring-blue-500 text-blue-600">
                             </th>
                             
-                            <% headers.forEach((header, i) => { %>
-                            <th class="<%= i === headers.length - 1 ? 'w-full' : 'min-w-fit' %> px-4 py-3 text-center font-medium text-gray-300 uppercase tracking-wider">
-                                <div class="relative flex flex-col gap-1 min-w-15">
-                                    <%= header %>
-                                    <input type="text" class="filter-input mt-1" placeholder="Filter">
-                                </div>
-                            </th>
+                            <% headers.forEach(header => { %>
+                                <th class="<%= header === 'note' ? 'w-full' : 'min-w-fit' %> px-4 py-3 text-center font-medium text-gray-300 uppercase tracking-wider">
+                                    <div class="relative flex flex-col gap-1 min-w-15">
+                                        <%= header %>
+                                        <input type="text" class="<%= header === 'note' || header === 'ip' || header === 'ip:port' ? 'text-left' : 'text-center' %> filter-input mt-1" placeholder="Filter">
+                                    </div>
+                                </th>
                             <% }); %>
 
                             <% if (showActions) { %>
@@ -49,7 +49,7 @@
                     <tbody id="tableBody">
                         <% if (data && data.length > 0) { %>
                             <% data.forEach(row => { %>
-                            <tr>
+                            <tr class="transition-colors duration-200 hover:bg-dark-750 cursor-pointer">
                                 <td class="px-4 py-2 border-b border-dark-600">
                                     <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
                                 </td>

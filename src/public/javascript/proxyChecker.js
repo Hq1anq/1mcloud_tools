@@ -1,4 +1,4 @@
-import { addRow, initTable } from '/javascript/components/table.js';
+import { addRow, updateCounts, initTable } from '/javascript/components/table.js';
 // DOM elements
 const elements = {
     proxyInput: document.getElementById('proxyInput'),
@@ -61,6 +61,7 @@ async function checkProxies() {
     eventSource.onmessage = (event) => {
         const result = JSON.parse(event.data);
         if (result.done) {
+            updateCounts();
             console.log("✅ All proxies checked. Closing SSE.");
             eventSource.close();
             return;

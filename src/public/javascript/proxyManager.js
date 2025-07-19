@@ -7,6 +7,7 @@ const elements = {
     getDataBtn: document.getElementById('getDataBtn'),
     changeNoteBtn: document.getElementById('changeNoteBtn'),
     changeIpBtn: document.getElementById('changeIpBtn'),
+    reinstallBtn: document.getElementById('reinstallBtn'),
     pauseBtn: document.getElementById('pauseBtn'),
     refundBtn: document.getElementById('refundBtn')
 }
@@ -35,8 +36,9 @@ function init() {
 function bindEvents() {
     // elements.deleteBtn.addEventListener('click', deleteProxies);
     elements.getDataBtn.addEventListener('click', getData);
-    elements.changeNoteBtn.addEventListener('click', getSelectedRows);
+    // elements.changeNoteBtn.addEventListener('click', getSelectedRows);
     elements.changeIpBtn.addEventListener('click', changeIp);
+    elements.reinstallBtn.addEventListener('click', reinstall);
     // elements.pauseBtn.addEventListener('click', clearTable);
     // elements.refundBtn.addEventListener('click', getTbody);
 }
@@ -93,7 +95,7 @@ async function changeIp() {
     console.log("Change ip...");
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
-        alert('Please select at least one row to change IP.');
+        alert('Please select at least one row to CHANGE IP.');
         return;
     }
 
@@ -124,11 +126,11 @@ async function changeIp() {
                 // Optionally update the row, for example by adding a ✅ mark
                 row.classList.add('bg-green-900/40');
             } else {
-                console.error(`❌ Failed to change IP for ${ip}:`, data.error);
+                console.error(`❌ Failed to CHANGE IP for ${ip}:`, data.error);
                 row.classList.add('bg-red-900/40');
             }
         } catch (err) {
-            console.error(`❌ Error changing IP for ${ip}:`, err);
+            console.error(`❌ Error CHANGE IP for ${ip}:`, err);
             row.classList.add('bg-red-900/40');
         }
 
@@ -143,6 +145,64 @@ async function changeIp() {
             alert('✅ Proxy list copied to clipboard!');
         } catch (err) {
             console.error('❌ Failed to copy to clipboard:', err);
+            showCopyDialog(textToCopy);
+        }
+    }
+}
+
+async function reinstall() {
+    console.log("Reinstall...");
+    const selectedRows = getSelectedRows();
+    if (selectedRows.length === 0) {
+        alert('Please select at least one row to REINSTALL.');
+        return;
+    }
+
+    const proxyLines = []; // collect proxies here
+
+    for (const row of selectedRows) {
+        const cells = row.querySelectorAll('td');
+        if (cells.length < 2) continue;
+
+        // Extract IP from the 'ip_port' column (assumed to be the second column)
+        const sid = cells[1].innerText.trim();
+
+        try {
+            const res = await fetch('/proxy/reinstall', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sid })
+            });
+
+            const data = await res.json();
+            if (res.ok && data.proxyInfo) {
+                const proxyString = data.proxyInfo.join(":");
+                console.log(`✅ REINSTALL for sid ${sid}:`, proxyString);
+
+                proxyLines.push(proxyString);
+
+                // Optionally update the row, for example by adding a ✅ mark
+                row.classList.add('bg-green-900/40');
+            } else {
+                console.error(`❌ Failed to REINSTALL for sid ${sid}:`, data.error);
+                row.classList.add('bg-red-900/40');
+            }
+        } catch (err) {
+            console.error(`❌ Error REINSTALL for sid ${sid}:`, err);
+            row.classList.add('bg-red-900/40');
+        }
+
+        await delay(2000);
+    }
+
+    // ✅ Copy to clipboard if there are any successful proxies
+    if (proxyLines.length > 0) {
+        const textToCopy = proxyLines.join('\n');
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+            alert('✅ Proxy list copied to clipboard!');
+        } catch (err) {
+            console.log('❌ Failed to copy to clipboard:', err);
             showCopyDialog(textToCopy);
         }
     }

@@ -69,8 +69,9 @@ export async function getData(req, res) {
 };
 
 export async function changeIp(req, res) {
-    const url = 'https://api.smartserver.vn/api/server/change-ip';
     const { ip, apiKey, type = 'proxy_https' } = req.body;
+
+    const url = 'https://api.smartserver.vn/api/server/change-ip';
 
     // const proxyInfo = [
     //     ip,
@@ -92,6 +93,35 @@ export async function changeIp(req, res) {
         'referer': 'https://manage.1mcloud.vn/',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
     };
+
+    // let data;
+    // if (custom_info) {
+    //     const list_info = custom_info.split(':');
+    //     if (list_info.length < 4) {
+    //         return res.status(400).json({ error: 'Invalid custom_info format. Expected format: range_ip:remote_port:username:password' });
+    //     }
+
+    //     data = {
+    //         ip,
+    //         proxy_type: type,
+    //         range_ip: list_info[0],
+    //         random_password: false,
+    //         random_remote_port: false,
+    //         password: list_info[3],
+    //         remote_port: parseInt(list_info[1]),
+    //         isp: 'Ngẫu nhiên',
+    //     };
+    // } else {
+    //     data = {
+    //         ip,
+    //         os_id: 0,
+    //         proxy_type: type,
+    //         range_ip: 'Ngẫu nhiên',
+    //         random_password: true,
+    //         random_remote_port: true,
+    //         isp: 'Ngẫu nhiên',
+    //     };
+    // }
 
     let data = {
         ip: ip,
@@ -124,8 +154,85 @@ export async function changeIp(req, res) {
             return res.status(response.status).json({ error: 'Failed to change IP' });
         }
     } catch (error) {
-        console.error('❌ Error while changing IP:', error);
+        console.error(`❌ Failed to CHANGE IP for ${ip}`, error.response?.data || error.message);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
 
+export async function reinstall(req, res) {
+    const { sid, apiKey, type = "proxy_https" } = req.body;
+
+    const url = "https://api.smartserver.vn/api/server/reinstall";
+
+    // let data;
+    // if (custom_info) {
+    //     const [range_ip, remote_port, username, password] = custom_info.split(":");
+    //     data = {
+    //         random_remote_port: "",
+    //         remote_port,
+    //         random_username: "",
+    //         username,
+    //         random_password: "",
+    //         password,
+    //         type,
+    //         sid
+    //     };
+    // } else {
+    //     data = {
+    //         random_remote_port: "on",
+    //         remote_port: "",
+    //         random_username: "on",
+    //         username: "",
+    //         random_password: "on",
+    //         password: "",
+    //         type,
+    //         sid
+    //     };
+    // }
+
+    const headers = {
+        'accept': 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
+        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+        'content-type': 'application/json',
+        'origin': 'https://manage.1mcloud.vn',
+        'referer': 'https://manage.1mcloud.vn/',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+    };
+
+    let data = {
+        random_remote_port: "on",
+        remote_port: "",
+        random_username: "on",
+        username: "",
+        random_password: "on",
+        password: "",
+        type: type,
+        sid: sid
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+            const rawData = await response.json();
+            const proxyInfo = [
+                rawData.ip,
+                rawData.remote_port,
+                rawData.username,
+                rawData.password
+            ];
+            res.json({ proxyInfo });
+        } else {
+            console.error('❌ Failed to REINSTALL for sid: ${sid}:', response.status);
+            return res.status(response.status).json({ error: 'Failed to change IP' });
+        }
+    } catch (error) {
+        console.error(`❌ Failed to REINSTALL for sid: ${sid}`, error.response?.data || error.message);
+        res.status(500).json({ success: false, error: 'Reinstall failed', sid });
+    }
+}

@@ -78,19 +78,6 @@ function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function showCopyDialog(textToCopy) {
-    const dialog = document.getElementById('copyDialog');
-    const textarea = document.getElementById('proxyTextarea');
-    const closeBtn = document.getElementById('closeDialogBtn');
-
-    textarea.value = textToCopy;
-    dialog.classList.remove('hidden');
-
-    closeBtn.addEventListener('click', () => {
-        dialog.classList.add('hidden');
-    });
-}
-
 async function changeIp() {
     console.log("Change ip...");
     const selectedRows = getSelectedRows();
@@ -122,6 +109,8 @@ async function changeIp() {
                 console.log(`✅ IP changed for ${ip}:`, proxyString);
 
                 proxyLines.push(proxyString);
+
+                updateRowContent(cells, data.proxyInfo, 'changeIp');
 
                 // Optionally update the row, for example by adding a ✅ mark
                 row.classList.add('bg-green-900/40');
@@ -181,6 +170,8 @@ async function reinstall() {
 
                 proxyLines.push(proxyString);
 
+                updateRowContent(cells, data.proxyInfo, 'reinstall');
+
                 // Optionally update the row, for example by adding a ✅ mark
                 row.classList.add('bg-green-900/40');
             } else {
@@ -206,6 +197,41 @@ async function reinstall() {
             showCopyDialog(textToCopy);
         }
     }
+}
+
+function updateRowContent(cells, newProxy, action) {
+    
+    // Column indexes based on header:
+    // [checkbox, 'sid', 'ip:port', 'country', 'type', 'from', 'to', 'changed', 'status', 'note']
+    const ipPortIndex = 2;
+    const changedIndex = 7;
+    const statusIndex = 8;
+
+    // Update ip:port
+    cells[ipPortIndex].innerText = `${newProxy[0]}:${newProxy[1]}`;
+
+    // Update 'changed' count if it's changeIp
+    if (action === 'changeIp') {
+        const changedCell = cells[changedIndex];
+        const currentValue = parseInt(changedCell.innerText.trim()) || 0;
+        changedCell.innerText = currentValue + 1;
+    }
+
+    // Update status to 'Running'
+    cells[statusIndex].innerText = 'Running';
+}
+
+function showCopyDialog(textToCopy) {
+    const dialog = document.getElementById('copyDialog');
+    const textarea = document.getElementById('proxyTextarea');
+    const closeBtn = document.getElementById('closeDialogBtn');
+
+    textarea.value = textToCopy;
+    dialog.classList.remove('hidden');
+
+    closeBtn.addEventListener('click', () => {
+        dialog.classList.add('hidden');
+    });
 }
 
 init();

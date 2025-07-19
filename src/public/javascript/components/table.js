@@ -91,7 +91,13 @@ export function getSelectedRows() {
 function handleSelectAll(e) {
     const isChecked = e.target.checked;
     document.querySelectorAll('.rowCheckbox').forEach(checkbox => {
-        checkbox.checked = isChecked;
+        if (isChecked) {
+            checkbox.checked = true;
+            checkbox.closest('tr').classList.add('selected-row');
+        } else {
+            checkbox.checked = false;
+            checkbox.closest('tr').classList.remove('selected-row');
+        }
     });
     updateCounts();
 }

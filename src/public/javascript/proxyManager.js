@@ -1,14 +1,30 @@
-import { addRows, initTable } from '/javascript/components/table.js';
+import { addRows, initTable, getSelectedRows, clearTable } from '/javascript/components/table.js';
 // DOM elements
 const elements = {
     ipList: document.getElementById('ip-list'),
     apiKey: document.getElementById('api-key'),
     amount: document.getElementById('amount'),
-    getDataBtn: document.getElementById('getDataBtn')
+    getDataBtn: document.getElementById('getDataBtn'),
+    changeNoteBtn: document.getElementById('changeNoteBtn'),
+    changeIpBtn: document.getElementById('changeIpBtn'),
+    pauseBtn: document.getElementById('pauseBtn'),
+    refundBtn: document.getElementById('refundBtn')
 }
 
 // Initialize
 function init() {
+    addRows([
+        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583183, "ip_port": "103.190.36.207:21095", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"}
+    ]);
     bindEvents();
     initTable();
     // updateSelectedCount();
@@ -19,16 +35,15 @@ function init() {
 function bindEvents() {
     // elements.deleteBtn.addEventListener('click', deleteProxies);
     elements.getDataBtn.addEventListener('click', getData);
-    // elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
-    // elements.selectActiveBtn.addEventListener('click', selectActiveProxies);
-    // elements.selectErrorBtn.addEventListener('click', selectErrorProxies);
-    // elements.copyIpBtn.addEventListener('click', copySelectedIPs);
-    // elements.copyFullProxyBtn.addEventListener('click', copyFullProxies);
-    // elements.refreshBtn.addEventListener('click', refreshProxies);
+    elements.changeNoteBtn.addEventListener('click', getSelectedRows);
+    elements.changeIpBtn.addEventListener('click', changeIp);
+    // elements.pauseBtn.addEventListener('click', clearTable);
+    // elements.refundBtn.addEventListener('click', getTbody);
 }
 
 // Feature: Get Servers by IPs
 async function getData() {
+    clearTable();
     const ipString = elements.ipList.value
         .split('\n')
         .map(ip => ip.trim())
@@ -47,12 +62,89 @@ async function getData() {
 
         if (response.ok) {
             // Optional: render to table instead of pre
+            // console.log(JSON.stringify(result.data));
             addRows(result.data);
         } else {
             output.textContent = `❌ Error: ${result.error}`;
         }
     } catch (err) {
         console.error('Fetch error:', err);
+    }
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function showCopyDialog(textToCopy) {
+    const dialog = document.getElementById('copyDialog');
+    const textarea = document.getElementById('proxyTextarea');
+    const closeBtn = document.getElementById('closeDialogBtn');
+
+    textarea.value = textToCopy;
+    dialog.classList.remove('hidden');
+
+    closeBtn.addEventListener('click', () => {
+        dialog.classList.add('hidden');
+    });
+}
+
+async function changeIp() {
+    console.log("Change ip...");
+    const selectedRows = getSelectedRows();
+    if (selectedRows.length === 0) {
+        alert('Please select at least one row to change IP.');
+        return;
+    }
+
+    const proxyLines = []; // collect proxies here
+
+    for (const row of selectedRows) {
+        const cells = row.querySelectorAll('td');
+        if (cells.length < 2) continue;
+
+        // Extract IP from the 'ip_port' column (assumed to be the second column)
+        const ipPort = cells[2].innerText.trim();
+        const ip = ipPort.split(':')[0]; // take only IP part
+
+        try {
+            const res = await fetch('/proxy/change-ip', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ip })
+            });
+
+            const data = await res.json();
+            if (res.ok && data.proxyInfo) {
+                const proxyString = data.proxyInfo.join(":");
+                console.log(`✅ IP changed for ${ip}:`, proxyString);
+
+                proxyLines.push(proxyString);
+
+                // Optionally update the row, for example by adding a ✅ mark
+                row.classList.add('bg-green-900/40');
+            } else {
+                console.error(`❌ Failed to change IP for ${ip}:`, data.error);
+                row.classList.add('bg-red-900/40');
+            }
+        } catch (err) {
+            console.error(`❌ Error changing IP for ${ip}:`, err);
+            row.classList.add('bg-red-900/40');
+        }
+
+        await delay(2000);
+    }
+
+    // ✅ Copy to clipboard if there are any successful proxies
+    if (proxyLines.length > 0) {
+        const textToCopy = proxyLines.join('\n');
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+            alert('✅ Proxy list copied to clipboard!');
+        } catch (err) {
+            console.error('❌ Failed to copy to clipboard:', err);
+            showCopyDialog(textToCopy);
+        }
     }
 }
 

@@ -28,8 +28,6 @@ export async function getData(req, res) {
             proxy: 'true',
         });
 
-        console.log(params);
-
         const response = await fetch(`${url}?${params.toString()}`, {
             method: 'GET',
             headers: headers,
@@ -66,6 +64,67 @@ export async function getData(req, res) {
 
     } catch (err) {
         console.error('❌ Error:', err.message);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export async function changeIp(req, res) {
+    const url = 'https://api.smartserver.vn/api/server/change-ip';
+    const { ip, apiKey, type = 'proxy_https' } = req.body;
+
+    // const proxyInfo = [
+    //     ip,
+    //     apiKey,
+    //     type
+    // ];
+
+    // await delay(2000);
+    
+    // return res.status(500).json({ error: 'Internal server error' });
+    // return res.json({ proxyInfo });
+
+    const headers = {
+        'accept': 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
+        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+        'content-type': 'application/json',
+        'origin': 'https://manage.1mcloud.vn',
+        'referer': 'https://manage.1mcloud.vn/',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+    };
+
+    let data = {
+        ip: ip,
+        os_id: 0,
+        proxy_type: type,
+        range_ip: 'Ngẫu nhiên',
+        random_password: true,
+        random_remote_port: true,
+        isp: 'Ngẫu nhiên',
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+            const rawData = await response.json();
+            const proxyInfo = [
+                rawData.new_ip,
+                rawData.remote_port,
+                rawData.username,
+                rawData.password
+            ];
+            return res.json({ proxyInfo });
+        } else {
+            console.error('❌ Failed to change IP:', response.status);
+            return res.status(response.status).json({ error: 'Failed to change IP' });
+        }
+    } catch (error) {
+        console.error('❌ Error while changing IP:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };

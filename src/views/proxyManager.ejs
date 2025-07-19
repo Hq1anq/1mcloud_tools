@@ -74,7 +74,7 @@
                                     <!-- Reinstall -->
                                     <div class="space-y-2">
                                         <input type="text" id="reinstallInput"
-                                            placeholder="Reinstall reason">
+                                            placeholder="port:username:password">
                                         <button id="reinstallBtn"
                                             class="w-full bg-orange-600 hover:bg-orange-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                             <i class="fas fa-sync-alt mr-2"></i>Reinstall
@@ -120,6 +120,14 @@
                 <p class="text-gray-400">No data available. Click "Get Data" to load information.</p>
             `,
         }) %>
+
+        <!-- Copy dialog modal -->
+        <div id="copyDialog" class="fixed inset-0 bg-dark-900/50 items-center flex justify-center z-50 hidden">
+            <div class="bg-dark-700 p-6 rounded-xl w-[90%] max-w-lg text-white shadow-xl">
+                <h2 class="text-lg font-semibold mb-4">Copy Proxies</h2>
+                <textarea id="proxyTextarea" class="w-full h-40 p-2 rounded bg-dark-600 text-white" readonly></textarea>
+                <div class="text-right mt-4">
+                <button id="closeDialogBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Close</button>
                 </div>
             </div>
         </div>

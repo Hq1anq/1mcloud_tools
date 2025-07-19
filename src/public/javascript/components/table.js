@@ -18,8 +18,11 @@ export function addRows(data, includeActions) {
     updateCounts();
 }
 
+export function clearTable() {
+    elements.tbody.innerHTML = "";
+}
+
 export function addRow(data, includeActions = false) {
-    const tbody = document.getElementById('tableBody');
     const tr = document.createElement('tr');
 
     tr.classList.add('hover:bg-dark-750');
@@ -50,7 +53,7 @@ export function addRow(data, includeActions = false) {
     }
 
     tr.innerHTML = rowHTML;
-    tbody.appendChild(tr);
+    elements.tbody.appendChild(tr);
 }
 
 export function updateCounts() {
@@ -82,8 +85,7 @@ export function initTable() {
 }
 
 export function getSelectedRows() {
-    const checkboxes = document.querySelectorAll('.rowCheckbox:checked');
-    return Array.from(checkboxes).map(cb => cb.closest('tr'));
+    return document.querySelectorAll('.selected-row');
 }
 
 function handleSelectAll(e) {

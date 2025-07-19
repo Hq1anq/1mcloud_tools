@@ -1,4 +1,4 @@
-import { addRow, updateCounts, initTable } from '/javascript/components/table.js';
+import { addRow, updateCounts, initTable, clearTable } from '/javascript/components/table.js';
 // DOM elements
 const elements = {
     proxyInput: document.getElementById('proxyInput'),
@@ -42,6 +42,7 @@ function bindEvents() {
 
 // Check proxies
 async function checkProxies() {
+    clearTable();
     const proxyText = elements.proxyInput.value.trim();
     
     if (!proxyText) {
@@ -67,7 +68,6 @@ async function checkProxies() {
             return;
         }
         addRow(result);
-        console.log(JSON.stringify(result));
     };
 
     eventSource.onerror = (err) => {

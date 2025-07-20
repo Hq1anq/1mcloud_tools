@@ -21,7 +21,7 @@ export async function getData(req, res) {
             page: 1,
             limit: +amountString || 200,
             by_status: '',
-            by_time: 'using',
+            by_time: 'all',
             by_created: '',
             keyword: '',
             ips: ipString || '',

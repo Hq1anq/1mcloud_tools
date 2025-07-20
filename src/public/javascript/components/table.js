@@ -4,22 +4,40 @@ const elements = {
     totalCount: document.getElementById('totalCount'),
     selectedCount: document.getElementById('selectedCount'),
     selectAllCheckbox: document.getElementById('selectAllCheckbox'),
-    emptyState: document.getElementById('emptyState')
+    emptyState: document.getElementById('emptyState'),
+
+    filterInputs: document.querySelectorAll('.filter-input')
 }
 
+let allData = [];
+let filteredData = [];
+let renderedCount = 0;
+const chunkSize = 50;
+
 function bindEvents() {
+    window.addEventListener('scroll', handleScroll);
     elements.tbody.addEventListener('change', handleCount);
     elements.tbody.addEventListener('click', handleRowClick);
     elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
 }
 
-export function addRows(data, includeActions) {
-    data.forEach(row => addRow(row));
+export function initTable() {
+    bindEvents();
     updateCounts();
+    initFilters();
 }
 
-export function clearTable() {
-    elements.tbody.innerHTML = "";
+export function setData(data) {
+    allData = data;
+    filteredData = [...data];
+    renderedCount = 0;
+    clearTable();
+    renderChunk();
+}
+
+export function addRows(data, includeActions = false) {
+    data.forEach(row => addRow(row, includeActions));
+    updateCounts();
 }
 
 export function addRow(data, includeActions = false) {
@@ -56,15 +74,23 @@ export function addRow(data, includeActions = false) {
     elements.tbody.appendChild(tr);
 }
 
+export function clearTable() {
+    elements.tbody.innerHTML = "";
+}
+
 export function updateCounts() {
-    const rows = elements.tbody.querySelectorAll('tr');
-    const checkboxes = elements.tbody.querySelectorAll('.rowCheckbox');
+    const visibleRows = [...elements.tbody.querySelectorAll('tr')].filter(
+        row => row.style.display !== 'none'
+    );
+
+    const checkboxes = visibleRows
+        .map(row => row.querySelector('.rowCheckbox'));
     const selected = [...checkboxes].filter(cb => cb.checked);
 
-    elements.totalCount.textContent = rows.length;
+    elements.totalCount.textContent = filteredData.length;
     elements.selectedCount.textContent = selected.length;
 
-    showEmptyState(rows.length === 0);
+    showEmptyState(filteredData.length === 0);
 
     if (checkboxes.length > 0) {
         elements.selectAllCheckbox.checked = selected.length === checkboxes.length;
@@ -76,12 +102,6 @@ function handleCount(e) {
     if (e.target.classList.contains('rowCheckbox')) {
         updateCounts();
     }
-}
-
-export function initTable() {
-    bindEvents();
-    updateCounts();
-    initFilters();
 }
 
 export function getSelectedRows() {
@@ -120,55 +140,47 @@ function handleRowClick(e) {
     updateCounts();
 }
 
-let filterData = {};
-
 // Initialize filter inputs
 function initFilters() {
-    const filterInputs = document.querySelectorAll('.filter-input');
-    filterInputs.forEach(input => {
+    elements.filterInputs.forEach(input => {
         // Run filter when ENTER is pressed
         input.addEventListener('keydown', event => {
             if (event.key === 'Enter') {
-                handleFilterChange(event);
+                applyFilter();
             }
         });
     });
 }
 
-// Handle filter change
-function handleFilterChange(e) {
-    const input = e.target;
-    const value = input.value.toLowerCase();
-    const th = input.closest('th');
+function applyFilter() {
+    const filters = Array.from(elements.filterInputs).map(i => i.value.toLowerCase());
 
-    const allThs = [...th.parentElement.children]; // Get all <th> in the same row
-    const column = allThs.indexOf(th);
-    
-    filterData[column] = value;
-    filterTable();
+    console.log(filters);
+
+    filteredData = allData.filter(row => {
+        return Object.values(row).every((value, index) => {
+            const f = filters[index];
+            return !f || (value?.toString().toLowerCase().includes(f));
+        });
+    });
+
+    renderedCount = 0;
+    clearTable();
+    renderChunk();
 }
 
-// Filter table based on filter inputs
-function filterTable() {
-    const rows = elements.tbody.querySelectorAll('tr');
-    
-    rows.forEach(row => {
-        const cells = row.querySelectorAll('td');
-        let visible = true;
+function handleScroll() {
+    const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+    if (nearBottom && renderedCount < filteredData.length) {
+        renderChunk();
+    }
+}
 
-        for (const [colIndex, filterValue] of Object.entries(filterData)) {
-            if (!filterValue) continue;
-
-            const cell = cells[colIndex];
-            const cellText = (cell?.innerText || '').toLowerCase();
-
-            if (!cellText.includes(filterValue.toLowerCase())) {
-                visible = false;
-                break;
-            }
-        }
-        row.style.display = visible ? '' : 'none';
-    });
+function renderChunk() {
+    const nextChunk = filteredData.slice(renderedCount, renderedCount + chunkSize);
+    nextChunk.forEach(row => addRow(row));
+    renderedCount += nextChunk.length;
+    updateCounts();
 }
 
 function showEmptyState(show) {

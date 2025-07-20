@@ -1,4 +1,4 @@
-import { addRows, initTable, updateCounts, getSelectedRows, clearTable } from '/javascript/components/table.js';
+import { addRows, setData, initTable, updateCounts, getSelectedRows } from '/javascript/components/table.js';
 // DOM elements
 const elements = {
     ipList: document.getElementById('ip-list'),
@@ -49,7 +49,6 @@ function bindEvents() {
 
 // Feature: Get Servers by IPs
 async function getData() {
-    clearTable();
     const ipString = elements.ipList.value
         .split('\n')
         .map(ip => ip.trim())
@@ -57,6 +56,7 @@ async function getData() {
         .join(',');
     const apiKeyString = elements.apiKey.value.trim();
     const amountString = elements.amount.value.trim();
+
     try {
         const response = await fetch('/getData', {
             method: 'POST',
@@ -67,19 +67,14 @@ async function getData() {
         const result = await response.json();
 
         if (response.ok) {
-            // Optional: render to table instead of pre
-            // console.log(JSON.stringify(result.data));
-            addRows(result.data);
+            setData(result.data || []);  // delegate everything to table.js
+            // saveToLocal(allData);
         } else {
             output.textContent = `❌ Error: ${result.error}`;
         }
     } catch (err) {
         console.error('Fetch error:', err);
     }
-}
-
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function changeIp() {
@@ -316,6 +311,10 @@ function showCopyDialog(textToCopy) {
     closeBtn.addEventListener('click', () => {
         dialog.classList.add('hidden');
     });
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 init();

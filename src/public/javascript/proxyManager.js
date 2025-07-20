@@ -1,4 +1,5 @@
 import { addRows, setData, initTable, updateCounts, getSelectedRows } from '/javascript/components/table.js';
+import { showToast } from '/javascript/components/toaster.js';
 // DOM elements
 const elements = {
     ipList: document.getElementById('ip-list'),
@@ -58,6 +59,7 @@ async function getData() {
     const amountString = elements.amount.value.trim();
 
     try {
+        showToast("Getting data...", )
         const response = await fetch('/getData', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

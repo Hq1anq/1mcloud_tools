@@ -153,16 +153,18 @@ function initFilters() {
 }
 
 function applyFilter() {
-    const filters = Array.from(elements.filterInputs).map(i => i.value.toLowerCase());
+    const activeFilters = Object.entries(elements.filterInputs)
+        .map(([_, inputBox]) => [_, inputBox.value.trim()])
+        .filter(([_, value]) => value !== '');
 
-    console.log(filters);
-
-    filteredData = allData.filter(row => {
-        return Object.values(row).every((value, index) => {
-            const f = filters[index];
-            return !f || (value?.toString().toLowerCase().includes(f));
+    filteredData = activeFilters.length === 0
+        ? [...allData]  // no filters, keep all
+        : allData.filter(row => {
+            return activeFilters.every(([colIndex, filterValue]) => {
+                const value = Object.values(row)[colIndex];
+                return value?.includes(filterValue);
+            });
         });
-    });
 
     renderedCount = 0;
     clearTable();

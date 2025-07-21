@@ -5,6 +5,7 @@
 
 @theme {
     --color-dark-900: #14171c;
+    --color-dark-850: #1e293b;
     --color-dark-800: #282e38;
     --color-dark-750: #323a45;
     --color-dark-700: #3c4653;
@@ -58,7 +59,7 @@
     transition: border-color 0.2s ease;
 }
 
-/* 🌀 Toast Animations */
+/* Toast Animations */
 @layer utilities {
     @keyframes fade-in {
         from {

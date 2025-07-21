@@ -1,5 +1,5 @@
 const elements = {
-    table: document.getElementById('table'),
+    table: document.querySelector('table'),
     tbody: document.getElementById('tableBody'),
     totalCount: document.getElementById('totalCount'),
     selectedCount: document.getElementById('selectedCount'),
@@ -183,6 +183,31 @@ function renderChunk() {
     nextChunk.forEach(row => addRow(row));
     renderedCount += nextChunk.length;
     updateCounts();
+    addColumnClass(1, 'hidden lg:table-cell');
+    addColumnClass(3, 'hidden md:table-cell');
+    addColumnClass(4, 'hidden md:table-cell');
+    addColumnClass(5, 'hidden sm:table-cell');
+}
+
+export function addColumnClass(colIndex, className) {
+    if (!elements.table) return;
+
+    // Modify header cell
+    const headerCell = elements.table.tHead?.rows[0]?.cells[colIndex];
+    if (headerCell) {
+        headerCell.classList.add(...className.split(' '));
+    }
+
+    // Modify all body cells in the same column
+    const rows = elements.table.tBodies[0]?.rows;
+    if (!rows) return;
+
+    for (const row of rows) {
+        const cell = row.cells[colIndex];
+        if (cell) {
+        cell.classList.add(...className.split(' '));
+        }
+    }
 }
 
 function showEmptyState(show) {

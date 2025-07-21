@@ -105,7 +105,7 @@ function handleCount(e) {
 }
 
 export function getSelectedRows() {
-    return document.querySelectorAll('.selected-row');
+    return [...document.querySelectorAll('.selected-row')];
 }
 
 function handleSelectAll(e) {

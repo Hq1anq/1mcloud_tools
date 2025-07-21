@@ -1,5 +1,5 @@
 import { setData, initTable, updateCounts, getSelectedRows } from '/javascript/components/table.js';
-import { showToast } from '/javascript/components/toaster.js';
+import { showToast, changeToToast } from '/javascript/components/toaster.js';
 // DOM elements
 const elements = {
     ipList: document.getElementById('ip-list'),
@@ -11,8 +11,10 @@ const elements = {
     replaceCheckbox: document.getElementById('replaceCheckbox'),
     changeNoteBtn: document.getElementById('changeNoteBtn'),
 
-    changeIpBtn: document.getElementById('changeIpBtn'),
     reinstallBtn: document.getElementById('reinstallBtn'),
+
+    changeIpBtn: document.getElementById('changeIpBtn'),
+    copyIpBtn: document.getElementById('copyIpBtn'),
     pauseBtn: document.getElementById('pauseBtn'),
     refundBtn: document.getElementById('refundBtn')
 }
@@ -33,27 +35,45 @@ function init() {
     ]);
     bindEvents();
     initTable();
-    // updateSelectedCount();
-    // showEmptyState(true);
 }
 
 // Bind event listeners
 function bindEvents() {
     // elements.deleteBtn.addEventListener('click', deleteProxies);
+    elements.copyIpBtn.addEventListener('click', copyIp);
     elements.getDataBtn.addEventListener('click', getData);
     elements.changeNoteBtn.addEventListener('click', changeNote);
-    elements.changeIpBtn.addEventListener('click', changeIp);
     elements.reinstallBtn.addEventListener('click', reinstall);
-    elements.pauseBtn.addEventListener('click', testToast);
-    // elements.refundBtn.addEventListener('click', getTbody);
+    elements.changeIpBtn.addEventListener('click', changeIp);
+    // elements.pauseBtn.addEventListener('click', testToast);
+    // elements.refundBtn.addEventListener('click', test);
 }
 
-function testToast() {
-    showToast('test toast', 'success');
+function copyIp() {
+    const selectedRows = getSelectedRows();
+    if (selectedRows.length === 0) {
+        showToast('No IP to copy', 'warning');
+        return;
+    }
+    const ipList = selectedRows
+        .map(row => row.cells[2]?.textContent.split(':')[0].trim())
+        .filter(Boolean) // remove null/undefined
+        .join('\n'); // multi-line string
+
+    navigator.clipboard.writeText(ipList)
+        .then(() => {
+            showToast('Copied IP list to clipboard!', 'success');
+        })
+        .catch(err => {
+            showCopyDialog(ipList);
+            showToast('Fail to copy IP list!', 'error');
+            console.error('Failed to copy:', err);
+        });
 }
 
 // Feature: Get Servers by IPs
 async function getData() {
+    showToast("Getting data...", 'loading');
     const ipString = elements.ipList.value
         .split('\n')
         .map(ip => ip.trim())
@@ -63,7 +83,6 @@ async function getData() {
     const amountString = elements.amount.value.trim();
 
     try {
-        showToast("Getting data...", )
         const response = await fetch('/getData', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -73,10 +92,11 @@ async function getData() {
         const result = await response.json();
 
         if (response.ok) {
-            setData(result.data || []);  // delegate everything to table.js
+            setData(result.data || []); // delegate everything to table.js
+            changeToToast('Get Data DONE!', 'success');
             // saveToLocal(allData);
         } else {
-            output.textContent = `❌ Error: ${result.error}`;
+            console.log(`❌ Error: ${result.error}`);
         }
     } catch (err) {
         console.error('Fetch error:', err);
@@ -84,10 +104,10 @@ async function getData() {
 }
 
 async function changeIp() {
-    console.log("Change ip...");
+    showToast('Change Ip...', 'loading');
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
-        alert('Please select at least one row to CHANGE IP.');
+        showToast('Select at least one row to CHANGE IP.', 'info');
         return;
     }
 
@@ -130,6 +150,8 @@ async function changeIp() {
         await delay(2000);
     }
 
+    changeToToast('Change Ip DONE', 'success');
+
     updateCounts();
 
     // ✅ Copy to clipboard if there are any successful proxies
@@ -137,8 +159,9 @@ async function changeIp() {
         const textToCopy = proxyLines.join('\n');
         try {
             await navigator.clipboard.writeText(textToCopy);
-            alert('✅ Proxy list copied to clipboard!');
+            showToast('Proxy list copied to clipboard!', 'success');
         } catch (err) {
+            showToast('Failed to copy proxies to clipboard', 'error');
             console.error('❌ Failed to copy to clipboard:', err);
             showCopyDialog(textToCopy);
         }
@@ -149,7 +172,7 @@ async function reinstall() {
     console.log("Reinstall...");
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
-        alert('Please select at least one row to REINSTALL.');
+        showToast('Select at least one row to REINSTALL', 'info');
         return;
     }
 
@@ -198,7 +221,7 @@ async function reinstall() {
         const textToCopy = proxyLines.join('\n');
         try {
             await navigator.clipboard.writeText(textToCopy);
-            alert('✅ Proxy list copied to clipboard!');
+            showToast('Proxy list copied to clipboard!', 'success');
         } catch (err) {
             console.log('❌ Failed to copy to clipboard:', err);
             showCopyDialog(textToCopy);
@@ -213,7 +236,7 @@ async function changeNote() {
     console.log("Change note...");
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
-        alert('Please select at least one row to CHANGE NOTE.');
+        showToast('Select at least one row to CHANGE IP', 'info');
         return;
     }
 
@@ -269,7 +292,7 @@ async function changeNote() {
         const textToCopy = proxyLines.join('\n');
         try {
             await navigator.clipboard.writeText(textToCopy);
-            alert('✅ Proxy list copied to clipboard!');
+            showToast('Proxy list copied to clipboard!', 'success');
         } catch (err) {
             console.log('❌ Failed to copy to clipboard:', err);
             showCopyDialog(textToCopy);

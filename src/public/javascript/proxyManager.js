@@ -1,4 +1,4 @@
-import { addRows, setData, initTable, updateCounts, getSelectedRows } from '/javascript/components/table.js';
+import { setData, initTable, updateCounts, getSelectedRows } from '/javascript/components/table.js';
 import { showToast } from '/javascript/components/toaster.js';
 // DOM elements
 const elements = {
@@ -19,7 +19,7 @@ const elements = {
 
 // Initialize
 function init() {
-    addRows([
+    setData([
         {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
         {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
         {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
@@ -44,8 +44,12 @@ function bindEvents() {
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.changeIpBtn.addEventListener('click', changeIp);
     elements.reinstallBtn.addEventListener('click', reinstall);
-    // elements.pauseBtn.addEventListener('click', clearTable);
+    elements.pauseBtn.addEventListener('click', testToast);
     // elements.refundBtn.addEventListener('click', getTbody);
+}
+
+function testToast() {
+    showToast('test toast', 'success');
 }
 
 // Feature: Get Servers by IPs

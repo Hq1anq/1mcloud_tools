@@ -149,6 +149,8 @@ function initFilters() {
                 applyFilter();
             }
         });
+
+        input.addEventListener('blur', applyFilter); // When loss focus on textbox (for mobile)
     });
 }
 

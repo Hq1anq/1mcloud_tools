@@ -42,7 +42,26 @@
     }
 
     textarea {
-        @apply resize-none;
+        @apply min-h-52 resize-none;
+    }
+
+    .scrollbar-dark::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .scrollbar-dark::-webkit-scrollbar-track {
+        background-color: var(--color-dark-700);
+        border-radius: 100vw;
+    }
+
+    .scrollbar-dark::-webkit-scrollbar-thumb {
+        background-color: var(--color-dark-800);
+        border-radius: 100vw;
+        cursor: pointer;
+    }
+
+    .scrollbar-dark::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-dark-900); /* on hover */
     }
 
     .selected-row {

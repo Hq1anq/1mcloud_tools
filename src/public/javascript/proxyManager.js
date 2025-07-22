@@ -1,5 +1,6 @@
 import { setData, initTable, updateCounts, getSelectedRows } from '/javascript/components/table.js';
 import { showToast, changeToToast } from '/javascript/components/toaster.js';
+import { showCopyDialog } from '/javascript/components/copyDialog.js'
 // DOM elements
 const elements = {
     ipList: document.getElementById('ip-list'),
@@ -163,7 +164,7 @@ async function changeIp() {
         } catch (err) {
             showToast('Failed to copy proxies to clipboard', 'error');
             console.error('❌ Failed to copy to clipboard:', err);
-            showCopyDialog(textToCopy);
+            showCopyDialog('Ip changed', textToCopy);
         }
     }
 }
@@ -327,19 +328,6 @@ function updateRowContent(cells, text, action) {
         // Update status to 'Running'
         cells[statusIndex].innerText = 'Running';
     }
-}
-
-function showCopyDialog(textToCopy) {
-    const dialog = document.getElementById('copyDialog');
-    const textarea = document.getElementById('proxyTextarea');
-    const closeBtn = document.getElementById('closeDialogBtn');
-
-    textarea.value = textToCopy;
-    dialog.classList.remove('hidden');
-
-    closeBtn.addEventListener('click', () => {
-        dialog.classList.add('hidden');
-    });
 }
 
 function delay(ms) {

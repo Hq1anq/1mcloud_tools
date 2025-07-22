@@ -17,7 +17,7 @@
         }
     </style>
 </head>
-<body class="bg-dark-900 text-white font-sans">
+<body class="bg-dark-900 text-white text-xs sm:text-base font-sans scrollbar-dark">
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Home' }) %>
     <% /* %>
@@ -52,6 +52,8 @@
         </form>
     </div>
     <% */ %>
+    <!-- Footer -->
+    <%- include('partials/footer') %>
     <script type="module" src="javascript/home.js"></script>
 </body>
 </html>

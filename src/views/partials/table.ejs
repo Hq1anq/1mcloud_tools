@@ -8,11 +8,15 @@
                         <i class="fas fa-table mr-2"></i><%= tableTitle %>
                     </h2>
                     <!-- Extra slot -->
-                    <div class="flex gap-2 sm:gap-5 text-xs sm:text-sm items-center">
-                        <div class=" text-gray-400">
-                            Selected: <span id="selectedCount">0</span> rows
-                        </div>
-                        <span class=" text-gray-400">Total: <span id="totalCount">0</span> rows</span>
+                    <div class="flex gap-5 text-xs sm:text-sm items-center">
+                        <span class=" text-gray-400 whitespace-nowrap">
+                            Selected:
+                            <span id="selectedCount">0</span> rows
+                        </span>
+                        <span class=" text-gray-400 whitespace-nowrap">
+                            Total:
+                            <span id="totalCount">0</span> rows
+                        </span>
                         <button id="refreshBtn"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors duration-200">
                         <i class="fas fa-sync-alt"></i>

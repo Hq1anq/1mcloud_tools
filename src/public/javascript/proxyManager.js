@@ -66,9 +66,8 @@ function copyIp() {
             showToast('Copied IP list to clipboard!', 'success');
         })
         .catch(err => {
-            showCopyDialog(ipList);
-            showToast('Fail to copy IP list!', 'error');
             console.error('Failed to copy:', err);
+            showCopyDialog('List IP', ipList);
         });
 }
 
@@ -105,12 +104,13 @@ async function getData() {
 }
 
 async function changeIp() {
-    showToast('Change Ip...', 'loading');
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
         showToast('Select at least one row to CHANGE IP.', 'info');
         return;
     }
+
+    showToast('Change Ip...', 'loading');
 
     const proxyLines = []; // collect proxies here
 
@@ -162,7 +162,6 @@ async function changeIp() {
             await navigator.clipboard.writeText(textToCopy);
             showToast('Proxy list copied to clipboard!', 'success');
         } catch (err) {
-            showToast('Failed to copy proxies to clipboard', 'error');
             console.error('❌ Failed to copy to clipboard:', err);
             showCopyDialog('Ip changed', textToCopy);
         }
@@ -170,12 +169,13 @@ async function changeIp() {
 }
 
 async function reinstall() {
-    showToast("Reinstalling...", 'loading');
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
         showToast('Select at least one row to REINSTALL', 'info');
         return;
     }
+
+    showToast("Reinstalling...", 'loading');
 
     const proxyLines = []; // collect proxies here
 
@@ -224,7 +224,7 @@ async function reinstall() {
         const textToCopy = proxyLines.join('\n');
         try {
             await navigator.clipboard.writeText(textToCopy);
-            showToast('Reinstalled DONE, Proxy list copied to clipboard!', 'success');
+            changeToToast('Reinstalled DONE, Proxy list copied to clipboard!', 'success');
         } catch (err) {
             console.log('❌ Failed to copy to clipboard:', err);
             showCopyDialog('Ip Reinstalled', textToCopy);
@@ -233,7 +233,6 @@ async function reinstall() {
 }
 
 async function changeNote() {
-    showToast("Changing note...", 'loading');
     const noteInput = elements.noteInput.value;
     const isReplace = elements.replaceCheckbox.checked;
 
@@ -243,6 +242,8 @@ async function changeNote() {
         showToast('Select at least one row to CHANGE IP', 'info');
         return;
     }
+
+    showToast("Changing note...", 'loading');
 
     for (const row of selectedRows) {
         let newNote;
@@ -290,7 +291,7 @@ async function changeNote() {
     }
 
     updateCounts();
-    showToast(`Change note DONE`, 'success');
+    changeToToast(`Change note DONE`, 'success');
 }
 
 function updateRowContent(cells, text, action) {

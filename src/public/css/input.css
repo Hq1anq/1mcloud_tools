@@ -31,7 +31,7 @@
     input[type="number"],
     input[type="password"],
     textarea {
-        @apply bg-dark-600 border border-2 border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full;
+        @apply bg-dark-600 border border-2 border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:border-none focus:ring-2 focus:ring-blue-500 w-full;
     }
 
     /* Hides the arrows in Chrome, Safari, Edge */
@@ -47,11 +47,14 @@
 
     .scrollbar-dark::-webkit-scrollbar {
         width: 8px;
+        position: relative;
     }
 
     .scrollbar-dark::-webkit-scrollbar-track {
         background-color: var(--color-dark-700);
+        border-top: none;
         border-radius: 100vw;
+        margin-block: .3em;
     }
 
     .scrollbar-dark::-webkit-scrollbar-thumb {
@@ -76,6 +79,12 @@
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
     transition: border-color 0.2s ease;
+}
+
+body::-webkit-scrollbar-track,
+body::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    margin: 0px;
 }
 
 /* Toast Animations */

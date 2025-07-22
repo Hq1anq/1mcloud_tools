@@ -170,7 +170,7 @@ async function changeIp() {
 }
 
 async function reinstall() {
-    console.log("Reinstall...");
+    showToast("Reinstalling...", 'loading');
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
         showToast('Select at least one row to REINSTALL', 'info');
@@ -204,10 +204,12 @@ async function reinstall() {
 
                 row.classList.add('bg-green-900/40');
             } else {
+                showToast(`Failed to REINSTALL for sid ${sid}`, 'error');
                 console.error(`❌ Failed to REINSTALL for sid ${sid}:`, data.error);
                 row.classList.add('bg-red-900/40');
             }
         } catch (err) {
+            showToast(`Failed to REINSTALL for sid ${sid}`, 'error');
             console.error(`❌ Error REINSTALL for sid ${sid}:`, err);
             row.classList.add('bg-red-900/40');
         }
@@ -222,15 +224,16 @@ async function reinstall() {
         const textToCopy = proxyLines.join('\n');
         try {
             await navigator.clipboard.writeText(textToCopy);
-            showToast('Proxy list copied to clipboard!', 'success');
+            showToast('Reinstalled DONE, Proxy list copied to clipboard!', 'success');
         } catch (err) {
             console.log('❌ Failed to copy to clipboard:', err);
-            showCopyDialog(textToCopy);
+            showCopyDialog('Ip Reinstalled', textToCopy);
         }
     }
 }
 
 async function changeNote() {
+    showToast("Changing note...", 'loading');
     const noteInput = elements.noteInput.value;
     const isReplace = elements.replaceCheckbox.checked;
 
@@ -240,8 +243,6 @@ async function changeNote() {
         showToast('Select at least one row to CHANGE IP', 'info');
         return;
     }
-
-    const proxyLines = []; // collect proxies here
 
     for (const row of selectedRows) {
         let newNote;
@@ -275,11 +276,13 @@ async function changeNote() {
                 }
                 row.classList.add('bg-green-900/40');
             } else {
-                console.error(`❌ Failed to REINSTALL for sid ${sid}:`, data.error);
+                showToast(`Failed to changeNote for sid ${sid}`, 'error');
+                console.error(`❌ Failed to CHANGE NOTE for sid ${sid}:`, data.error);
                 row.classList.add('bg-red-900/40');
             }
         } catch (err) {
-            console.error(`❌ Error REINSTALL for sid ${sid}:`, err);
+            showToast(`Failed to changeNote for sid ${sid}`, 'error');
+            console.error(`❌ Error CHANGE NOTE for sid ${sid}:`, err);
             row.classList.add('bg-red-900/40');
         }
 
@@ -287,18 +290,7 @@ async function changeNote() {
     }
 
     updateCounts();
-
-    // ✅ Copy to clipboard if there are any successful proxies
-    if (proxyLines.length > 0) {
-        const textToCopy = proxyLines.join('\n');
-        try {
-            await navigator.clipboard.writeText(textToCopy);
-            showToast('Proxy list copied to clipboard!', 'success');
-        } catch (err) {
-            console.log('❌ Failed to copy to clipboard:', err);
-            showCopyDialog(textToCopy);
-        }
-    }
+    showToast(`Change note DONE`, 'success');
 }
 
 function updateRowContent(cells, text, action) {

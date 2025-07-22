@@ -92,11 +92,7 @@
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Proxy Checker' }) %>
     <!-- Status Display -->
-    <div id="statusDisplay" class="fixed top-16 right-4 z-50 hidden">
-        <div class="bg-green-500 px-4 py-2 rounded-lg shadow-lg">
-            <span id="statusMessage"></span>
-        </div>
-    </div>
+    <%- include('partials/toaster') %>
 
     <!-- Main Container -->
     <div class="min-h-screen flex flex-col pt-2">
@@ -216,8 +212,6 @@
             `,
             showActions: false,
         }) %>
-
-        <pre id="response"></pre>
         <!-- Footer -->
         <%- include('partials/footer') %>
     </div>

@@ -16,7 +16,8 @@ const chunkSize = 50;
 
 function bindEvents() {
     window.addEventListener('scroll', handleScroll);
-    elements.tbody.addEventListener('change', handleCount);
+    // elements.tbody.addEventListener('change', handleCount);
+    elements.tbody.addEventListener('change', handleRowCheckboxChange);
     elements.tbody.addEventListener('click', handleRowClick);
     elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
 }
@@ -149,20 +150,29 @@ function handleSelectAll(e) {
 
 function handleRowClick(e) {
     const tr = e.target.closest('tr');
-    if (!tr || tr.querySelector('button')?.contains(e.target) || e.target.tagName === 'BUTTON' || e.target.tagName === 'A') {
-        return; // Ignore if clicked a button or link
+
+    // Ignore if clicked a button, link, or the checkbox itself
+    if (!tr || e.target.closest('button') || e.target.closest('a') || e.target.classList.contains('rowCheckbox')) {
+        return;
     }
 
     const checkbox = tr.querySelector('.rowCheckbox');
-    if (checkbox?.checked) {
-        checkbox.checked = false;
-        tr.classList.remove('selected-row');
-    } else {
-        checkbox.checked = true;
-        tr.classList.add('selected-row');
+    if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        checkbox.dispatchEvent(new Event('change', { bubbles: true })); // manually trigger change event
     }
+}
 
-    updateCounts();
+function handleRowCheckboxChange(e) {
+    if (e.target.classList.contains('rowCheckbox')) {
+        const tr = e.target.closest('tr');
+        if (e.target.checked) {
+            tr.classList.add('selected-row');
+        } else {
+            tr.classList.remove('selected-row');
+        }
+        updateCounts();
+    }
 }
 
 // Initialize filter inputs

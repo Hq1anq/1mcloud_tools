@@ -78,12 +78,11 @@ function shuffleListIp() {
     const rawBlocks = elements.ipList.value.trim().split(/\n\s*\n/);
     if (rawBlocks.length === 2) {
         const block1 = rawBlocks[0].split('\n').map(ip => ip.trim()).filter(Boolean).map(ip => ({ ip, block: 1 }));
-        const block2 = rawBlocks[1].split('\n').map(ip => ip.trim()).filter(Boolean).map(ip => ({ ip, block: 2 }));
+        const block2 = rawBlocks[1].split('\n').map(ip => ip.trim()).filter(Boolean).map(ip => ({ ip: '  ' + ip, block: 2 }));
         allLines = [...block1, ...block2];
     } else {
         allLines = rawBlocks[0]
             .split('\n')
-            .map(ip => ip.trim())
             .filter(ip => ip.length > 0)
             .map(ip => ({ ip, block: 1 }));
     }
@@ -327,7 +326,6 @@ async function changeNote() {
 }
 
 function updateRowContent(cells, text, action, id) {
-    cells[0].firstElementChild.checked = false;
     if (action === 'changeNote') {
         const newNote = text;
         cells[9].innerText = newNote;

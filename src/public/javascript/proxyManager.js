@@ -7,6 +7,7 @@ const elements = {
     apiKey: document.getElementById('api-key'),
     amount: document.getElementById('amount'),
     getDataBtn: document.getElementById('getDataBtn'),
+    shuffleBtn: document.getElementById('shuffleBtn'),
 
     noteInput: document.getElementById('noteInput'),
     replaceCheckbox: document.getElementById('replaceCheckbox'),
@@ -42,6 +43,7 @@ function init() {
 function bindEvents() {
     // elements.deleteBtn.addEventListener('click', deleteProxies);
     elements.copyIpBtn.addEventListener('click', copyIp);
+    elements.shuffleBtn.addEventListener('click', shuffleListIp);
     elements.getDataBtn.addEventListener('click', getData);
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.reinstallBtn.addEventListener('click', reinstall);
@@ -69,6 +71,36 @@ function copyIp() {
             console.error('Failed to copy:', err);
             showCopyDialog('List IP', ipList);
         });
+}
+
+function shuffleListIp() {
+    let allLines = [];
+    const rawBlocks = elements.ipList.value.trim().split(/\n\s*\n/);
+    if (rawBlocks.length === 2) {
+        const block1 = rawBlocks[0].split('\n').map(ip => ip.trim()).filter(Boolean).map(ip => ({ ip, block: 1 }));
+        const block2 = rawBlocks[1].split('\n').map(ip => ip.trim()).filter(Boolean).map(ip => ({ ip, block: 2 }));
+        allLines = [...block1, ...block2];
+    } else {
+        allLines = rawBlocks[0]
+            .split('\n')
+            .map(ip => ip.trim())
+            .filter(ip => ip.length > 0)
+            .map(ip => ({ ip, block: 1 }));
+    }
+
+    console.log(allLines);
+
+    shuffleArray(allLines);
+
+    elements.ipList.value = allLines.map(line => line.ip).join('\n');
+}
+
+// Fisher-Yates shuffle
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
 }
 
 // Feature: Get Servers by IPs

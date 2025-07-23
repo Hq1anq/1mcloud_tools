@@ -78,11 +78,13 @@ function createToast(message, type) {
         setTimeout(() => toast.remove(), 300);
     });
 
-    // Auto-hide after 4s
-    setTimeout(() => {
-        toast.classList.add('float-out');
-        setTimeout(() => toast.remove(), 300);
-    }, 10000);
+    if (type !== 'loading') {
+        // Auto-hide after 10s
+        setTimeout(() => {
+            toast.classList.add('float-out');
+            setTimeout(() => toast.remove(), 300);
+        }, 10000);
+    }
 
     return toast;
 }
@@ -100,7 +102,6 @@ function contentDiv(message, type) {
 }
 
 export function changeToToast(message, type = 'info') {
-    const toaster = document.getElementById('toaster');
     if (!toaster) return;
 
     const lastToast = toaster.lastElementChild;

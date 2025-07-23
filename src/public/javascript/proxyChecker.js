@@ -62,12 +62,12 @@ async function checkProxies() {
         const result = JSON.parse(event.data);
         if (result.done) {
             updateCounts();
-            showToast('Check proxies DONE', 'success');
+            changeToToast('Check proxies DONE', 'success');
             console.log("✅ All proxies checked. Closing SSE.");
             eventSource.close();
             return;
         }
-        addRow(result);
+        addRow(result, true);
     };
 
     eventSource.onerror = (err) => {

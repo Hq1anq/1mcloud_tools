@@ -1,4 +1,4 @@
-import { setData, initTable, updateCounts, getSelectedRows } from '/javascript/components/table.js';
+import { setData, initTable, updateRowData, updateCounts, getSelectedRows } from '/javascript/components/table.js';
 import { showToast, changeToToast } from '/javascript/components/toaster.js';
 import { showCopyDialog } from '/javascript/components/copyDialog.js'
 // DOM elements
@@ -23,16 +23,16 @@ const elements = {
 // Initialize
 function init() {
     setData([
-        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583183, "ip_port": "103.190.36.207:21095", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed_ip": 0,"status": "Running", "note": "0208 tung2"}
+        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583183, "ip_port": "103.190.36.207:21095", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"}
     ]);
     bindEvents();
     initTable();
@@ -136,7 +136,7 @@ async function changeIp() {
 
                 proxyLines.push(proxyString);
 
-                updateRowContent(cells, data.proxyInfo, 'changeIp');
+                updateRowContent(cells, data.proxyInfo, 'changeIp', row.dataset.id);
 
                 row.classList.add('bg-green-900/40');
             } else {
@@ -200,7 +200,7 @@ async function reinstall() {
 
                 proxyLines.push(proxyString);
 
-                updateRowContent(cells, data.proxyInfo, 'reinstall');
+                updateRowContent(cells, data.proxyInfo, 'reinstall', row.dataset.id);
 
                 row.classList.add('bg-green-900/40');
             } else {
@@ -273,7 +273,7 @@ async function changeNote() {
             const data = await res.json();
             if (res.ok) {
                 if (data.success) {
-                    updateRowContent(cells, newNote, 'changeNote');
+                    updateRowContent(cells, newNote, 'changeNote', row.dataset.id);
                 }
                 row.classList.add('bg-green-900/40');
             } else {
@@ -294,11 +294,12 @@ async function changeNote() {
     changeToToast(`Change note DONE`, 'success');
 }
 
-function updateRowContent(cells, text, action) {
+function updateRowContent(cells, text, action, id) {
     cells[0].firstElementChild.checked = false;
     if (action === 'changeNote') {
         const newNote = text;
         cells[9].innerText = newNote;
+        updateRowData(id, { note: newNote });
     } else {
         const newProxy = text;
 
@@ -311,15 +312,25 @@ function updateRowContent(cells, text, action) {
         // Update ip:port
         cells[ipPortIndex].innerText = `${newProxy[0]}:${newProxy[1]}`;
 
+        // Update status to 'Running'
+        cells[statusIndex].innerText = 'Running';
+
         // Update 'changed' count if it's changeIp
         if (action === 'changeIp') {
             const changedCell = cells[changedIndex];
             const currentValue = parseInt(changedCell.innerText.trim()) || 0;
             changedCell.innerText = currentValue + 1;
-        }
 
-        // Update status to 'Running'
-        cells[statusIndex].innerText = 'Running';
+            updateRowData(id, {
+                ip_port: `${newProxy[0]}:${newProxy[1]}`,
+                changed: currentValue + 1,
+                status: 'Running'
+            });
+        } else {
+            updateRowData(id, {
+                status: 'Running'
+            });
+        }
     }
 }
 

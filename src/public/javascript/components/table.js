@@ -28,10 +28,10 @@ export function initTable() {
 }
 
 export function setData(data) {
+    clearTable();
     allData = data;
     filteredData = [...data];
     renderedCount = 0;
-    clearTable();
     renderChunk();
 }
 
@@ -40,8 +40,10 @@ export function addRows(data, includeActions = false) {
     updateCounts();
 }
 
-export function addRow(data, includeActions = false) {
+export function addRow(data, addData = false, includeActions = false) {
     const tr = document.createElement('tr');
+
+    tr.dataset.id = data.sid; // Unique key
 
     tr.classList.add('hover:bg-dark-750');
 
@@ -72,10 +74,33 @@ export function addRow(data, includeActions = false) {
 
     tr.innerHTML = rowHTML;
     elements.tbody.appendChild(tr);
+    if (addData) {
+        allData.push(data);
+        filteredData.push(data);
+        updateCounts();
+        showEmptyState(false);
+    }
 }
 
 export function clearTable() {
     elements.tbody.innerHTML = "";
+    allData = [];
+    filteredData = [];
+}
+
+export function updateRowData(id, newData) {
+    const numericId = Number(id); // Convert to number
+
+    const index = allData.findIndex(item => item.sid === numericId);
+    if (index !== -1) {
+        allData[index] = { ...allData[index], ...newData };
+    }
+
+    const fIndex = filteredData.findIndex(item => item.sid === numericId);
+    if (fIndex !== -1) {
+        filteredData[fIndex] = { ...filteredData[fIndex], ...newData };
+    }
+    console.log('AFTER:', JSON.stringify(filteredData[fIndex]));
 }
 
 export function updateCounts() {
@@ -169,7 +194,7 @@ function applyFilter() {
         });
 
     renderedCount = 0;
-    clearTable();
+    elements.tbody.innerHTML = "";
     renderChunk();
 }
 

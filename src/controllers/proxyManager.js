@@ -48,7 +48,7 @@ export async function getData(req, res) {
             type: server.plan_number,
             from: server.ngay_mua,
             to: server.het_han,
-            changed_ip: server.change_ip_time,
+            changed: server.change_ip_time,
             status: server.trang_thai,
             note: server.note
         }));

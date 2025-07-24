@@ -47,6 +47,7 @@ function bindEvents() {
     elements.getDataBtn.addEventListener('click', getData);
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.reinstallBtn.addEventListener('click', reinstall);
+    elements.pauseBtn.addEventListener('click', pause);
     elements.changeIpBtn.addEventListener('click', changeIp);
     // elements.pauseBtn.addEventListener('click', testToast);
     // elements.refundBtn.addEventListener('click', test);
@@ -167,9 +168,7 @@ async function changeIp() {
 
                 proxyLines.push(proxyString);
 
-                updateRowContent(cells, data.proxyInfo, 'changeIp', row.dataset.id);
-
-                row.classList.add('bg-green-900/40');
+                updateRowContent(row, data.proxyInfo, 'changeIp');
             } else {
                 console.error(`❌ Failed to CHANGE IP for ${ip}:`, data.error);
                 row.classList.add('bg-red-900/40');
@@ -231,9 +230,7 @@ async function reinstall() {
 
                 proxyLines.push(proxyString);
 
-                updateRowContent(cells, data.proxyInfo, 'reinstall', row.dataset.id);
-
-                row.classList.add('bg-green-900/40');
+                updateRowContent(row, data.proxyInfo, 'reinstall');
             } else {
                 showToast(`Failed to REINSTALL for sid ${sid}`, 'error');
                 console.error(`❌ Failed to REINSTALL for sid ${sid}:`, data.error);
@@ -248,6 +245,8 @@ async function reinstall() {
         await delay(2000);
     }
 
+    changeToToast('Reinstall DONE', 'success');
+
     updateCounts();
 
     // ✅ Copy to clipboard if there are any successful proxies
@@ -255,12 +254,49 @@ async function reinstall() {
         const textToCopy = proxyLines.join('\n');
         try {
             await navigator.clipboard.writeText(textToCopy);
-            changeToToast('Reinstalled DONE, Proxy list copied to clipboard!', 'success');
+            showToast('Proxy list copied to clipboard!', 'success');
         } catch (err) {
             console.log('❌ Failed to copy to clipboard:', err);
             showCopyDialog('Ip Reinstalled', textToCopy);
         }
     }
+}
+
+async function pause() {
+    const selectedRows = getSelectedRows();
+    if (selectedRows.length === 0) {
+        showToast('Select at least one row to PAUSE', 'info');
+        return;
+    }
+
+    showToast("Pausing...", 'loading');
+
+    const sids = selectedRows
+        .map(row => row.querySelectorAll('td')[1].innerText.trim())
+        .join(',');
+
+    try {
+        const res = await fetch('/proxy/pause', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sids })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+            for (const row of selectedRows)
+                updateRowContent(row, '', 'pause');
+            changeToToast(`Pause DONE`, 'success');
+        } else {
+            changeToToast(`Fail to PAUSE`, 'error');
+            console.error(`❌ Failed to PAUSE for sid ${sid}:`, data.error);
+        }
+    } catch (err) {
+        changeToToast('Fail to PAUSE', 'error');
+        console.error(`❌ Error PAUSE for sids ${sids}:`, err);
+    }
+
+    updateCounts();
 }
 
 async function changeNote() {
@@ -302,12 +338,9 @@ async function changeNote() {
             });
 
             const data = await res.json();
-            if (res.ok) {
-                if (data.success) {
-                    updateRowContent(cells, newNote, 'changeNote', row.dataset.id);
-                }
-                row.classList.add('bg-green-900/40');
-            } else {
+            if (res.ok && data.success)
+                updateRowContent(row, newNote, 'changeNote');
+            else {
                 showToast(`Failed to changeNote for sid ${sid}`, 'error');
                 console.error(`❌ Failed to CHANGE NOTE for sid ${sid}:`, data.error);
                 row.classList.add('bg-red-900/40');
@@ -325,42 +358,50 @@ async function changeNote() {
     changeToToast(`Change note DONE`, 'success');
 }
 
-function updateRowContent(cells, text, action, id) {
+function updateRowContent(row, text, action) {
+    const cells = row.children;
+    const id = row.dataset.id;
+    row.classList.add('bg-green-900/40');
+    if (action === 'pause') {
+        cells[8].innerText = 'Pause';
+        updateRowData(id, { status: 'Pause' });
+        return;
+    }
     if (action === 'changeNote') {
         const newNote = text;
         cells[9].innerText = newNote;
         updateRowData(id, { note: newNote });
+        return;
+    }
+    const newProxy = text;
+
+    // Column indexes based on header:
+    // [checkbox, 'sid', 'ip:port', 'country', 'type', 'from', 'to', 'changed', 'status', 'note']
+    const ipPortIndex = 2;
+    const changedIndex = 7;
+    const statusIndex = 8;
+
+    // Update ip:port
+    cells[ipPortIndex].innerText = `${newProxy[0]}:${newProxy[1]}`;
+
+    // Update status to 'Running'
+    cells[statusIndex].innerText = 'Running';
+
+    // Update 'changed' count if it's changeIp
+    if (action === 'changeIp') {
+        const changedCell = cells[changedIndex];
+        const currentValue = parseInt(changedCell.innerText.trim()) || 0;
+        changedCell.innerText = currentValue + 1;
+
+        updateRowData(id, {
+            ip_port: `${newProxy[0]}:${newProxy[1]}`,
+            changed: currentValue + 1,
+            status: 'Running'
+        });
     } else {
-        const newProxy = text;
-
-        // Column indexes based on header:
-        // [checkbox, 'sid', 'ip:port', 'country', 'type', 'from', 'to', 'changed', 'status', 'note']
-        const ipPortIndex = 2;
-        const changedIndex = 7;
-        const statusIndex = 8;
-
-        // Update ip:port
-        cells[ipPortIndex].innerText = `${newProxy[0]}:${newProxy[1]}`;
-
-        // Update status to 'Running'
-        cells[statusIndex].innerText = 'Running';
-
-        // Update 'changed' count if it's changeIp
-        if (action === 'changeIp') {
-            const changedCell = cells[changedIndex];
-            const currentValue = parseInt(changedCell.innerText.trim()) || 0;
-            changedCell.innerText = currentValue + 1;
-
-            updateRowData(id, {
-                ip_port: `${newProxy[0]}:${newProxy[1]}`,
-                changed: currentValue + 1,
-                status: 'Running'
-            });
-        } else {
-            updateRowData(id, {
-                status: 'Running'
-            });
-        }
+        updateRowData(id, {
+            status: 'Running'
+        });
     }
 }
 

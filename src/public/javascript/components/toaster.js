@@ -96,7 +96,7 @@ function contentDiv(message, type) {
             <div class="${style.bg} flex items-center justify-center shrink-0 w-8 h-8 rounded-lg">
                 ${style.icon}
             </div>
-            <div class="mx-3 text-sm font-normal flex-1">${message}</div>
+            <div id="toast-message" class="mx-3 text-sm font-normal flex-1">${message}</div>
         </div>
     `;
 }
@@ -104,15 +104,15 @@ function contentDiv(message, type) {
 export function changeToToast(message, type = 'info') {
     if (!toaster) return;
 
-    const lastToast = toaster.lastElementChild;
-    if (!lastToast) {
+    const firstToast = toaster.firstElementChild;
+    if (!firstToast) {
         // If no existing toast, fallback to create new
         toaster.appendChild(createToast(message, type));
         return;
     }
 
     // Icon transition
-    const contentWrapper = lastToast.querySelector('div:first-child');
+    const contentWrapper = firstToast.querySelector('div:first-child');
     contentWrapper.classList.add('float-out');
 
     setTimeout(() => {
@@ -128,9 +128,9 @@ export function changeToToast(message, type = 'info') {
     }, 300);
 
     // Reset auto-dismiss timer
-    clearTimeout(lastToast.dismissTimer);
-    lastToast.dismissTimer = setTimeout(() => {
-        lastToast.classList.add('float-out');
-        setTimeout(() => lastToast.remove(), 300);
+    clearTimeout(firstToast.dismissTimer);
+    firstToast.dismissTimer = setTimeout(() => {
+        firstToast.classList.add('float-out');
+        setTimeout(() => firstToast.remove(), 300);
     }, 10000);
 }

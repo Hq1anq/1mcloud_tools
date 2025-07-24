@@ -101,7 +101,6 @@ export function updateRowData(id, newData) {
     if (fIndex !== -1) {
         filteredData[fIndex] = { ...filteredData[fIndex], ...newData };
     }
-    console.log('AFTER:', JSON.stringify(filteredData[fIndex]));
 }
 
 export function updateCounts() {

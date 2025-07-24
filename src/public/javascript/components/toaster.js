@@ -104,15 +104,32 @@ function contentDiv(message, type) {
 export function changeToToast(message, type = 'info') {
     if (!toaster) return;
 
-    const firstToast = toaster.firstElementChild;
-    if (!firstToast) {
-        // If no existing toast, fallback to create new
+    // Find toast whose message div contains the word "loading"
+    // const loadingToast = Array.from(toaster.children).find(toast => {
+    //     const messageDiv = toast.querySelector('#toast-message');
+    //     return messageDiv && messageDiv.textContent.includes('...');
+    // });
+
+
+    let loadingToast = null;
+
+    for (let i = 0; i < toaster.children.length; i++) {
+        const toast = toaster.children[i];
+        const messageDiv = toast.querySelector('#toast-message');
+        if (messageDiv && messageDiv.textContent.includes('...')) {
+            loadingToast = toast;
+            break;
+        }
+    }
+
+    if (!loadingToast) {
+        // No loading toast found, create new one
         toaster.appendChild(createToast(message, type));
         return;
     }
 
     // Icon transition
-    const contentWrapper = firstToast.querySelector('div:first-child');
+    const contentWrapper = loadingToast.querySelector('div:first-child');
     contentWrapper.classList.add('float-out');
 
     setTimeout(() => {
@@ -128,9 +145,9 @@ export function changeToToast(message, type = 'info') {
     }, 300);
 
     // Reset auto-dismiss timer
-    clearTimeout(firstToast.dismissTimer);
-    firstToast.dismissTimer = setTimeout(() => {
-        firstToast.classList.add('float-out');
-        setTimeout(() => firstToast.remove(), 300);
+    clearTimeout(loadingToast.dismissTimer);
+    loadingToast.dismissTimer = setTimeout(() => {
+        loadingToast.classList.add('float-out');
+        setTimeout(() => loadingToast.remove(), 300);
     }, 10000);
 }

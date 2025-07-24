@@ -8,6 +8,7 @@ const elements = {
     amount: document.getElementById('amount'),
     getDataBtn: document.getElementById('getDataBtn'),
     shuffleBtn: document.getElementById('shuffleBtn'),
+    textCopyBtn: document.getElementById('textCopyBtn'),
 
     noteInput: document.getElementById('noteInput'),
     replaceCheckbox: document.getElementById('replaceCheckbox'),
@@ -41,6 +42,46 @@ function init() {
 
 // Bind event listeners
 function bindEvents() {
+    elements.textCopyBtn.addEventListener('click', () => {
+        const textToCopy = elements.ipList.value
+            .split('\n')
+            .map(ip => ip.trim())
+            .filter(ip => ip.length > 0)
+            .join('\n');
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                showToast('Copied clipboard!', 'success');
+
+                // Save original content
+                const originalHTML = elements.textCopyBtn.innerHTML;
+
+                // Smooth transition by adding a class
+                elements.textCopyBtn.classList.add('float-out');
+
+                setTimeout(() => {
+                    elements.textCopyBtn.innerHTML = 
+                    `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
+                    </svg>Copied`;
+                    elements.textCopyBtn.classList.remove('float-out');
+                    elements.textCopyBtn.classList.add('float-in');
+                }, 300);
+
+                // Revert back after 2 seconds
+                setTimeout(() => {
+                    elements.textCopyBtn.classList.add('float-out');
+                    setTimeout(() => {
+                        elements.textCopyBtn.innerHTML = originalHTML;
+                        elements.textCopyBtn.classList.remove('float-out');
+                        elements.textCopyBtn.classList.add('float-in');
+                    }, 300);
+                }, 2000);
+            })
+            .catch(err => {
+                showToast('Fail to copy!', 'error');
+                console.error('Failed to copy:', err);
+            });
+    })
     // elements.deleteBtn.addEventListener('click', deleteProxies);
     elements.copyIpBtn.addEventListener('click', copyIp);
     elements.shuffleBtn.addEventListener('click', shuffleListIp);

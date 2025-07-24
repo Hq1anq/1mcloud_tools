@@ -151,7 +151,7 @@
   }
   img, svg, video, canvas, audio, iframe, embed, object {
     display: block;
-    vertical-align: middle;
+    /* vertical-align: middle; */
   }
   img, video {
     max-width: 100%;
@@ -250,8 +250,14 @@
   .top-6 {
     top: calc(var(--spacing) * 6);
   }
+  .top-8 {
+    top: calc(var(--spacing) * 8);
+  }
   .top-16 {
     top: calc(var(--spacing) * 16);
+  }
+  .right-1 {
+    right: calc(var(--spacing) * 1);
   }
   .right-4 {
     right: calc(var(--spacing) * 4);
@@ -786,6 +792,13 @@
   .duration-200 {
     --tw-duration: 200ms;
     transition-duration: 200ms;
+  }
+  .group-hover\:text-gray-400 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        color: var(--color-gray-400);
+      }
+    }
   }
   .hover\:bg-blue-700 {
     &:hover {

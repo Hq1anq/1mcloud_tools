@@ -129,8 +129,6 @@ function shuffleListIp() {
             .map(ip => ({ ip, block: 1 }));
     }
 
-    console.log(allLines);
-
     shuffleArray(allLines);
 
     elements.ipList.value = allLines.map(line => line.ip).join('\n');
@@ -149,7 +147,7 @@ async function getData() {
     showToast("Getting data...", 'loading');
     const ipString = elements.ipList.value
         .split('\n')
-        .map(ip => ip.trim())
+        .map(ip => ip.split(':')[0].trim())
         .filter(ip => ip.length > 0)
         .join(',');
     const apiKeyString = elements.apiKey.value.trim();
@@ -344,7 +342,6 @@ async function changeNote() {
     const noteInput = elements.noteInput.value;
     const isReplace = elements.replaceCheckbox.checked;
 
-    console.log("Change note...");
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
         showToast('Select at least one row to CHANGE IP', 'info');

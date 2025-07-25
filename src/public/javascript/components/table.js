@@ -56,10 +56,12 @@ export function addRow(data, addData = false, includeActions = false) {
 
     for (const [key, value] of Object.entries(data)) {
         const alignment = (key === 'ip' || key === 'ip_port' || key === 'note') ? 'text-left' : 'text-center';
+        console.log(getStatusChip(value));
+        const content = key === 'status' ? getStatusChip(value) : value;
 
         rowHTML += `
         <td class="px-4 py-2 border-b border-dark-600 whitespace-nowrap ${alignment}">
-            ${value}
+            ${content}
         </td>
         `;
     }
@@ -80,6 +82,21 @@ export function addRow(data, addData = false, includeActions = false) {
         filteredData.push(data);
         updateCounts();
         showEmptyState(false);
+    }
+}
+
+function getStatusChip(status) {
+    const baseClasses = 'px-2 py-0.5 rounded-full text-xs font-semibold inline-block';
+    switch (status) {
+        case 'Running':
+            return `<span class="${baseClasses} bg-green-600 text-white">Running</span>`;
+        case 'Pause':
+            return `<span class="${baseClasses} bg-yellow-500 text-black">Pause</span>`;
+        case 'Off':
+            return `<span class="${baseClasses} bg-red-600 text-white">Stop</span>`;
+        case 'Unknow':
+        default:
+            return `<span class="${baseClasses} bg-gray-500 text-white">Unknown</span>`;
     }
 }
 
@@ -166,6 +183,8 @@ function handleRowCheckboxChange(e) {
     if (e.target.classList.contains('rowCheckbox')) {
         const tr = e.target.closest('tr');
         if (e.target.checked) {
+            tr.classList.remove('bg-green-900/40');
+            tr.classList.remove('bg-red-900/40')
             tr.classList.add('selected-row');
         } else {
             tr.classList.remove('selected-row');

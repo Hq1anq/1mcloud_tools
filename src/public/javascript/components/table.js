@@ -89,14 +89,16 @@ function getStatusChip(status) {
     const baseClasses = 'px-2 py-0.5 rounded-full text-xs font-semibold inline-block';
     switch (status) {
         case 'Running':
-            return `<span class="${baseClasses} bg-green-600 text-white">Running</span>`;
+        case 'Active':
+            return `<span class="${baseClasses} bg-green-600 text-white">${status}</span>`;
         case 'Pause':
-            return `<span class="${baseClasses} bg-yellow-500 text-black">Pause</span>`;
+            return `<span class="${baseClasses} bg-yellow-500 text-black">${status}</span>`;
         case 'Off':
-            return `<span class="${baseClasses} bg-red-600 text-white">Stop</span>`;
+        case 'Inactive':
+            return `<span class="${baseClasses} bg-red-600 text-white">${status}</span>`;
         case 'Unknow':
         default:
-            return `<span class="${baseClasses} bg-gray-500 text-white">Unknown</span>`;
+            return `<span class="${baseClasses} bg-gray-500 text-white">${status}</span>`;
     }
 }
 
@@ -234,6 +236,7 @@ function handleScroll() {
 }
 
 function renderChunk() {
+    if (filteredData.length === allData.length) return;
     const nextChunk = filteredData.slice(renderedCount, renderedCount + chunkSize);
     nextChunk.forEach(row => addRow(row));
     renderedCount += nextChunk.length;

@@ -48,9 +48,9 @@ export async function checkSingleProxy(proxy, type) {
         const response = await fetch(test_url, { agent, timeout: 8000 });
         if (!response.ok) throw new Error('Bad response');
 
-        return { ...proxy, type, status: 'success' };
+        return { ...proxy, type, status: 'Active' };
     } catch (err) {
-        return { ...proxy, type, status: 'fail' };
+        return { ...proxy, type, status: 'Inactive' };
     }
 };
 
@@ -71,9 +71,9 @@ export async function checkProxy(req, res) {
             try {
                 const response = await fetch(test_url, { agent, timeout: 8000 });
                 if (!response.ok) throw new Error('Bad response');
-                return { ip: proxy.ip, port: proxy.port, username: proxy.username, password: proxy.password, type: type, status: 'success' };
+                return { ip: proxy.ip, port: proxy.port, username: proxy.username, password: proxy.password, type: type, status: 'Active' };
             } catch (err) {
-                return { ip: proxy.ip, port: proxy.port, username: proxy.username, password: proxy.password, type: type, status: 'fail', error: err.message };
+                return { ip: proxy.ip, port: proxy.port, username: proxy.username, password: proxy.password, type: type, status: 'Inactive' };
             }
         }));
         res.json({ results });

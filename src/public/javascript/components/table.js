@@ -14,18 +14,18 @@ let filteredData = [];
 let renderedCount = 0;
 const chunkSize = 50;
 
-function bindEvents() {
-    window.addEventListener('scroll', handleScroll);
+function bindEvents(page) {
+    window.addEventListener('scroll', () => handleScroll(page));
     // elements.tbody.addEventListener('change', handleCount);
     elements.tbody.addEventListener('change', handleRowCheckboxChange);
     elements.tbody.addEventListener('click', handleRowClick);
     elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
 }
 
-export function initTable() {
-    bindEvents();
+export function initTable(page) {
+    bindEvents(page);
     updateCounts();
-    initFilters();
+    initFilters(page);
 }
 
 export function setData(data) {
@@ -196,20 +196,20 @@ function handleRowCheckboxChange(e) {
 }
 
 // Initialize filter inputs
-function initFilters() {
+function initFilters(page) {
     elements.filterInputs.forEach(input => {
         // Run filter when ENTER is pressed
         input.addEventListener('keydown', event => {
             if (event.key === 'Enter') {
-                applyFilter();
+                applyFilter(page);
             }
         });
 
-        input.addEventListener('blur', applyFilter); // When loss focus on textbox (for mobile)
+        input.addEventListener('blur', () => applyFilter(page)); // When loss focus on textbox (for mobile)
     });
 }
 
-function applyFilter() {
+function applyFilter(page) {
     const activeFilters = Object.entries(elements.filterInputs)
         .map(([_, inputBox]) => [_, inputBox.value.trim()])
         .filter(([_, value]) => value !== '');
@@ -225,18 +225,18 @@ function applyFilter() {
 
     renderedCount = 0;
     elements.tbody.innerHTML = "";
-    renderChunk();
+    if (page !== 'proxyChecker') renderChunk();
+    else filteredData.forEach(row => addRow(row));
 }
 
-function handleScroll() {
+function handleScroll(page) {
     const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
     if (nearBottom && renderedCount < filteredData.length) {
-        renderChunk();
+        if (page !== 'proxyChecker') renderChunk();
     }
 }
 
 function renderChunk() {
-    if (filteredData.length === allData.length) return;
     const nextChunk = filteredData.slice(renderedCount, renderedCount + chunkSize);
     nextChunk.forEach(row => addRow(row));
     renderedCount += nextChunk.length;

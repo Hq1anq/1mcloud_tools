@@ -23,7 +23,7 @@ const elements = {
 // Initialize
 function init() {
     bindEvents();
-    initTable();
+    initTable('proxyChecker');
     // updateSelectedCount();
     // showEmptyState(true);
 }

@@ -37,7 +37,7 @@ function init() {
         {"sid": 583183, "ip_port": "103.190.36.207:21095", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"}
     ]);
     bindEvents();
-    initTable();
+    initTable('proxyManager');
 }
 
 // Bind event listeners

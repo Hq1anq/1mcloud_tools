@@ -83,7 +83,7 @@ function createToast(message, type) {
         setTimeout(() => {
             toast.classList.add('float-out');
             setTimeout(() => toast.remove(), 300);
-        }, 10000);
+        }, 5000);
     }
 
     return toast;
@@ -149,5 +149,5 @@ export function changeToToast(message, type = 'info') {
     loadingToast.dismissTimer = setTimeout(() => {
         loadingToast.classList.add('float-out');
         setTimeout(() => loadingToast.remove(), 300);
-    }, 10000);
+    }, 5000);
 }

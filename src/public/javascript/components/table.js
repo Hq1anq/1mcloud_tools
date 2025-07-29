@@ -56,7 +56,6 @@ export function addRow(data, addData = false, includeActions = false) {
 
     for (const [key, value] of Object.entries(data)) {
         const alignment = (key === 'ip' || key === 'ip_port' || key === 'note') ? 'text-left' : 'text-center';
-        console.log(getStatusChip(value));
         const content = key === 'status' ? getStatusChip(value) : value;
 
         rowHTML += `
@@ -85,13 +84,14 @@ export function addRow(data, addData = false, includeActions = false) {
     }
 }
 
-function getStatusChip(status) {
+export function getStatusChip(status) {
     const baseClasses = 'px-2 py-0.5 rounded-full text-xs font-semibold inline-block';
     switch (status) {
         case 'Running':
         case 'Active':
             return `<span class="${baseClasses} bg-green-600 text-white">${status}</span>`;
-        case 'Pause':
+        case 'Paused':
+        case 'Stopped':
             return `<span class="${baseClasses} bg-yellow-500 text-black">${status}</span>`;
         case 'Off':
         case 'Inactive':

@@ -365,7 +365,7 @@ async function changeNote() {
 
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
-        showToast('Select at least one row to CHANGE IP', 'info');
+        showToast('Select at least one row to CHANGE NOTE', 'info');
         return;
     }
 

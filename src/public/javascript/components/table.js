@@ -1,3 +1,5 @@
+import { showToast } from '/javascript/components/toaster.js';
+
 const elements = {
     table: document.querySelector('table'),
     tbody: document.getElementById('tableBody'),
@@ -14,12 +16,15 @@ let filteredData = [];
 let renderedCount = 0;
 const chunkSize = 50;
 
+let lastSelectedIndex = null;
+
 function bindEvents(page) {
     window.addEventListener('scroll', () => handleScroll(page));
     // elements.tbody.addEventListener('change', handleCount);
     elements.tbody.addEventListener('change', handleRowCheckboxChange);
     elements.tbody.addEventListener('click', handleRowClick);
     elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
+    elements.tbody.addEventListener('dblclick', handleDoubleClick)
 }
 
 export function initTable(page) {
@@ -174,10 +179,53 @@ function handleRowClick(e) {
         return;
     }
 
+    const rows = Array.from(elements.tbody.querySelectorAll('tr'));
+    const clickedIndex = rows.indexOf(tr);
+
+    if (clickedIndex === -1) return;
+
     const checkbox = tr.querySelector('.rowCheckbox');
-    if (checkbox) {
+    if (!checkbox) return;
+
+    // SHIFT key logic
+    if (e.shiftKey && lastSelectedIndex !== null) {
+        const [start, end] = [lastSelectedIndex, clickedIndex].sort((a, b) => a - b);
+
+        // Determine the action (check or uncheck) based on the last selected row's checkbox state
+        const lastRow = rows[lastSelectedIndex];
+        const lastCheckbox = lastRow.querySelector('.rowCheckbox');
+        const shouldCheck = lastCheckbox?.checked ?? false;
+        
+        for (let i = start; i <= end; i++) {
+            const row = rows[i];
+            const rowCheckbox = row.querySelector('.rowCheckbox');
+            if (rowCheckbox) {
+                rowCheckbox.checked = shouldCheck;
+                rowCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        }
+    } else {
+        // Regular toggle
         checkbox.checked = !checkbox.checked;
         checkbox.dispatchEvent(new Event('change', { bubbles: true })); // manually trigger change event
+    }
+
+    lastSelectedIndex = clickedIndex;
+}
+
+function handleDoubleClick(e) {
+    const target = e.target.closest('td');
+    if (!target) return;
+
+    const text = target.textContent.trim();
+
+    if (text) {
+        navigator.clipboard.writeText(text).then(() => {
+            // Optional: Show tooltip or console log
+            showToast(`Copied: ${text}`, 'info');
+        }).catch(err => {
+            console.error('Clipboard copy failed', err);
+        });
     }
 }
 
@@ -211,7 +259,7 @@ function initFilters(page) {
 
 function applyFilter(page) {
     const activeFilters = Object.entries(elements.filterInputs)
-        .map(([_, inputBox]) => [_, inputBox.value.trim()])
+        .map(([_, inputBox]) => [_, inputBox.value])
         .filter(([_, value]) => value !== '');
 
     filteredData = activeFilters.length === 0

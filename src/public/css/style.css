@@ -809,6 +809,10 @@
     --tw-duration: 200ms;
     transition-duration: 200ms;
   }
+  .select-none {
+    -webkit-user-select: none;
+    user-select: none;
+  }
   .group-hover\:text-gray-400 {
     &:is(:where(.group):hover *) {
       @media (hover: hover) {

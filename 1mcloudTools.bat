@@ -1,3 +1,3 @@
 echo This is 1mcloud tools
-npm run dev
+node ./src/server.js
 pause

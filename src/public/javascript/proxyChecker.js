@@ -30,7 +30,7 @@ function init() {
 
 // Bind event listeners
 function bindEvents() {
-    // elements.deleteBtn.addEventListener('click', deleteProxies);
+    elements.deleteBtn.addEventListener('click', deleteProxies);
     elements.checkProxiesBtn.addEventListener('click', checkProxies);
     // elements.selectActiveBtn.addEventListener('click', selectActiveProxies);
     // elements.selectErrorBtn.addEventListener('click', selectErrorProxies);
@@ -99,6 +99,10 @@ function parseProxyList(text) {
         }
         return null;
     }).filter(proxy => proxy !== null);
+}
+
+function deleteProxies() {
+    elements.proxyInput.value = '';
 }
 
 init();

@@ -14,6 +14,7 @@ const elements = {
     replaceCheckbox: document.getElementById('replaceCheckbox'),
     changeNoteBtn: document.getElementById('changeNoteBtn'),
 
+    reinstallInput: document.getElementById('reinstallInput'),
     reinstallBtn: document.getElementById('reinstallBtn'),
 
     changeIpBtn: document.getElementById('changeIpBtn'),
@@ -280,7 +281,7 @@ async function reinstall() {
             const res = await fetch('/proxy/reinstall', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sid })
+                body: JSON.stringify({ sid: sid, custom_info: elements.reinstallInput.value.trim() })
             });
 
             const data = await res.json();

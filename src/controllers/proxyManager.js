@@ -160,35 +160,35 @@ export async function changeIp(req, res) {
 };
 
 export async function reinstall(req, res) {
-    const { sid, apiKey, type = "proxy_https" } = req.body;
+    const { sid, custom_info, apiKey, type = "proxy_https" } = req.body;
 
     const url = "https://api.smartserver.vn/api/server/reinstall";
 
-    // let data;
-    // if (custom_info) {
-    //     const [range_ip, remote_port, username, password] = custom_info.split(":");
-    //     data = {
-    //         random_remote_port: "",
-    //         remote_port,
-    //         random_username: "",
-    //         username,
-    //         random_password: "",
-    //         password,
-    //         type,
-    //         sid
-    //     };
-    // } else {
-    //     data = {
-    //         random_remote_port: "on",
-    //         remote_port: "",
-    //         random_username: "on",
-    //         username: "",
-    //         random_password: "on",
-    //         password: "",
-    //         type,
-    //         sid
-    //     };
-    // }
+    let data;
+    if (custom_info) {
+        const [range_ip, remote_port, username, password] = custom_info.split(":");
+        data = {
+            "random_remote_port": "",
+            "remote_port": remote_port,
+            "random_username": "",
+            "username": username,
+            "random_password": "",
+            "password": password,
+            "type": type,
+            "sid": sid
+        };
+    } else {
+        data = {
+            random_remote_port: "on",
+            remote_port: "",
+            random_username: "on",
+            username: "",
+            random_password: "on",
+            password: "",
+            type: type,
+            sid: sid
+        };
+    }
 
     const headers = {
         'accept': 'application/json, text/plain, */*',
@@ -198,17 +198,6 @@ export async function reinstall(req, res) {
         'origin': 'https://manage.1mcloud.vn',
         'referer': 'https://manage.1mcloud.vn/',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-    };
-
-    let data = {
-        random_remote_port: "on",
-        remote_port: "",
-        random_username: "on",
-        username: "",
-        random_password: "on",
-        password: "",
-        type: type,
-        sid: sid
     };
 
     try {

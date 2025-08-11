@@ -46,7 +46,7 @@ async function checkWithType(proxy, type) {
 
     const response = await fetch(test_url, { agent, timeout: 8000 });
     if (!response.ok) throw new Error('Bad response');
-    return { ...proxy, type, status: 'Active' };
+    return { ...proxy, type: type.toUpperCase(), status: 'Active' };
 }
 
 export async function checkSingleProxy(proxy, type = 'auto') {
@@ -54,7 +54,7 @@ export async function checkSingleProxy(proxy, type = 'auto') {
         try {
             return await checkWithType(proxy, type);
         } catch {
-            return { ...proxy, type, status: 'Inactive' };
+            return { ...proxy, type: type.toUpperCase(), status: 'Inactive' };
         }
     }
 
@@ -69,29 +69,4 @@ export async function checkSingleProxy(proxy, type = 'auto') {
         // If both failed, Promise.any throws an AggregateError
         return { ...proxy, type: 'auto', status: 'Inactive' };
     }
-}
-
-export async function checkProxy(req, res) {
-    const { proxies, type } = req.body;
-        const test_url = 'https://api.ipify.org?format=json';
-        if (!proxies) return res.status(400).json({ error: 'No proxies provided' });
-        const results = await Promise.all(proxies.map(async (proxy) => {
-            let agent;
-            let proxyUrl;
-            if (type === 'socks5') {
-                proxyUrl = `socks5://${encodeURIComponent(proxy.username)}:${encodeURIComponent(proxy.password)}@${proxy.ip}:${proxy.port}`;
-                agent = new SocksProxyAgent(proxyUrl);
-            } else {
-                proxyUrl = `http://${encodeURIComponent(proxy.username)}:${encodeURIComponent(proxy.password)}@${proxy.ip}:${proxy.port}`;
-                agent = new HttpsProxyAgent(proxyUrl);
-            }
-            try {
-                const response = await fetch(test_url, { agent, timeout: 8000 });
-                if (!response.ok) throw new Error('Bad response');
-                return { ip: proxy.ip, port: proxy.port, username: proxy.username, password: proxy.password, type: type, status: 'Active' };
-            } catch (err) {
-                return { ip: proxy.ip, port: proxy.port, username: proxy.username, password: proxy.password, type: type, status: 'Inactive' };
-            }
-        }));
-        res.json({ results });
 }

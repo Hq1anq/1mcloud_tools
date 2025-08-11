@@ -7,11 +7,9 @@ const elements = {
     apiKey: document.getElementById('api-key'),
     amount: document.getElementById('amount'),
     getDataBtn: document.getElementById('getDataBtn'),
-    shuffleBtn: document.getElementById('shuffleBtn'),
-    textCopyBtn: document.getElementById('textCopyBtn'),
+    deleteBtn: document.getElementById('deleteBtn'),
 
     noteInput: document.getElementById('noteInput'),
-    replaceCheckbox: document.getElementById('replaceCheckbox'),
     changeNoteBtn: document.getElementById('changeNoteBtn'),
 
     reinstallInput: document.getElementById('reinstallInput'),
@@ -64,49 +62,9 @@ function init() {
 
 // Bind event listeners
 function bindEvents() {
-    elements.textCopyBtn.addEventListener('click', () => {
-        const textToCopy = elements.ipList.value
-            .split('\n')
-            .map(ip => ip.trim())
-            .filter(ip => ip.length > 0)
-            .join('\n');
-        navigator.clipboard.writeText(textToCopy)
-            .then(() => {
-                showToast('Copied clipboard!', 'success');
-
-                // Save original content
-                const originalHTML = elements.textCopyBtn.innerHTML;
-
-                // Smooth transition by adding a class
-                elements.textCopyBtn.classList.add('float-out');
-
-                setTimeout(() => {
-                    elements.textCopyBtn.innerHTML = 
-                    `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
-                    </svg>Copied`;
-                    elements.textCopyBtn.classList.remove('float-out');
-                    elements.textCopyBtn.classList.add('float-in');
-                }, 300);
-
-                // Revert back after 2 seconds
-                setTimeout(() => {
-                    elements.textCopyBtn.classList.add('float-out');
-                    setTimeout(() => {
-                        elements.textCopyBtn.innerHTML = originalHTML;
-                        elements.textCopyBtn.classList.remove('float-out');
-                        elements.textCopyBtn.classList.add('float-in');
-                    }, 300);
-                }, 2000);
-            })
-            .catch(err => {
-                showToast('Fail to copy!', 'error');
-                console.error('Failed to copy:', err);
-            });
-    })
     // elements.deleteBtn.addEventListener('click', deleteProxies);
     elements.copyIpBtn.addEventListener('click', copyIp);
-    elements.shuffleBtn.addEventListener('click', shuffleListIp);
+    elements.deleteBtn.addEventListener('click', deleteIP);
     elements.getDataBtn.addEventListener('click', getData);
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.reinstallBtn.addEventListener('click', reinstall);
@@ -135,33 +93,6 @@ function copyIp() {
             console.error('Failed to copy:', err);
             showCopyDialog('List IP', ipList);
         });
-}
-
-function shuffleListIp() {
-    let allLines = [];
-    const rawBlocks = elements.ipList.value.trim().split(/\n\s*\n/);
-    if (rawBlocks.length === 2) {
-        const block1 = rawBlocks[0].split('\n').map(ip => ip.trim()).filter(Boolean).map(ip => ({ ip, block: 1 }));
-        const block2 = rawBlocks[1].split('\n').map(ip => ip.trim()).filter(Boolean).map(ip => ({ ip: '  ' + ip, block: 2 }));
-        allLines = [...block1, ...block2];
-    } else {
-        allLines = rawBlocks[0]
-            .split('\n')
-            .filter(ip => ip.length > 0)
-            .map(ip => ({ ip, block: 1 }));
-    }
-
-    shuffleArray(allLines);
-
-    elements.ipList.value = allLines.map(line => line.ip).join('\n');
-}
-
-// Fisher-Yates shuffle
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
 }
 
 // Feature: Get Servers by IPs
@@ -362,7 +293,6 @@ async function pause() {
 
 async function changeNote() {
     const noteInput = elements.noteInput.value;
-    const isReplace = elements.replaceCheckbox.checked;
 
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
@@ -379,16 +309,8 @@ async function changeNote() {
 
         // Extract IP from the 'ip_port' column (assumed to be the second column)
         const sid = cells[1].innerText.trim();
-        // const oldNote = cells[9].innerText.trim();
-        const oldNote = cells[9].innerText.trim();
 
-        if (isReplace) {
-            newNote = noteInput;
-        } else {
-            const firstSpaceIndex = oldNote.indexOf(' ');
-            const suffix = oldNote.slice(firstSpaceIndex + 1);
-            newNote = noteInput + suffix;
-        }
+        newNote = noteInput;
 
         try {
             const res = await fetch('/proxy/change-note', {
@@ -468,6 +390,10 @@ function updateRowContent(row, text, action) {
             status: 'Running'
         });
     }
+}
+
+function deleteIP() {
+    elements.ipList.value = '';
 }
 
 function delay(ms) {

@@ -30,17 +30,11 @@
                                 <label class="block font-medium text-gray-300 mb-2">
                                     <i class="fas fa-server mr-2"></i>Enter IPs (one per line)
                                 </label>
-                                <button id="shuffleBtn"
-                                    class="bg-red-600 hover:bg-red-700 font-medium py-1 px-3 mb-1 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
-                                    <i class="fas fa-sync mr-2"></i>Shuffle
+                                <button id="deleteBtn"
+                                    class="bg-red-600 hover:bg-red-700 font-medium mb-2 py-1 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
+                                    <i class="fas fa-trash-alt mr-2"></i>Delete
                                 </button>
                             </div>
-                            <button id="textCopyBtn" class="group absolute top-8 right-1 text-gray-500 hover:text-gray-400 rounded-lg inline-flex items-center justify-center cursor-pointer">
-                                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" class="text-gray-500 group-hover:text-gray-400" stroke-linejoin="round" stroke-width="2" d="M9 8v3a1 1 0 0 1-1 1H5m11 4h2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-7a1 1 0 0 0-1 1v1m4 3v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7.13a1 1 0 0 1 .24-.65L7.7 8.35A1 1 0 0 1 8.46 8H13a1 1 0 0 1 1 1Z"/>
-                                </svg>
-                                Copy
-                            </button>
                             <textarea id="ip-list" class="flex-grow min-h-[6rem] scrollbar-dark"
                                 placeholder="192.168.1.1&#10;10.0.0.1&#10;172.16.0.1"></textarea>
                         </div>
@@ -64,18 +58,10 @@
                                     <div class="space-y-2 flex-1">
                                         <input type="text" id="noteInput"
                                             placeholder="Enter note">
-                                        <div class="flex items-center space-x-2">
-                                            <button id="changeNoteBtn"
-                                                class="flex-1 bg-purple-600 hover:bg-purple-700 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                                <i class="fas fa-edit mr-2"></i>Change Note
-                                            </button>
-                                            <div class="flex items-center ml-2">
-                                                <input type="checkbox" id="replaceCheckbox"
-                                                    class="w-4 h-4 bg-dark-600 border-dark-500 rounded focus:ring-blue-500">
-                                                <label for="replaceCheckbox"
-                                                    class="ml-2 text-sm text-gray-300">Replace?</label>
-                                            </div>
-                                        </div>
+                                        <button id="changeNoteBtn"
+                                            class="w-full bg-purple-600 hover:bg-purple-700 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                            <i class="fas fa-edit mr-2"></i>Change Note
+                                        </button>
                                     </div>
                                     <!-- Reinstall -->
                                     <div class="space-y-2">

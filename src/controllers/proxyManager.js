@@ -73,17 +73,6 @@ export async function changeIp(req, res) {
 
     const url = 'https://api.smartserver.vn/api/server/change-ip';
 
-    // const proxyInfo = [
-    //     ip,
-    //     apiKey,
-    //     type
-    // ];
-
-    // await delay(2000);
-    
-    // return res.status(500).json({ error: 'Internal server error' });
-    // return res.json({ proxyInfo });
-
     const headers = {
         'accept': 'application/json, text/plain, */*',
         'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
@@ -93,35 +82,6 @@ export async function changeIp(req, res) {
         'referer': 'https://manage.1mcloud.vn/',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
     };
-
-    // let data;
-    // if (custom_info) {
-    //     const list_info = custom_info.split(':');
-    //     if (list_info.length < 4) {
-    //         return res.status(400).json({ error: 'Invalid custom_info format. Expected format: range_ip:remote_port:username:password' });
-    //     }
-
-    //     data = {
-    //         ip,
-    //         proxy_type: type,
-    //         range_ip: list_info[0],
-    //         random_password: false,
-    //         random_remote_port: false,
-    //         password: list_info[3],
-    //         remote_port: parseInt(list_info[1]),
-    //         isp: 'Ngẫu nhiên',
-    //     };
-    // } else {
-    //     data = {
-    //         ip,
-    //         os_id: 0,
-    //         proxy_type: type,
-    //         range_ip: 'Ngẫu nhiên',
-    //         random_password: true,
-    //         random_remote_port: true,
-    //         isp: 'Ngẫu nhiên',
-    //     };
-    // }
 
     let data = {
         ip: ip,

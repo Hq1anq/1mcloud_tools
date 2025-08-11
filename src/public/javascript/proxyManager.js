@@ -303,25 +303,22 @@ async function changeNote() {
     showToast("Changing note...", 'loading');
 
     for (const row of selectedRows) {
-        let newNote;
         const cells = row.querySelectorAll('td');
         if (cells.length < 2) continue;
 
         // Extract IP from the 'ip_port' column (assumed to be the second column)
         const sid = cells[1].innerText.trim();
 
-        newNote = noteInput;
-
         try {
             const res = await fetch('/proxy/change-note', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sid, newNote })
+                body: JSON.stringify({ sid, noteInput })
             });
 
             const data = await res.json();
             if (res.ok && data.success)
-                updateRowContent(row, newNote, 'changeNote');
+                updateRowContent(row, noteInput, 'changeNote');
             else {
                 showToast(`Failed to changeNote for sid ${sid}`, 'error');
                 console.error(`❌ Failed to CHANGE NOTE for sid ${sid}:`, data.error);

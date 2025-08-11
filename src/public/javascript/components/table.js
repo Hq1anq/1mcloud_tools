@@ -139,7 +139,7 @@ export function updateCounts() {
     elements.totalCount.textContent = filteredData.length;
     elements.selectedCount.textContent = selected.length;
 
-    showEmptyState(filteredData.length === 0);
+    showEmptyState(allData.length === 0);
 
     if (checkboxes.length > 0) {
         elements.selectAllCheckbox.checked = selected.length === checkboxes.length;

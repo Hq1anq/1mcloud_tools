@@ -5,6 +5,7 @@ const elements = {
     tbody: document.getElementById('tableBody'),
     totalCount: document.getElementById('totalCount'),
     selectedCount: document.getElementById('selectedCount'),
+    reloadBtn: document.getElementById('reloadBtn'),
     selectAllCheckbox: document.getElementById('selectAllCheckbox'),
     emptyState: document.getElementById('emptyState'),
 
@@ -20,11 +21,11 @@ let lastSelectedIndex = null;
 
 function bindEvents(page) {
     window.addEventListener('scroll', () => handleScroll(page));
-    // elements.tbody.addEventListener('change', handleCount);
     elements.tbody.addEventListener('change', handleRowCheckboxChange);
     elements.tbody.addEventListener('click', handleRowClick);
     elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
     elements.tbody.addEventListener('dblclick', handleDoubleClick)
+    elements.reloadBtn.addEventListener('click', showAllData);
 }
 
 export function initTable(page) {
@@ -266,7 +267,7 @@ function applyFilter(page) {
         ? [...allData]  // no filters, keep all
         : allData.filter(row => {
             return activeFilters.every(([colIndex, filterValue]) => {
-                const value = Object.values(row)[colIndex];
+                const value = Object.values(row)[colIndex].toString();
                 return value?.includes(filterValue);
             });
         });
@@ -275,6 +276,15 @@ function applyFilter(page) {
     elements.tbody.innerHTML = "";
     if (page !== 'proxyChecker') renderChunk();
     else filteredData.forEach(row => addRow(row));
+}
+
+function showAllData() {
+    filteredData = [...allData];
+    renderedCount = 0;
+    elements.tbody.innerHTML = "";
+    renderChunk();
+    updateCounts();
+    showEmptyState(allData.length === 0);
 }
 
 function handleScroll(page) {

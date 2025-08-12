@@ -107,6 +107,11 @@ function bindEvents() {
     // elements.deleteBtn.addEventListener('click', deleteProxies);
     elements.copyIpBtn.addEventListener('click', copyIp);
     elements.shuffleBtn.addEventListener('click', shuffleListIp);
+    elements.amount.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+            getData();
+        }
+    });
     elements.getDataBtn.addEventListener('click', getData);
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.reinstallBtn.addEventListener('click', reinstall);

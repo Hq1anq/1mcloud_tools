@@ -1,6 +1,6 @@
 import { setData, initTable, updateRowData, updateCounts, getSelectedRows, getStatusChip } from '/javascript/components/table.js';
 import { showToast, changeToToast } from '/javascript/components/toaster.js';
-import { showCopyDialog } from '/javascript/components/copyDialog.js'
+import { showCopyDialog } from '/javascript/components/copyDialog.js';
 // DOM elements
 const elements = {
     ipList: document.getElementById('ip-list'),
@@ -213,7 +213,7 @@ async function changeIp() {
     const proxyLines = []; // collect proxies here
 
     for (const row of selectedRows) {
-        const cells = row.querySelectorAll('td');
+        const cells = row.cells;
         if (cells.length < 2) continue;
 
         // Extract IP from the 'ip_port' column (assumed to be the second column)
@@ -276,7 +276,7 @@ async function reinstall() {
     const proxyLines = []; // collect proxies here
 
     for (const row of selectedRows) {
-        const cells = row.querySelectorAll('td');
+        const cells = row.cells;
         if (cells.length < 2) continue;
 
         // Extract IP from the 'ip_port' column (assumed to be the second column)
@@ -338,7 +338,7 @@ async function pause() {
     showToast("Pausing...", 'loading');
 
     const sids = selectedRows
-        .map(row => row.querySelectorAll('td')[1].innerText.trim())
+        .map(row => row.cells[1].innerText.trim())
         .join(',');
 
     try {
@@ -379,7 +379,7 @@ async function changeNote() {
 
     for (const row of selectedRows) {
         let newNote;
-        const cells = row.querySelectorAll('td');
+        const cells = row.cells;
         if (cells.length < 2) continue;
 
         // Extract IP from the 'ip_port' column (assumed to be the second column)

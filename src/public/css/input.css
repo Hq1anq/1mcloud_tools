@@ -5,7 +5,6 @@
 
 @theme {
     --color-dark-900: #14171c;
-    --color-dark-850: #1e293b;
     --color-dark-800: #282e38;
     --color-dark-750: #323a45;
     --color-dark-700: #3c4653;
@@ -138,29 +137,4 @@ body::-webkit-scrollbar-thumb {
             transform: rotate(360deg);
         }
     } 
-}
-
-/* Navbar styles */
-@layer components {
-    .navbar {
-        border-bottom: 1px solid #334155;
-    }
-
-    .nav-link {
-        color: #cbd5e1;
-        transition: color 0.3s ease;
-    }
-
-    .nav-link:hover {
-        color: #f8fafc;
-    }
-
-    .nav-link.active {
-        color: #60a5fa;
-        font-weight: 500;
-    }
-
-    .nav-link.active:hover {
-        color: #93c5fd;
-    }
 }

@@ -148,14 +148,16 @@ export function updateCounts() {
     }
 }
 
-function handleCount(e) {
-    if (e.target.classList.contains('rowCheckbox')) {
-        updateCounts();
-    }
-}
-
 export function getSelectedRows() {
-    return [...document.querySelectorAll('.selected-row')];
+    const selectedRows = [];
+    const rows = elements.tbody.rows;
+    for (let i = 0; i < rows.length; i++) {
+        const firstCellChild = rows[i].cells[0].firstElementChild;
+        if (firstCellChild && firstCellChild.checked) {
+            selectedRows.push(rows[i]);
+        }
+    }
+    return selectedRows;
 }
 
 function handleSelectAll(e) {

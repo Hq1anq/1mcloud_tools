@@ -15,7 +15,7 @@ const elements = {
     selectionButtons: document.getElementById('selectionButtons'),
     selectedCount: document.getElementById('selectedCount'),
     totalCount: document.getElementById('totalCount'),
-    refreshBtn: document.getElementById('refreshBtn'),
+    reloadBtn: document.getElementById('reloadBtn'),
     statusDisplay: document.getElementById('statusDisplay'),
     statusMessage: document.getElementById('statusMessage')
 };
@@ -36,7 +36,6 @@ function bindEvents() {
     // elements.selectErrorBtn.addEventListener('click', selectErrorProxies);
     // elements.copyIpBtn.addEventListener('click', copySelectedIPs);
     // elements.copyFullProxyBtn.addEventListener('click', copyFullProxies);
-    // elements.refreshBtn.addEventListener('click', refreshProxies);
 }
 
 // Check proxies

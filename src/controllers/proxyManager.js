@@ -127,7 +127,7 @@ export async function reinstall(req, res) {
     let data;
     if (custom_info) {
         let range_ip, remote_port, username, password;
-        reinstallInfo = custom_info.split(":");
+        const reinstallInfo = custom_info.split(":");
         if (reinstallInfo.length === 4) {
             [range_ip, remote_port, username, password] = reinstallInfo;
         } else if (reinstallInfo.length === 3) {

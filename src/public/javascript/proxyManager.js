@@ -18,7 +18,6 @@ const elements = {
     changeIpBtn: document.getElementById('changeIpBtn'),
     copyIpBtn: document.getElementById('copyIpBtn'),
     pauseBtn: document.getElementById('pauseBtn'),
-    refundBtn: document.getElementById('refundBtn')
 }
 
 // Initialize
@@ -70,8 +69,6 @@ function bindEvents() {
     elements.reinstallBtn.addEventListener('click', reinstall);
     elements.pauseBtn.addEventListener('click', pause);
     elements.changeIpBtn.addEventListener('click', changeIp);
-    // elements.pauseBtn.addEventListener('click', testToast);
-    // elements.refundBtn.addEventListener('click', test);
 }
 
 function copyIp() {

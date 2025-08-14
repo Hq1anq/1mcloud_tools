@@ -59,32 +59,39 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="flex flex-1 gap-4">
-                                    <!-- Change Note -->
-                                    <div class="space-y-2 flex-1">
-                                        <input type="text" id="noteInput"
-                                            placeholder="Enter note">
-                                        <div class="flex items-center space-x-2">
-                                            <button id="changeNoteBtn"
-                                                class="flex-1 bg-purple-600 hover:bg-purple-700 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                                <i class="fas fa-edit mr-2"></i>Change Note
-                                            </button>
-                                            <div class="flex items-center ml-2">
-                                                <input type="checkbox" id="replaceCheckbox"
-                                                    class="w-4 h-4 bg-dark-600 border-dark-500 rounded focus:ring-blue-500">
-                                                <label for="replaceCheckbox"
-                                                    class="ml-2 text-sm text-gray-300">Replace?</label>
-                                            </div>
+
+                                <!-- Change Note -->
+                                <div class="space-y-2 flex-1">
+                                    <input type="text" id="noteInput"
+                                        placeholder="Enter note">
+                                    <div class="flex items-center space-x-2">
+                                        <button id="changeNoteBtn"
+                                            class="flex-1 bg-purple-600 hover:bg-purple-700 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                            <i class="fas fa-edit mr-2"></i>Change Note
+                                        </button>
+                                        <div class="flex items-center ml-2">
+                                            <input type="checkbox" id="replaceCheckbox"
+                                                class="w-4 h-4 bg-dark-600 border-dark-500 rounded focus:ring-blue-500">
+                                            <label for="replaceCheckbox"
+                                                class="ml-2 text-sm text-gray-300">Replace?</label>
                                         </div>
                                     </div>
-                                    <!-- Reinstall -->
-                                    <div class="space-y-2">
-                                        <input type="text" id="reinstallInput"
-                                            placeholder="port:username:password">
+                                </div>
+
+                                <!-- Reinstall -->
+                                <div class="space-y-2">
+                                    <input type="text" id="reinstallInput"
+                                        placeholder="port:username:password">
+                                    <div class="flex">
                                         <button id="reinstallBtn"
-                                            class="w-full bg-orange-600 hover:bg-orange-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                            class="flex-1 bg-orange-600 hover:bg-orange-700 font-medium py-2 px-3 rounded-l-lg transition-colors duration-200 flex items-center justify-center">
                                             <i class="fas fa-sync-alt mr-2"></i>Reinstall
                                         </button>
+                                        <%- include('partials/dropDown', {
+                                            dropdownId: 'protocolSelect',
+                                            dropdownOptions: ['HTTPS', 'SOCKS5'],
+                                            defaultOption: 'HTTPS'
+                                        }) %>
                                     </div>
                                 </div>
                             </div>

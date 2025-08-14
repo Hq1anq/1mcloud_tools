@@ -53,31 +53,31 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="flex flex-1 gap-4">
-                                    <!-- Change Note -->
-                                    <div class="space-y-2 flex-1">
-                                        <input type="text" id="noteInput"
-                                            placeholder="Enter note">
-                                        <button id="changeNoteBtn"
-                                            class="w-full bg-purple-600 hover:bg-purple-700 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                            <i class="fas fa-edit mr-2"></i>Change Note
+
+                                <!-- Change Note -->
+                                <div class="space-y-2 flex-1">
+                                    <input type="text" id="noteInput"
+                                        placeholder="Enter note">
+                                    <button id="changeNoteBtn"
+                                        class="w-full bg-purple-600 hover:bg-purple-700 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                        <i class="fas fa-edit mr-2"></i>Change Note
+                                    </button>
+                                </div>
+
+                                <!-- Reinstall -->
+                                <div class="space-y-2">
+                                    <input type="text" id="reinstallInput"
+                                        placeholder="port:username:password">
+                                    <div class="flex">
+                                        <button id="reinstallBtn"
+                                            class="flex-1 bg-orange-600 hover:bg-orange-700 font-medium py-2 px-3 rounded-l-lg transition-colors duration-200 flex items-center justify-center">
+                                            <i class="fas fa-sync-alt mr-2"></i>Reinstall
                                         </button>
-                                    </div>
-                                    <!-- Reinstall -->
-                                    <div class="space-y-2">
-                                        <input type="text" id="reinstallInput"
-                                            placeholder="port:username:password">
-                                        <div class="flex items-center">
-                                            <button id="reinstallBtn"
-                                                class="w-full bg-orange-600 hover:bg-orange-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                                <i class="fas fa-sync-alt mr-2"></i>Reinstall
-                                            </button>
-                                            <select id="typeReinstall"
-                                                class="w-full bg-dark-600 border border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                                <option value="https">HTTPS</option>
-                                                <option value="socks5">SOCKS5</option>
-                                            </select>
-                                        </div>
+                                        <%- include('partials/dropDown', {
+                                            dropdownId: 'protocolSelect',
+                                            dropdownOptions: ['HTTPS', 'SOCKS5'],
+                                            defaultOption: 'HTTPS'
+                                        }) %>
                                     </div>
                                 </div>
                             </div>

@@ -22,55 +22,6 @@ const elements = {
 function init() {
     bindEvents();
     initTable('proxyChecker');
-    insertTestData();
-}
-
-function insertTestData() {
-    const testData = [
-        {
-            ip: '192.168.1.1',
-            port: '8080',
-            username: 'user1',
-            password: 'pass1',
-            type: 'HTTP',
-            status: 'Active'
-        },
-        {
-            ip: '192.168.1.2',
-            port: '3128',
-            username: 'user2',
-            password: 'pass2',
-            type: 'SOCKS5',
-            status: 'Inactive'
-        },
-        {
-            ip: '192.168.1.3',
-            port: '80',
-            username: 'user3',
-            password: 'pass3',
-            type: 'HTTP',
-            status: 'Active'
-        },
-        {
-            ip: '192.168.1.4',
-            port: '1080',
-            username: 'user4',
-            password: 'pass4',
-            type: 'SOCKS4',
-            status: 'Inactive'
-        },
-        {
-            ip: '192.168.1.5',
-            port: '8888',
-            username: 'user5',
-            password: 'pass5',
-            type: 'HTTP',
-            status: 'Active'
-        }
-    ];
-
-    clearTable();
-    testData.forEach(data => addRow(data, true));
 }
 
 // Bind event listeners

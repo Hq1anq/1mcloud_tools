@@ -67,10 +67,17 @@
                                     <div class="space-y-2">
                                         <input type="text" id="reinstallInput"
                                             placeholder="port:username:password">
-                                        <button id="reinstallBtn"
-                                            class="w-full bg-orange-600 hover:bg-orange-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                            <i class="fas fa-sync-alt mr-2"></i>Reinstall
-                                        </button>
+                                        <div class="flex items-center">
+                                            <button id="reinstallBtn"
+                                                class="w-full bg-orange-600 hover:bg-orange-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                                <i class="fas fa-sync-alt mr-2"></i>Reinstall
+                                            </button>
+                                            <select id="typeReinstall"
+                                                class="w-full bg-dark-600 border border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                                <option value="https">HTTPS</option>
+                                                <option value="socks5">SOCKS5</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

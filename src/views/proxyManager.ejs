@@ -70,10 +70,25 @@
                                             <i class="fas fa-edit mr-2"></i>Change Note
                                         </button>
                                         <div class="flex items-center ml-2">
-                                            <input type="checkbox" id="replaceCheckbox"
-                                                class="w-4 h-4 bg-dark-600 border-dark-500 rounded focus:ring-blue-500">
-                                            <label for="replaceCheckbox"
-                                                class="ml-2 text-sm text-gray-300">Replace?</label>
+                                            <label class="inline-flex items-center cursor-pointer select-none group">
+                                                <!-- Hidden native checkbox -->
+                                                <input id="replaceCheckbox" type="checkbox" class="sr-only" />
+
+                                                <!-- Custom box -->
+                                                <span class="w-5 h-5 flex items-center justify-center rounded border border-dark-600
+                                                            bg-dark-750 transition-all duration-200
+                                                            group-hover:border-dark-500 relative overflow-visible">
+                                                    <!-- Big check -->
+                                                    <svg class="w-5 h-5 text-white opacity-0 scale-75 transition-all duration-200
+                                                                group-has-[input:checked]:opacity-100 group-has-[input:checked]:scale-100 absolute"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                                    </svg>
+                                                </span>
+
+                                                <!-- Text -->
+                                                <span class="ml-2 text-sm text-gray-300">Replace</span>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +103,7 @@
                                             <i class="fas fa-sync-alt mr-2"></i>Reinstall
                                         </button>
                                         <%- include('partials/dropDown', {
-                                            dropdownId: 'protocolSelect',
+                                            dropdownId: 'reinstallType',
                                             dropdownOptions: ['HTTPS', 'SOCKS5'],
                                             defaultOption: 'HTTPS'
                                         }) %>

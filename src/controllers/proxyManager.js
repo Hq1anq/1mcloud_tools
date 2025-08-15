@@ -45,7 +45,7 @@ export async function getData(req, res) {
             sid: server.server_id,
             ip_port: server.ip_port,
             country: server.country,
-            type: server.plan_number,
+            type: server.he_dieu_hanh,
             from: server.ngay_mua,
             to: server.het_han,
             changed: server.change_ip_time,
@@ -72,17 +72,6 @@ export async function changeIp(req, res) {
     const { ip, apiKey, type = 'proxy_https' } = req.body;
 
     const url = 'https://api.smartserver.vn/api/server/change-ip';
-
-    // const proxyInfo = [
-    //     ip,
-    //     apiKey,
-    //     type
-    // ];
-
-    // await delay(2000);
-    
-    // return res.status(500).json({ error: 'Internal server error' });
-    // return res.json({ proxyInfo });
 
     const headers = {
         'accept': 'application/json, text/plain, */*',

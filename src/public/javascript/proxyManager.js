@@ -15,6 +15,7 @@ const elements = {
     changeNoteBtn: document.getElementById('changeNoteBtn'),
 
     reinstallInput: document.getElementById('reinstallInput'),
+    reinstallType: document.getElementById('reinstallType-trigger'),
     reinstallBtn: document.getElementById('reinstallBtn'),
 
     changeIpBtn: document.getElementById('changeIpBtn'),
@@ -26,37 +27,37 @@ const elements = {
 // Initialize
 function init() {
     setData([
-        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Paused", "note": "0208 tung2"},
-        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Stopped", "note": "0208 tung2"},
-        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Unknowed", "note": "0208 tung2"},
-        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Paused", "note": "0208 tung2"},
+        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Stopped", "note": "0208 tung2"},
+        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Unknowed", "note": "0208 tung2"},
+        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
         
-        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Paused", "note": "0208 tung2"},
-        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Stopped", "note": "0208 tung2"},
-        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Unknowed", "note": "0208 tung2"},
-        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Paused", "note": "0208 tung2"},
+        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Stopped", "note": "0208 tung2"},
+        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Unknowed", "note": "0208 tung2"},
+        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
 
-        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Paused", "note": "0208 tung2"},
-        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Stopped", "note": "0208 tung2"},
-        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Unknowed", "note": "0208 tung2"},
-        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Paused", "note": "0208 tung2"},
+        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Stopped", "note": "0208 tung2"},
+        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Unknowed", "note": "0208 tung2"},
+        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
         
-        {"sid": 583183, "ip_port": "103.190.36.207:21095", "country": "VN", "type": "HTTP Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"}
+        {"sid": 583183, "ip_port": "103.190.36.207:21095", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"}
     ]);
     bindEvents();
     initTable('proxyManager');
@@ -211,6 +212,7 @@ async function changeIp() {
     showToast('Change Ip...', 'loading');
 
     const proxyLines = []; // collect proxies here
+    const apiKeyString = elements.apiKey.value.trim();
 
     for (const row of selectedRows) {
         const cells = row.cells;
@@ -224,7 +226,7 @@ async function changeIp() {
             const res = await fetch('/proxy/change-ip', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ip })
+                body: JSON.stringify({ ip: ip, apiKey: apiKeyString })
             });
 
             const data = await res.json();
@@ -274,6 +276,8 @@ async function reinstall() {
     showToast("Reinstalling...", 'loading');
 
     const proxyLines = []; // collect proxies here
+    const apiKeyString = elements.apiKey.value.trim();
+    const proxyType = elements.reinstallType.textContent.trim() === 'SOCKS5' ? 'proxy_sock_5' : 'proxy_https';
 
     for (const row of selectedRows) {
         const cells = row.cells;
@@ -286,7 +290,7 @@ async function reinstall() {
             const res = await fetch('/proxy/reinstall', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sid: sid, custom_info: elements.reinstallInput.value.trim() })
+                body: JSON.stringify({ sid: sid, custom_info: elements.reinstallInput.value.trim(), apiKey: apiKeyString, type: proxyType })
             });
 
             const data = await res.json();
@@ -340,12 +344,13 @@ async function pause() {
     const sids = selectedRows
         .map(row => row.cells[1].innerText.trim())
         .join(',');
+    const apiKeyString = elements.apiKey.value.trim();
 
     try {
         const res = await fetch('/proxy/pause', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sids })
+            body: JSON.stringify({ sids: sids, apiKey: apiKeyString })
         });
 
         const data = await res.json();
@@ -368,6 +373,7 @@ async function pause() {
 async function changeNote() {
     const noteInput = elements.noteInput.value;
     const isReplace = elements.replaceCheckbox.checked;
+    const apiKeyString = elements.apiKey.value.trim();
 
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
@@ -399,7 +405,7 @@ async function changeNote() {
             const res = await fetch('/proxy/change-note', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sid, newNote })
+                body: JSON.stringify({ sid: sid, newNote: newNote, apiKey: apiKeyString })
             });
 
             const data = await res.json();
@@ -448,6 +454,7 @@ function updateRowContent(row, text, action) {
     // Column indexes based on header:
     // [checkbox, 'sid', 'ip:port', 'country', 'type', 'from', 'to', 'changed', 'status', 'note']
     const ipPortIndex = 2;
+    const typeIndex = 4;
     const changedIndex = 7;
     const statusIndex = 8;
 
@@ -468,8 +475,11 @@ function updateRowContent(row, text, action) {
             changed: currentValue + 1,
             status: 'Running'
         });
-    } else {
+    } else if (action === 'reinstall') {
+        const reinstallType = elements.reinstallType.textContent.trim() === 'SOCKS5' ? 'SOCKS5 Proxy' : 'HTTPS Proxy'
+        cells[typeIndex].innerText = reinstallType;
         updateRowData(id, {
+            type: reinstallType,
             status: 'Running'
         });
     }

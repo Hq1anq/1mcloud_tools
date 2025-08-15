@@ -11,7 +11,7 @@ export function receiveProxies(req, res) {
 };
 
 export async function startProxyCheckStream(req, res) {
-    const type = req.query.type || 'http';
+    const type = req.query.type || 'HTTPS';
 
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
@@ -36,7 +36,7 @@ async function checkWithType(proxy, type) {
     let agent;
     let proxyUrl;
 
-    if (type === 'socks5') {
+    if (type === 'SOCKS5') {
         proxyUrl = `socks5://${encodeURIComponent(proxy.username)}:${encodeURIComponent(proxy.password)}@${proxy.ip}:${proxy.port}`;
         agent = new SocksProxyAgent(proxyUrl);
     } else {
@@ -49,8 +49,8 @@ async function checkWithType(proxy, type) {
     return { ...proxy, type: type.toUpperCase(), status: 'Active' };
 }
 
-export async function checkSingleProxy(proxy, type = 'auto') {
-    if (type !== 'auto') {
+export async function checkSingleProxy(proxy, type = 'AUTO DETECT') {
+    if (type !== 'AUTO DETECT') {
         try {
             return await checkWithType(proxy, type);
         } catch {
@@ -62,11 +62,11 @@ export async function checkSingleProxy(proxy, type = 'auto') {
     try {
         // Promise.any returns the first fulfilled promise
         return await Promise.any([
-            checkWithType(proxy, 'http'),
-            checkWithType(proxy, 'socks5')
+            checkWithType(proxy, 'HTTPS'),
+            checkWithType(proxy, 'SOCKS5')
         ]);
     } catch {
         // If both failed, Promise.any throws an AggregateError
-        return { ...proxy, type: 'auto', status: 'Inactive' };
+        return { ...proxy, type: 'AUTO DETECT', status: 'Inactive' };
     }
 }

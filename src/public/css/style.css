@@ -488,8 +488,8 @@
   .cursor-pointer {
     cursor: pointer;
   }
-  .grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .flex-col {
     flex-direction: column;
@@ -524,11 +524,11 @@
   .gap-5 {
     gap: calc(var(--spacing) * 5);
   }
-  .space-y-2 {
+  .space-y-1 {
     :where(& > :not(:last-child)) {
       --tw-space-y-reverse: 0;
-      margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
-      margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
+      margin-block-start: calc(calc(var(--spacing) * 1) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 1) * calc(1 - var(--tw-space-y-reverse)));
     }
   }
   .space-y-3 {
@@ -1151,11 +1151,6 @@
   .sm\:w-1\/2 {
     @media (width >= 40rem) {
       width: calc(1/2 * 100%);
-    }
-  }
-  .sm\:grid-cols-4 {
-    @media (width >= 40rem) {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
   .sm\:flex-row {

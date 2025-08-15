@@ -47,9 +47,9 @@
                         <!-- GetData & Change Note & Reinstall and Simple Action Buttons -->
                         <div class="flex flex-col space-y-4 w-full">
                             <!-- Getdata & Change Note & Reinstall (top) -->
-                            <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="flex gap-4">
                                 <!-- Get Data -->
-                                <div class="space-y-2">
+                                <div class="space-y-1">
                                     <input type="number" id="amount"
                                         placeholder="Enter amount" min="0">
                                     <div class="flex items-center">
@@ -61,7 +61,7 @@
                                 </div>
 
                                 <!-- Change Note -->
-                                <div class="space-y-2 flex-1">
+                                <div class="space-y-1 flex-1">
                                     <input type="text" id="noteInput"
                                         placeholder="Enter note">
                                     <div class="flex items-center space-x-2">
@@ -92,9 +92,10 @@
                                         </div>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div class="flex flex-col sm:flex-row gap-4">
                                 <!-- Reinstall -->
-                                <div class="space-y-2">
+                                <div class="space-y-1 flex-1">
                                     <input type="text" id="reinstallInput"
                                         placeholder="port:username:password">
                                     <div class="flex">
@@ -109,13 +110,26 @@
                                         }) %>
                                     </div>
                                 </div>
+
+                                <!-- ChangeIP -->
+                                <div class="space-y-1 flex-1">
+                                    <input type="text" id="changeIpInput"
+                                        placeholder="ip:port:username:password">
+                                    <div class="flex">
+                                        <button id="changeIpBtn"
+                                            class="flex-1 bg-green-600 hover:bg-green-700 text-nowrap font-medium py-2 px-3 rounded-l-lg transition-colors duration-200 flex items-center justify-center">
+                                            <i class="fas fa-exchange-alt mr-2"></i>Change IP
+                                        </button>
+                                        <%- include('partials/dropDown', {
+                                            dropdownId: 'changeIpType',
+                                            dropdownOptions: ['HTTPS', 'SOCKS5'],
+                                            defaultOption: 'HTTPS'
+                                        }) %>
+                                    </div>
+                                </div>
                             </div>
                             <!-- Simple Action Buttons (bottom) -->
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                <button id="changeIpBtn"
-                                    class="bg-green-600 hover:bg-green-700 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                    <i class="fas fa-exchange-alt mr-2"></i>Change IP
-                                </button>
+                            <div class="grid grid-cols-3 gap-3">
                                 <button id="copyIpBtn"
                                     class="bg-yellow-600 hover:bg-yellow-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                     <i class="fas fa-copy mr-2"></i>Copy IP

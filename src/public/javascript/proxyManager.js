@@ -13,6 +13,7 @@ const elements = {
     changeNoteBtn: document.getElementById('changeNoteBtn'),
 
     reinstallInput: document.getElementById('reinstallInput'),
+    reinstallType: document.getElementById('reinstallType-trigger'),
     reinstallBtn: document.getElementById('reinstallBtn'),
 
     changeIpBtn: document.getElementById('changeIpBtn'),
@@ -31,6 +32,11 @@ function bindEvents() {
     // elements.deleteBtn.addEventListener('click', deleteProxies);
     elements.copyIpBtn.addEventListener('click', copyIp);
     elements.deleteBtn.addEventListener('click', deleteIP);
+    elements.amount.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+            getData();
+        }
+    });
     elements.getDataBtn.addEventListener('click', getData);
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.reinstallBtn.addEventListener('click', reinstall);
@@ -101,6 +107,7 @@ async function changeIp() {
     showToast('Change Ip...', 'loading');
 
     const proxyLines = []; // collect proxies here
+    const apiKeyString = elements.apiKey.value.trim();
 
     for (const row of selectedRows) {
         const cells = row.cells;
@@ -114,7 +121,7 @@ async function changeIp() {
             const res = await fetch('/proxy/change-ip', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ip })
+                body: JSON.stringify({ ip: ip, apiKey: apiKeyString })
             });
 
             const data = await res.json();
@@ -164,6 +171,8 @@ async function reinstall() {
     showToast("Reinstalling...", 'loading');
 
     const proxyLines = []; // collect proxies here
+    const apiKeyString = elements.apiKey.value.trim();
+    const proxyType = elements.reinstallType.textContent.trim() === 'SOCKS5' ? 'proxy_sock_5' : 'proxy_https';
 
     for (const row of selectedRows) {
         const cells = row.cells;
@@ -176,7 +185,7 @@ async function reinstall() {
             const res = await fetch('/proxy/reinstall', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sid: sid, custom_info: elements.reinstallInput.value.trim() })
+                body: JSON.stringify({ sid: sid, custom_info: elements.reinstallInput.value.trim(), apiKey: apiKeyString, type: proxyType })
             });
 
             const data = await res.json();
@@ -230,12 +239,13 @@ async function pause() {
     const sids = selectedRows
         .map(row => row.cells[1].innerText.trim())
         .join(',');
+    const apiKeyString = elements.apiKey.value.trim();
 
     try {
         const res = await fetch('/proxy/pause', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ sids })
+            body: JSON.stringify({ sids: sids, apiKey: apiKeyString })
         });
 
         const data = await res.json();
@@ -257,6 +267,7 @@ async function pause() {
 
 async function changeNote() {
     const noteInput = elements.noteInput.value;
+    const apiKeyString = elements.apiKey.value.trim();
 
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
@@ -277,7 +288,7 @@ async function changeNote() {
             const res = await fetch('/proxy/change-note', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sid, noteInput })
+                body: JSON.stringify({ sid: sid, newNote: noteInput, apiKey: apiKeyString })
             });
 
             const data = await res.json();
@@ -326,6 +337,7 @@ function updateRowContent(row, text, action) {
     // Column indexes based on header:
     // [checkbox, 'sid', 'ip:port', 'country', 'type', 'from', 'to', 'changed', 'status', 'note']
     const ipPortIndex = 2;
+    const typeIndex = 4;
     const changedIndex = 7;
     const statusIndex = 8;
 
@@ -346,8 +358,11 @@ function updateRowContent(row, text, action) {
             changed: currentValue + 1,
             status: 'Running'
         });
-    } else {
+    } else if (action === 'reinstall') {
+        const reinstallType = elements.reinstallType.textContent.trim() === 'SOCKS5' ? 'SOCKS5 Proxy' : 'HTTPS Proxy'
+        cells[typeIndex].innerText = reinstallType;
         updateRowData(id, {
+            type: reinstallType,
             status: 'Running'
         });
     }

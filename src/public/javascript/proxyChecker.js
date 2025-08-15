@@ -6,7 +6,7 @@ const elements = {
     proxyInput: document.getElementById('proxyInput'),
     deleteBtn: document.getElementById('deleteBtn'),
 
-    proxyTypeSelect: document.getElementById('proxyTypeSelect'),
+    proxyType: document.getElementById('proxyTypeSelect-trigger'),
     checkProxiesBtn: document.getElementById('checkProxiesBtn'),
 
     selectActiveBtn: document.getElementById('selectActiveBtn'),
@@ -50,7 +50,7 @@ async function checkProxies() {
 
     // Parse proxy list
     const proxies = parseProxyList(proxyText);
-    const proxyType = proxyTypeSelect.value.trim()
+    const proxyType = elements.proxyType.textContent.trim();
 
     // Start the stream
     const eventSource = new EventSource(`/proxy/check-stream?type=${proxyType}`);

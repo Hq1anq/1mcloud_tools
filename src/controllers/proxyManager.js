@@ -69,7 +69,7 @@ export async function getData(req, res) {
 };
 
 export async function changeIp(req, res) {
-    const { ip, apiKey, type = 'proxy_https' } = req.body;
+    const { ip, custom_info, apiKey, type = 'proxy_https' } = req.body;
 
     const url = 'https://api.smartserver.vn/api/server/change-ip';
 
@@ -83,44 +83,34 @@ export async function changeIp(req, res) {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
     };
 
-    // let data;
-    // if (custom_info) {
-    //     const list_info = custom_info.split(':');
-    //     if (list_info.length < 4) {
-    //         return res.status(400).json({ error: 'Invalid custom_info format. Expected format: range_ip:remote_port:username:password' });
-    //     }
+    let data;
+    if (custom_info) {
+        const list_info = custom_info.split(':');
+        if (list_info.length < 4) {
+            return res.status(400).json({ error: 'Invalid custom_info format. Expected format: range_ip:remote_port:username:password' });
+        }
 
-    //     data = {
-    //         ip,
-    //         proxy_type: type,
-    //         range_ip: list_info[0],
-    //         random_password: false,
-    //         random_remote_port: false,
-    //         password: list_info[3],
-    //         remote_port: parseInt(list_info[1]),
-    //         isp: 'Ngẫu nhiên',
-    //     };
-    // } else {
-    //     data = {
-    //         ip,
-    //         os_id: 0,
-    //         proxy_type: type,
-    //         range_ip: 'Ngẫu nhiên',
-    //         random_password: true,
-    //         random_remote_port: true,
-    //         isp: 'Ngẫu nhiên',
-    //     };
-    // }
-
-    let data = {
-        ip: ip,
-        os_id: 0,
-        proxy_type: type,
-        range_ip: 'Ngẫu nhiên',
-        random_password: true,
-        random_remote_port: true,
-        isp: 'Ngẫu nhiên',
-    };
+        data = {
+            ip: ip,
+            proxy_type: type,
+            range_ip: list_info[0],
+            random_password: false,
+            random_remote_port: false,
+            password: list_info[3],
+            remote_port: parseInt(list_info[1]),
+            isp: 'Ngẫu nhiên',
+        };
+    } else {
+        data = {
+            ip: ip,
+            os_id: 0,
+            proxy_type: type,
+            range_ip: 'Ngẫu nhiên',
+            random_password: true,
+            random_remote_port: true,
+            isp: 'Ngẫu nhiên',
+        };
+    }
 
     try {
         const response = await fetch(url, {

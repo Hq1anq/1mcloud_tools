@@ -18,7 +18,10 @@ const elements = {
     reinstallType: document.getElementById('reinstallType-trigger'),
     reinstallBtn: document.getElementById('reinstallBtn'),
 
+    changeIpInput: document.getElementById('changeIpInput'),
+    changeIpType: document.getElementById('changeIpType-trigger'),
     changeIpBtn: document.getElementById('changeIpBtn'),
+
     copyIpBtn: document.getElementById('copyIpBtn'),
     pauseBtn: document.getElementById('pauseBtn'),
     refundBtn: document.getElementById('refundBtn')
@@ -213,6 +216,7 @@ async function changeIp() {
 
     const proxyLines = []; // collect proxies here
     const apiKeyString = elements.apiKey.value.trim();
+    const proxyType = elements.changeIpType.textContent.trim() === 'SOCKS5' ? 'proxy_sock_5' : 'proxy_https';
 
     for (const row of selectedRows) {
         const cells = row.cells;
@@ -226,7 +230,7 @@ async function changeIp() {
             const res = await fetch('/proxy/change-ip', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ip: ip, apiKey: apiKeyString })
+                body: JSON.stringify({ ip: ip, custom_info: elements.changeIpInput.value.trim(), apiKey: apiKeyString, type: proxyType })
             });
 
             const data = await res.json();
@@ -466,12 +470,16 @@ function updateRowContent(row, text, action) {
 
     // Update 'changed' count if it's changeIp
     if (action === 'changeIp') {
+        const changeIpType = elements.changeIpType.textContent.trim() === 'SOCKS5' ? 'SOCKS5 Proxy' : 'HTTPS Proxy'
+        cells[typeIndex].innerText = changeIpType;
+
         const changedCell = cells[changedIndex];
         const currentValue = parseInt(changedCell.innerText.trim()) || 0;
         changedCell.innerText = currentValue + 1;
 
         updateRowData(id, {
             ip_port: `${newProxy[0]}:${newProxy[1]}`,
+            type: changeIpType,
             changed: currentValue + 1,
             status: 'Running'
         });

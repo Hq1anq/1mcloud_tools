@@ -31,7 +31,6 @@
     --color-violet-600: oklch(54.1% 0.281 293.009);
     --color-purple-600: oklch(55.8% 0.288 302.321);
     --color-pink-600: oklch(59.2% 0.249 0.584);
-    --color-gray-100: oklch(96.7% 0.003 264.542);
     --color-gray-400: oklch(70.7% 0.022 261.325);
     --color-gray-500: oklch(55.1% 0.027 264.364);
     --color-gray-700: oklch(37.3% 0.034 259.733);
@@ -61,8 +60,6 @@
     --radius-sm: 0.25rem;
     --radius-lg: 0.5rem;
     --radius-xl: 0.75rem;
-    --ease-out: cubic-bezier(0, 0, 0.2, 1);
-    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
     --animate-spin: spin 1s linear infinite;
     --default-transition-duration: 150ms;
     --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -78,6 +75,8 @@
     --color-icon-hover: var(--icon-hover);
     --color-dropdown: var(--bg-dropdown);
     --color-navbar: var(--bg-navbar);
+    --color-navbar-menu: var(--bg-navbar-menu);
+    --color-navbar-menu-selected: var(--bg-navbar-menu-selected);
     --color-toggle-theme: var(--bg-toggle-theme);
     --color-bg-hover: var(--bg-hover);
     --color-bg-selected: var(--bg-selected);
@@ -665,17 +664,11 @@
   .border-border {
     border-color: var(--color-border);
   }
-  .border-gray-100 {
-    border-color: var(--color-gray-100);
-  }
   .border-input {
     border-color: var(--color-input);
   }
   .border-b-border {
     border-bottom-color: var(--color-border);
-  }
-  .bg-\[\#253349\] {
-    background-color: #253349;
   }
   .bg-black\/30 {
     background-color: color-mix(in srgb, #000 30%, transparent);
@@ -685,9 +678,6 @@
   }
   .bg-blue-600 {
     background-color: var(--color-blue-600);
-  }
-  .bg-blue-700 {
-    background-color: var(--color-blue-700);
   }
   .bg-blue-800 {
     background-color: var(--color-blue-800);
@@ -718,6 +708,12 @@
   }
   .bg-navbar {
     background-color: var(--color-navbar);
+  }
+  .bg-navbar-menu {
+    background-color: var(--color-navbar-menu);
+  }
+  .bg-navbar-menu-selected {
+    background-color: var(--color-navbar-menu-selected);
   }
   .bg-orange-600 {
     background-color: var(--color-orange-600);
@@ -888,9 +884,6 @@
   .text-\[\#cbd5e1\] {
     color: #cbd5e1;
   }
-  .text-\[var\(--dark-800\)\] {
-    color: var(--dark-800);
-  }
   .text-\[var\(--logo-ring\)\] {
     color: var(--logo-ring);
   }
@@ -929,6 +922,9 @@
   }
   .text-text-title {
     color: var(--color-text-title);
+  }
+  .text-toggle-theme {
+    color: var(--color-toggle-theme);
   }
   .text-white {
     color: var(--color-white);
@@ -977,11 +973,6 @@
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
-  .transition-\[background-color\] {
-    transition-property: background-color;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-  }
   .transition-all {
     transition-property: all;
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
@@ -992,38 +983,9 @@
     transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
-  .transition-transform {
-    transition-property: transform, translate, scale, rotate;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-  }
-  .duration-150 {
-    --tw-duration: 150ms;
-    transition-duration: 150ms;
-  }
   .duration-200 {
     --tw-duration: 200ms;
     transition-duration: 200ms;
-  }
-  .duration-300 {
-    --tw-duration: 300ms;
-    transition-duration: 300ms;
-  }
-  .duration-500 {
-    --tw-duration: 500ms;
-    transition-duration: 500ms;
-  }
-  .duration-\[0\.3s\] {
-    --tw-duration: 0.3s;
-    transition-duration: 0.3s;
-  }
-  .ease-in-out {
-    --tw-ease: var(--ease-in-out);
-    transition-timing-function: var(--ease-in-out);
-  }
-  .ease-out {
-    --tw-ease: var(--ease-out);
-    transition-timing-function: var(--ease-out);
   }
   .select-none {
     -webkit-user-select: none;
@@ -1264,12 +1226,6 @@
       }
     }
   }
-  .md\:border-0 {
-    @media (width >= 48rem) {
-      border-style: var(--tw-border-style);
-      border-width: 0px;
-    }
-  }
   .md\:bg-transparent {
     @media (width >= 48rem) {
       background-color: transparent;
@@ -1325,11 +1281,6 @@
       }
     }
   }
-  .dark\:border-gray-700 {
-    @media (prefers-color-scheme: dark) {
-      border-color: var(--color-gray-700);
-    }
-  }
 }
 :root {
   --dark-900: #14171c;
@@ -1348,6 +1299,7 @@
   --blue-300: #8DD8FF;
   --blue-400: #46A9FD;
   --blue-500: #007bfc;
+  --blue-700: #053fe5;
   --color-primary: #60a5fa;
   --color-success: #22c55e;
   --color-warning: #eab308;
@@ -1364,6 +1316,8 @@
   --bg-checkbox: #F5F0CD;
   --bg-toast: var(--blue-400);
   --bg-navbar: var(--light-100);
+  --bg-navbar-menu: var(--light-200);
+  --bg-navbar-menu-selected: var(--blue-300);
   --bg-toggle-theme: var(--blue-400);
   --bg-hover: hsl(from var(--bg-surface) h s calc(l - 10));
   --bg-selected: hsl(from var(--bg-surface) h s calc(l - 20));
@@ -1393,6 +1347,8 @@
   --bg-checkbox: var(--dark-750);
   --bg-toast: hsl(from var(--bg-surface) h s calc(l + 5));
   --bg-navbar: #1e293b;
+  --bg-navbar-menu: #253349;
+  --bg-navbar-menu-selected: var(--blue-700);
   --bg-toggle-theme: var(--dark-500);
   --bg-hover: hsl(from var(--bg-surface) h s calc(l + 5));
   --bg-selected: hsl(from var(--bg-surface) h s calc(l + 10));
@@ -1405,9 +1361,25 @@
   --border: var(--dark-600);
   --border-input: var(--dark-500);
   --border-checkbox-hover: var(--dark-500);
-  --logo-ring: #053fe5;
+  --logo-ring: var(--blue-700);
   --logo-inner: #e2e2e4;
   --highlight-brightness: 120%;
+}
+[data-theme] * {
+  transition: none;
+}
+.theme-transitions * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+.theme-transitions .all-slow {
+  transition-property: all;
+  transition-timing-function: ease-out;
+  transition-duration: 0.5s;
+}
+.theme-transitions .navbar-transition {
+  transition-property: all;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.5s;
 }
 @layer base {
   input[type="text"], input[type="number"], input[type="password"], textarea {
@@ -1701,10 +1673,6 @@
   syntax: "*";
   inherits: false;
 }
-@property --tw-ease {
-  syntax: "*";
-  inherits: false;
-}
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -1752,7 +1720,6 @@
       --tw-drop-shadow-alpha: 100%;
       --tw-drop-shadow-size: initial;
       --tw-duration: initial;
-      --tw-ease: initial;
     }
   }
 }

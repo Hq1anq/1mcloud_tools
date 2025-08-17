@@ -88,7 +88,6 @@
     --color-text-muted: var(--text-muted);
     --color-border: var(--border);
     --color-border-input: var(--border-input);
-    --color-border-checkbox-hover: var(--border-checkbox-hover);
   }
 }
 @layer base {
@@ -168,6 +167,7 @@
   }
   img, svg, video, canvas, audio, iframe, embed, object {
     display: block;
+    vertical-align: middle;
   }
   img, video {
     max-width: 100%;
@@ -478,8 +478,8 @@
   .cursor-pointer {
     cursor: pointer;
   }
-  .grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   .flex-col {
     flex-direction: column;

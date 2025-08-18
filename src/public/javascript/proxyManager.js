@@ -24,7 +24,8 @@ const elements = {
 
     copyIpBtn: document.getElementById('copyIpBtn'),
     pauseBtn: document.getElementById('pauseBtn'),
-    refundBtn: document.getElementById('refundBtn')
+    refundBtn: document.getElementById('refundBtn'),
+    rebootBtn: document.getElementById('rebootBtn')
 }
 
 // Initialize
@@ -120,6 +121,7 @@ function bindEvents() {
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.reinstallBtn.addEventListener('click', reinstall);
     elements.pauseBtn.addEventListener('click', pause);
+    elements.rebootBtn.addEventListener('click', reboot);
     elements.changeIpBtn.addEventListener('click', changeIp);
     // elements.pauseBtn.addEventListener('click', testToast);
     // elements.refundBtn.addEventListener('click', test);
@@ -374,6 +376,44 @@ async function pause() {
     updateCounts();
 }
 
+async function reboot() {
+    const selectedRows = getSelectedRows();
+    if (selectedRows.length === 0) {
+        showToast('Select at least one row to REBOOT', 'info');
+        return;
+    }
+
+    showToast("REBOOT...", 'loading');
+
+    const sids = selectedRows
+        .map(row => row.cells[1].innerText.trim())
+        .join(',');
+    const apiKeyString = elements.apiKey.value.trim();
+
+    try {
+        const res = await fetch('/proxy/reboot', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sids: sids, apiKey: apiKeyString })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+            for (const row of selectedRows)
+                updateRowContent(row, '', 'reboot');
+            changeToToast(`Reboot DONE`, 'success');
+        } else {
+            changeToToast(`Fail to REBOOT`, 'error');
+            console.error(`❌ Failed to REBOOT for sid ${sid}:`, data.error);
+        }
+    } catch (err) {
+        changeToToast('Fail to REBOOT', 'error');
+        console.error(`❌ Error REBOOT for sids ${sids}:`, err);
+    }
+
+    updateCounts();
+}
+
 async function changeNote() {
     const noteInput = elements.noteInput.value;
     const isReplace = elements.replaceCheckbox.checked;
@@ -441,6 +481,13 @@ function updateRowContent(row, text, action) {
     if (action === 'pause') {
         cells[8].innerHTML = getStatusChip('Paused');
         updateRowData(id, { status: 'Paused' });
+        checkbox.checked = false;
+        row.classList.remove('selected-row');
+        return;
+    }
+    if (action === 'reboot') {
+        cells[8].innerHTML = getStatusChip('Running');
+        updateRowData(id, { status: 'Running' });
         checkbox.checked = false;
         row.classList.remove('selected-row');
         return;

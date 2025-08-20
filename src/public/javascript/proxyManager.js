@@ -136,11 +136,11 @@ async function changeIp() {
                 updateRowContent(row, data.proxyInfo, 'changeIp');
             } else {
                 console.error(`❌ Failed to CHANGE IP for ${ip}:`, data.error);
-                row.classList.add('bg-red-900/40');
+                row.classList.add('bg-error-cell');
             }
         } catch (err) {
             console.error(`❌ Error CHANGE IP for ${ip}:`, err);
-            row.classList.add('bg-red-900/40');
+            row.classList.add('bg-error-cell');
         }
 
         await delay(2000);
@@ -201,12 +201,12 @@ async function reinstall() {
             } else {
                 showToast(`Failed to REINSTALL for sid ${sid}`, 'error');
                 console.error(`❌ Failed to REINSTALL for sid ${sid}:`, data.error);
-                row.classList.add('bg-red-900/40');
+                row.classList.add('bg-error-cell');
             }
         } catch (err) {
             showToast(`Failed to REINSTALL for sid ${sid}`, 'error');
             console.error(`❌ Error REINSTALL for sid ${sid}:`, err);
-            row.classList.add('bg-red-900/40');
+            row.classList.add('bg-error-cell');
         }
 
         await delay(2000);
@@ -337,12 +337,12 @@ async function changeNote() {
             else {
                 showToast(`Failed to changeNote for sid ${sid}`, 'error');
                 console.error(`❌ Failed to CHANGE NOTE for sid ${sid}:`, data.error);
-                row.classList.add('bg-red-900/40');
+                row.classList.add('bg-error-cell');
             }
         } catch (err) {
             showToast(`Failed to changeNote for sid ${sid}`, 'error');
             console.error(`❌ Error CHANGE NOTE for sid ${sid}:`, err);
-            row.classList.add('bg-red-900/40');
+            row.classList.add('bg-error-cell');
         }
 
         await delay(1000);
@@ -356,7 +356,7 @@ function updateRowContent(row, text, action) {
     const cells = row.children;
     const id = row.dataset.id;
     const checkbox = cells[0].firstElementChild;
-    row.classList.add('bg-green-900/40');
+    row.classList.add('bg-success-cell');
     if (action === 'pause') {
         cells[8].innerHTML = getStatusChip('Paused');
         updateRowData(id, { status: 'Paused' });

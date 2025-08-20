@@ -36,6 +36,12 @@
     --color-border: var(--border);
     --color-border-input: var(--border-input);
     --color-border-checkbox-hover: var(--border-checkbox-hover);
+
+    --color-success-cell: var(--success-cell);
+    --color-error-cell: var(--error-cell);
+
+    --color-warning: var(--warning);
+    --color-info: var(--info);
 }
 
 /* Theme Variables */
@@ -60,13 +66,6 @@
     --blue-400: #46A9FD;
     --blue-500: #007bfc;
     --blue-700: #053fe5;
-
-    /* Base Theme Variables - Light Mode Default */
-    --color-primary: #60a5fa;
-    --color-success: #22c55e;    /* green-500 */
-    --color-warning: #eab308;    /* yellow-500 */
-    --color-error: #ef4444;      /* red-500 */
-    --color-info: #3b82f6;       /* blue-500 */
 }
 
 [data-theme="light"] {
@@ -106,6 +105,12 @@
     --logo-inner: #000000;
 
     --highlight-brightness: 80%;
+
+    --success-cell: #00c95066;    /* green-500/40 */
+    --error-cell: #fb2c3666;      /* red-500/40 */
+
+    --warning: #eab308;    /* yellow-500 */
+    --info: #3b82f6;       /* blue-500 */
 
     #theme-toggle-slider {
         transform: translateX(26px);
@@ -150,6 +155,12 @@
     --logo-inner: #e2e2e4;
 
     --highlight-brightness: 120%;
+
+    --success-cell: #0d542b99;    /* green-900 */
+    --error-cell: #82181a99;      /* red-900 */
+
+    --warning: #eab308;    /* yellow-500 */
+    --info: #3b82f6;       /* blue-500 */
 }
 
 /* Base theme colors without transitions */

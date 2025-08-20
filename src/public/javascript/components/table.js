@@ -236,8 +236,8 @@ function handleRowCheckboxChange(e) {
     if (e.target.classList.contains('rowCheckbox')) {
         const tr = e.target.closest('tr');
         if (e.target.checked) {
-            tr.classList.remove('bg-green-900/40');
-            tr.classList.remove('bg-red-900/40')
+            tr.classList.remove('bg-success-cell');
+            tr.classList.remove('bg-error-cell')
             tr.classList.add('selected-row');
         } else {
             tr.classList.remove('selected-row');

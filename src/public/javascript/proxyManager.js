@@ -1,5 +1,5 @@
 import { setData, initTable, updateRowData, updateCounts, getSelectedRows, getStatusChip } from '/javascript/components/table.js';
-import { showToast, changeToToast } from '/javascript/components/toaster.js';
+import { showToast, changeToToast, testToast } from '/javascript/components/toaster.js';
 import { showCopyDialog } from '/javascript/components/copyDialog.js';
 // DOM elements
 const elements = {
@@ -124,7 +124,7 @@ function bindEvents() {
     elements.rebootBtn.addEventListener('click', reboot);
     elements.changeIpBtn.addEventListener('click', changeIp);
     // elements.pauseBtn.addEventListener('click', testToast);
-    // elements.refundBtn.addEventListener('click', test);
+    elements.refundBtn.addEventListener('click', testToast);
 }
 
 function copyIp() {
@@ -190,17 +190,27 @@ async function getData() {
         const response = await fetch('/getData', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ipString, amountString, apiKeyString })
+            body: JSON.stringify({ ips: ipString, amount: +amountString, apiKey: apiKeyString })
         });
 
-        const result = await response.json();
-
-        if (response.ok) {
+        if (response.ok && response.status === 200) {
+            const result = await response.json();
             setData(result.data || []); // delegate everything to table.js
             changeToToast('Get Data DONE!', 'success');
             // saveToLocal(allData);
         } else {
-            console.log(`❌ Error: ${result.error}`);
+            console.log(`❌ Error: ${response.status}`);
+            switch (response.status) {
+                case 401:
+                    changeToToast('Wrong API KEY!', 'error');
+                    break;
+                case 500:
+                    changeToToast('Fail to get data, try again!', 'error');
+                    break;
+                default:
+                    changeToToast(`❌ Error: ${response.status}`, 'error');
+                    break;
+            }
         }
     } catch (err) {
         console.error('Fetch error:', err);
@@ -258,6 +268,8 @@ async function changeIp() {
     changeToToast('Change Ip DONE', 'success');
 
     updateCounts();
+
+    await delay(500);
 
     // ✅ Copy to clipboard if there are any successful proxies
     if (proxyLines.length > 0) {
@@ -324,6 +336,8 @@ async function reinstall() {
     changeToToast('Reinstall DONE', 'success');
 
     updateCounts();
+
+    await delay(500);
 
     // ✅ Copy to clipboard if there are any successful proxies
     if (proxyLines.length > 0) {

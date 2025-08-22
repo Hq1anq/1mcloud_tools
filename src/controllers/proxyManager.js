@@ -5,7 +5,7 @@ dotenv.config();
 export async function getData(req, res) {
     const url = 'https://api.smartserver.vn/api/server/list';
     try {
-        const { ipString, amountString, apiKey } = req.body;
+        const { ips, amount, apiKey } = req.body;
 
         const headers = {
             'accept': 'application/json, text/plain, */*',
@@ -19,12 +19,12 @@ export async function getData(req, res) {
 
         const params = new URLSearchParams({
             page: 1,
-            limit: +amountString || 200,
+            limit: amount || 200,
             by_status: '',
             by_time: 'all',
             by_created: '',
             keyword: '',
-            ips: ipString || '',
+            ips: ips || '',
             proxy: 'true',
         });
 
@@ -33,9 +33,9 @@ export async function getData(req, res) {
             headers: headers,
         });
 
-        if (!response.ok) {
+        if (!response.ok || response.status !== 200) {
             console.error('❌ Request failed:', response.status);
-            return res.status(response.status).json({ error: 'Request failed' });
+            return res.status(response.status).json({ error: 'getData Request failed' });;
         }
 
         const json = await response.json();
@@ -52,13 +52,6 @@ export async function getData(req, res) {
             status: server.trang_thai,
             note: server.note
         }));
-
-        // Optional save to file
-        // if (save === true || save === 'true') {
-        //     const fs = require('fs');
-        //     fs.writeFileSync('data.json', JSON.stringify(data, null, 4), 'utf8');
-        //     console.log('✅ Data saved to data.json');
-        // }
 
         return res.json({ data });
 

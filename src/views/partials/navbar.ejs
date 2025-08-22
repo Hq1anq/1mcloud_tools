@@ -4,7 +4,7 @@
     const inactive = "text-[#cbd5e1] md:hover:text-[#9dc9ff] hover:bg-[#2c3c57] md:hover:bg-transparent";
 %>
 
-<nav class="bg-[#1e293b] text-white py-3 px-3 border-b-2 border-b-dark-700 sticky top-0 z-50 shadow-md">
+<nav class="bg-[var(--bg-navbar)] text-white py-3 px-3 border-b-2 border-b-[var(--border)] sticky top-0 z-50 shadow-md">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
 
         <!-- Logo and Title -->
@@ -19,7 +19,7 @@
 
         <!-- Mobile Menu Button -->
         <button id="menu-toggle" type="button"
-            class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:focus:ring-gray-600">
+            class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm rounded-lg md:hidden hover:bg-gray-700 text-gray-400">
             <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M1 1h15M1 7h15M1 13h15"/>

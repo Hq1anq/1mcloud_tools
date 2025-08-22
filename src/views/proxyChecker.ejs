@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-
-<body class="bg-dark-900 text-white text-xs sm:text-base font-sans scrollbar-dark">
+<body class="bg-[var(--bg-body)] text-[var(--text-primary)] text-xs sm:text-base font-sans scrollbar-dark">
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Proxy Checker' }) %>
     <!-- Status Display -->
@@ -18,21 +16,23 @@
     <!-- Main Container -->
     <div class="min-h-screen flex flex-col pt-2">
         <!-- Fixed Top Controls -->
-        <div class="bg-dark-800 border-b border-dark-600 top-16 z-40 shadow-lg">
+        <div class="bg-[var(--bg-surface)] border-b border-[var(--border)] top-16 z-40 shadow-lg">
             <div class="max-w-7xl mx-auto px-4 py-2">
                 <!-- Top Controls Area -->
-                <div class="bg-dark-700 rounded-lg p-4 pb-2">
+                <div class="bg-[var(--bg-wrapper)] rounded-lg p-4 pb-2">
                     <div class="flex flex-col lg:flex-row gap-4">
                         <!-- Left Side - Proxy Input -->
                         <div class="w-full lg:w-1/2">
                             <div class="space-y-3">
                                 <div class="flex justify-between items-center">
-                                    <label class="block text-sm font-medium text-gray-300">
-                                        <i class="fas fa-server mr-2"></i>Proxy List (ip:port:username:password)
+                                    <label class="block text-sm font-medium text-[var(--text-secondary)]">
+                                        <i class="fas fa-server mr-2"></i>
+                                        Proxy List (ip:port:username:password)
                                     </label>
                                     <button id="deleteBtn"
                                         class="bg-red-600 hover:bg-red-700 font-medium py-1 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
-                                        <i class="fas fa-trash-alt mr-2"></i>Delete
+                                        <i class="fas fa-trash-alt mr-2"></i>
+                                        Delete
                                     </button>
                                 </div>
                                 <textarea id="proxyInput" class="scrollbar-dark"
@@ -46,17 +46,20 @@
                             <!-- Top Row - Proxy Type and Check Button -->
                             <div class="flex mb-0">
                                 <div class="flex-2/3">
-                                    <label class="block text-sm font-medium text-gray-300 mb-2">
-                                        <i class="fas fa-check-circle mr-2"></i>Check Proxies
+                                    <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+                                        <i class="fas fa-check-circle mr-2"></i>
+                                        Check Proxies
                                     </label>
                                     <button id="checkProxiesBtn"
                                         class="w-full bg-orange-600 hover:bg-orange-700 font-bold py-2 px-4 rounded-l-lg transition-colors duration-200 flex items-center justify-center">
-                                        <i class="fas fa-play mr-2"></i>Check Now
+                                        <i class="fas fa-play mr-2"></i>
+                                        Check Now
                                     </button>
                                 </div>
                                 <div class="flex-1/3">
-                                    <label class="block text-sm font-medium text-gray-300 mb-2">
-                                        <i class="fas fa-exchange-alt mr-2"></i>Proxy Type
+                                    <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+                                        <i class="fas fa-exchange-alt mr-2"></i>
+                                        Proxy Type
                                     </label>
                                     <%- include('partials/dropDown', {
                                         dropdownId: 'proxyTypeSelect',
@@ -70,12 +73,14 @@
                             <div class="flex">
                                 <button id="copyIpBtn"
                                     class="flex-1 bg-sky-600 hover:bg-sky-700 font-medium py-3 px-4 rounded-l-xl transition-colors duration-200 flex items-center justify-center">
-                                    <i class="fas fa-copy mr-2"></i>Copy IPs
+                                    <i class="fas fa-copy mr-2"></i>
+                                    Copy IPs
                                 </button>
 
                                 <button id="copyFullProxyBtn"
                                     class="flex-1 bg-violet-600 hover:bg-violet-700 font-medium py-3 px-4 rounded-r-xl transition-colors duration-200 flex items-center justify-center">
-                                    <i class="fas fa-copy mr-2"></i>Copy Full Proxies
+                                    <i class="fas fa-copy mr-2"></i>
+                                    Copy Full Proxies
                                 </button>
                             </div>
                             
@@ -83,12 +88,14 @@
                             <div class="flex">
                                 <button id="selectActiveBtn"
                                     class="flex-1 bg-green-600 hover:bg-green-700 text-nowrap font-medium py-3 px-4 rounded-l-xl transition-colors duration-200 flex items-center justify-center">
-                                    <i class="fas fa-check-circle mr-2"></i>Select Active Proxies
+                                    <i class="fas fa-check-circle mr-2"></i>
+                                    Select Active Proxies
                                 </button>
 
                                 <button id="selectErrorBtn"
                                     class="flex-1 bg-red-600 hover:bg-red-700 text-nowrap font-medium py-3 px-4 rounded-r-xl transition-colors duration-200 flex items-center justify-center">
-                                    <i class="fas fa-exclamation-circle mr-2"></i>Select Error Proxies
+                                    <i class="fas fa-exclamation-circle mr-2"></i>
+                                    Select Error Proxies
                                 </button>
                             </div>
                         </div>
@@ -127,7 +134,9 @@
                     <path class="st0" d="M24.9,6.2c0,0.4-0.4,0.8-0.8,0.8s-0.8-0.4-0.8-0.8s0.4-0.8,0.8-0.8S24.9,5.8,24.9,6.2z"/>
                     <path class="st0" d="M21.7,6.2c0,0.4-0.4,0.8-0.8,0.8s-0.8-0.4-0.8-0.8s0.4-0.8,0.8-0.8S21.7,5.8,21.7,6.2z"/>
                 </svg>
-                <p class="text-gray-400">No proxies to check. Enter your proxies and click "Check Now".</p>
+                <p class="text-[var(--text-muted)]">
+                    No proxies to check. Enter your proxies and click "Check Now".
+                </p>
             `,
             showActions: false,
         }) %>

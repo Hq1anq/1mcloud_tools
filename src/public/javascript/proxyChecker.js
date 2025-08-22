@@ -32,7 +32,7 @@ function insertTestData() {
             port: '8080',
             username: 'user1',
             password: 'pass1',
-            type: 'HTTP',
+            type: 'HTTPS',
             status: 'Active'
         },
         {
@@ -48,7 +48,7 @@ function insertTestData() {
             port: '80',
             username: 'user3',
             password: 'pass3',
-            type: 'HTTP',
+            type: 'HTTPS',
             status: 'Active'
         },
         {
@@ -56,7 +56,7 @@ function insertTestData() {
             port: '1080',
             username: 'user4',
             password: 'pass4',
-            type: 'SOCKS4',
+            type: 'SOCKS5',
             status: 'Inactive'
         },
         {
@@ -64,7 +64,7 @@ function insertTestData() {
             port: '8888',
             username: 'user5',
             password: 'pass5',
-            type: 'HTTP',
+            type: 'HTTPS',
             status: 'Active'
         }
     ];

@@ -52,10 +52,10 @@ export function addRow(data, addData = false, includeActions = false) {
 
     tr.dataset.id = data.sid; // Unique key
 
-    tr.classList.add('hover:bg-dark-750');
+    tr.classList.add('hover:bg-[var(--bg-hover)]');
 
     let rowHTML = `
-        <td class="px-4 py-2 border-b border-dark-600">
+        <td class="px-4 py-2 border-b border-[var(--border)]">
             <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
         </td>
     `;
@@ -65,7 +65,7 @@ export function addRow(data, addData = false, includeActions = false) {
         const content = key === 'status' ? getStatusChip(value) : value;
 
         rowHTML += `
-        <td class="px-4 py-2 border-b border-dark-600 whitespace-nowrap ${alignment}">
+        <td class="px-4 py-2 border-b border-[var(--border)] whitespace-nowrap ${alignment}">
             ${content}
         </td>
         `;
@@ -73,7 +73,7 @@ export function addRow(data, addData = false, includeActions = false) {
 
     if (includeActions) {
         rowHTML += `
-        <td class="px-4 py-2 border-b border-dark-600 space-x-2">
+        <td class="px-4 py-2 border-b border-[var(--border)] space-x-2">
             <button class="bg-blue-600 py-1 px-4 rounded-lg hover:bg-blue-700" onclick="editRow(this)">Edit</button>
             <button class="bg-red-600 py-1 px-4 rounded-lg hover:bg-red-700" onclick="deleteRow(this)">Delete</button>
         </td>

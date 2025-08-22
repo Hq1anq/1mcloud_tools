@@ -12,13 +12,87 @@
     --color-dark-500: #64748b;
 }
 
+/* Theme Variables */
+:root {
+    /* Dark Theme colors */
+    --dark-900: #14171c;
+    --dark-800: #282e38;
+    --dark-750: #323a45;
+    --dark-700: #3c4653;
+    --dark-600: #505d6f;
+    --dark-500: #64748b;
+    /* Light Theme Colors */
+    --light-900: #ffffff;
+    --light-800: #f8fafc;
+    --light-700: #f1f5f9;
+    --light-600: #e2e8f0;
+    --light-500: #cbd5e1;
+    /* Base Theme Variables - Light Mode Default */
+    --color-primary: #60a5fa;    /* blue-400 */
+    --color-success: #22c55e;    /* green-500 */
+    --color-warning: #eab308;    /* yellow-500 */
+    --color-error: #ef4444;      /* red-500 */
+    --color-info: #3b82f6;       /* blue-500 */
+
+    /* Background Colors */
+    --bg-body: var(--light-900);
+    --bg-surface: var(--light-800);
+    --bg-wrapper: var(--light-700);
+    --bg-input: var(--light-900);
+    --bg-dropdown: var(--light-900);
+    --bg-toast: var(--light-900);
+
+    --bg-navbar: var(--light-800);
+
+    /* Text Colors */
+    --text-primary: #111827;     /* gray-900 */
+    --text-secondary: #374151;   /* gray-700 */
+    --text-muted: #6b7280;       /* gray-500 */
+
+    /* Border Colors */
+    --border: var(--light-600);
+    --border-checkbox-hover: var(--light-500);
+
+    /* Status Colors - Chips */
+    --status-active: var(--color-success);
+    --status-inactive: var(--color-error);
+    --status-pending: var(--color-warning);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+    /* Background Colors */
+    --bg-body: var(--dark-900);
+    --bg-surface: var(--dark-800);
+    --bg-wrapper: var(--dark-700);
+    --bg-input: var(--dark-600);
+    --bg-dropdown: var(--dark-800);
+    --bg-toast: var(--dark-800);
+
+    --bg-navbar: #1e293b;
+    --bg-hover: hsl(from var(--bg-surface) h s calc(l + 5));
+    --bg-selected: hsl(from var(--bg-surface) h s calc(l + 10));
+
+    /* Text Colors */
+    --text-primary: #f3f4f6;     /* gray-100 */
+    --text-secondary: #d1d5db;   /* gray-300 */
+    --text-muted: #9ca3af;       /* gray-400 */
+
+    --icon-hover: hsl(from var(--text-secondary) h s calc(l + 10));
+
+    /* Border Colors */
+    --border: var(--dark-600);
+    --border-input: var(--dark-500);
+    --border-checkbox-hover: var(--dark-500);
+}
+
 /* Custom base styles */
 @layer base {
     input[type="text"],
     input[type="number"],
     input[type="password"],
     textarea {
-        @apply bg-dark-600 border border-2 border-dark-500 rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:border-none focus:ring-2 focus:ring-blue-500 w-full;
+        @apply bg-[var(--bg-input)] border border-2 border-[var(--border-input)] rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:border-none focus:ring-2 focus:ring-blue-500 w-full;
     }
 
     /* Hides the arrows in Chrome, Safari, Edge */

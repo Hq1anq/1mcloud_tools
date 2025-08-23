@@ -30,7 +30,10 @@ export function showGetAPIKeyDialog() {
     elements.viewKeyBtn.classList.add('hidden');
     elements.getKeyBtn.classList.remove('hidden');
     elements.title.innerText = 'Authenticate to Get API Key';
+
     elements.emailInput.classList.remove('cursor-not-allowed');
+    if (authAccount.email)
+        elements.emailInput.value = authAccount.email;
     elements.emailDiv.classList.remove('opacity-50');
     elements.emailInput.disabled = false;
 
@@ -82,7 +85,6 @@ export async function showViewKeyDialog(apiKey, apiKeyEn, eyeIconAPIKey) {
 
     elements.dialog.classList.remove("hidden");
     elements.dialog.classList.add("flex");
-    authAccount = JSON.parse(localStorage.getItem("authAccount"));
 }
 
 export function closeAPIKeyDialog() {
@@ -108,6 +110,7 @@ export async function setAuthAccount(email, password) {
 elements.eyeIcon.addEventListener("click", handleViewPassword);
 elements.cancelChangeIp.addEventListener("click", closeAPIKeyDialog);
 elements.viewKeyBtn.addEventListener("click", handleViewKey);
+authAccount = JSON.parse(localStorage.getItem("authAccount"));
 
 export async function handleViewKey() {
     const password = elements.passwordInput.value;

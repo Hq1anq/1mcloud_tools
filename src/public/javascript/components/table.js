@@ -143,7 +143,7 @@ export function displaySorted(data) {
         });
         return reordered;
     });
-    filteredData = [...sortedData];
+    filteredData = sortedData;
     renderedCount = 0;
     isSorted = true;
     renderChunk();
@@ -244,13 +244,17 @@ export function updateRowData(id, newData) {
     const numericId = Number(id); // Convert to number
 
     const index = allData.findIndex(item => item.sid === numericId);
-    if (index !== -1) {
+    if (index !== -1)
         allData[index] = { ...allData[index], ...newData };
-    }
 
     const fIndex = filteredData.findIndex(item => item.sid === numericId);
-    if (fIndex !== -1) {
+    if (fIndex !== -1)
         filteredData[fIndex] = { ...filteredData[fIndex], ...newData };
+
+    if (sortedData) {
+        const sIndex = sortedData.findIndex(item => item.sid === numericId);
+        if (sIndex !== -1)
+            sortedData[sIndex] = { ...sortedData[sIndex], ...newData };
     }
 }
 
@@ -405,7 +409,7 @@ function applyFilter(page) {
 
     const targetData = isSorted ? sortedData : allData;
     filteredData = activeFilters.length === 0
-        ? [...targetData]  // no filters, keep all
+        ? targetData  // no filters, keep all
         : targetData.filter(row => {
             return activeFilters.every(([colKey, keyword]) => {
                 const cellValue = String(row[colKey]);
@@ -420,7 +424,7 @@ function applyFilter(page) {
 }
 
 export function showAllData() {
-    filteredData = [...allData];
+    filteredData = allData;
     isSorted = false;
     renderedCount = 0;
     elements.tbody.innerHTML = "";

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-[var(--bg-body)] text-[var(--text-primary)] text-xs sm:text-base font-sans scrollbar-dark">
+<body class="bg-body text-text-primary text-xs sm:text-base font-sans scrollbar-dark">
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Proxy Manager' }) %>
     <!-- Status Display -->
@@ -16,30 +16,30 @@
     <!-- Main Container -->
     <div class="min-h-screen flex flex-col pt-2">
         <!-- ========== TOP CONTROLS ========== -->
-        <div class="bg-[var(--bg-surface)] border-b border-[var(--border)] top-0 z-40 shadow-lg">
+        <div class="bg-surface border-b border-border top-0 z-40 shadow-lg">
             <div class="max-w-7xl mx-auto px-4 py-2">
                 <!-- ========== FEATURE CONTROLS ========== -->
-                <div class="bg-[var(--bg-wrapper)] rounded-lg p-4">
-                    <h3 class="text-lg font-semibold mb-3 text-[var(--text-secondary)]">
+                <div class="bg-wrapper rounded-lg p-4">
+                    <h3 class="text-text-secondary text-lg font-semibold mb-3">
                         <i class="fas fa-cogs mr-2"></i>Actions
                     </h3>
                     <div class="flex flex-col sm:flex-row gap-4">
                         <!-- IPs Input -->
                         <div class="sm:w-1/2 relative flex flex-col">
                             <div class="flex justify-between items-center">
-                                <label class="block font-medium text-[var(--text-secondary)] mb-2">
+                                <label class="block text-text-secondary font-medium mb-2">
                                     <i class="fas fa-server mr-2"></i>
                                     Enter IPs (one per line)
                                 </label>
                                 <button id="shuffleBtn"
-                                    class="bg-red-600 hover:bg-red-700 font-medium py-1 px-3 mb-1 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
+                                    class="bg-red-600 hover:brightness-900 font-medium py-1 px-3 mb-1 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
                                     <i class="fas fa-sync mr-2"></i>
                                     Shuffle
                                 </button>
                             </div>
-                            <button id="textCopyBtn" class="group absolute top-8 right-1 text-[var(--text-muted)] hover:text-[var(--text-secondary)] rounded-lg inline-flex items-center justify-center cursor-pointer">
+                            <button id="textCopyBtn" class="group absolute top-8 right-1 text-text-muted hover:text-text-primary rounded-lg inline-flex items-center justify-center cursor-pointer">
                                 <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" class="text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]" stroke-linejoin="round" stroke-width="2" d="M9 8v3a1 1 0 0 1-1 1H5m11 4h2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-7a1 1 0 0 0-1 1v1m4 3v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7.13a1 1 0 0 1 .24-.65L7.7 8.35A1 1 0 0 1 8.46 8H13a1 1 0 0 1 1 1Z"/>
+                                    <path stroke="currentColor" class="text-text-muted group-hover:text-text-primary" stroke-linejoin="round" stroke-width="2" d="M9 8v3a1 1 0 0 1-1 1H5m11 4h2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-7a1 1 0 0 0-1 1v1m4 3v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7.13a1 1 0 0 1 .24-.65L7.7 8.35A1 1 0 0 1 8.46 8H13a1 1 0 0 1 1 1Z"/>
                                 </svg>
                                 Copy
                             </button>
@@ -56,7 +56,7 @@
                                         placeholder="Enter amount" min="0">
                                     <div class="flex items-center">
                                         <button id="getDataBtn"
-                                            class="flex-1 bg-blue-600 hover:bg-blue-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                            class="flex-1 bg-blue-600 hover:brightness-90 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                             <i class="fas fa-download mr-2"></i>
                                             Get Data
                                         </button>
@@ -69,7 +69,7 @@
                                         placeholder="Enter note">
                                     <div class="flex items-center space-x-2">
                                         <button id="changeNoteBtn"
-                                            class="flex-1 bg-purple-600 hover:bg-purple-700 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                            class="flex-1 bg-purple-600 hover:brightness-90 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                             <i class="fas fa-edit mr-2"></i>
                                             Change Note
                                         </button>
@@ -79,11 +79,11 @@
                                                 <input id="replaceCheckbox" type="checkbox" class="sr-only" />
 
                                                 <!-- Custom box -->
-                                                <span class="w-5 h-5 flex items-center justify-center rounded border border-[var(--border)]
-                                                            bg-[var(--bg-checkbox)] transition-all duration-200
-                                                            group-hover:border-[var(--border-checkbox-hover)] relative overflow-visible">
+                                                <span class="w-5 h-5 text-text-secondary flex items-center justify-center rounded border border-border
+                                                            bg-checkbox transition-all duration-200
+                                                            group-hover:border-border-checkbox-hover relative overflow-visible">
                                                     <!-- Big check -->
-                                                    <svg class="w-5 h-5 text-(var(--text-secondary)) opacity-0 scale-75 transition-all duration-200
+                                                    <svg class="w-5 h-5 opacity-0 scale-75 transition-all duration-200
                                                                 group-has-[input:checked]:opacity-100 group-has-[input:checked]:scale-100 absolute"
                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
@@ -91,7 +91,7 @@
                                                 </span>
 
                                                 <!-- Text -->
-                                                <span class="ml-2 text-sm text-[var(--text-secondary)]">
+                                                <span class="text-text-secondary text-sm ml-2">
                                                     Replace
                                                 </span>
                                             </label>
@@ -106,7 +106,7 @@
                                         placeholder="port:username:password">
                                     <div class="flex">
                                         <button id="reinstallBtn"
-                                            class="flex-1 bg-orange-600 hover:bg-orange-700 font-medium py-2 px-3 rounded-l-lg transition-colors duration-200 flex items-center justify-center">
+                                            class="flex-1 bg-orange-600 hover:brightness-90 font-medium py-2 px-3 rounded-l-lg transition-colors duration-200 flex items-center justify-center">
                                             <i class="fas fa-sync-alt mr-2"></i>
                                             Reinstall
                                         </button>
@@ -124,7 +124,7 @@
                                         placeholder="ip:port:username:password">
                                     <div class="flex">
                                         <button id="changeIpBtn"
-                                            class="flex-1 bg-green-600 hover:bg-green-700 text-nowrap font-medium py-2 px-3 rounded-l-lg transition-colors duration-200 flex items-center justify-center">
+                                            class="flex-1 bg-green-600 hover:brightness-90 text-nowrap font-medium py-2 px-3 rounded-l-lg transition-colors duration-200 flex items-center justify-center">
                                             <i class="fas fa-exchange-alt mr-2"></i>
                                             Change IP
                                         </button>
@@ -139,17 +139,17 @@
                             <!-- Simple Action Buttons (bottom) -->
                             <div class="grid grid-cols-3 gap-3">
                                 <button id="copyIpBtn"
-                                    class="bg-yellow-600 hover:bg-yellow-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                    class="bg-yellow-600 hover:brightness-90 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                     <i class="fas fa-copy mr-2"></i>
                                     Copy IP
                                 </button>
                                 <button id="pauseBtn"
-                                    class="bg-red-600 hover:bg-red-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                    class="bg-red-600 hover:brightness-90 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                     <i class="fas fa-pause mr-2"></i>
                                     Pause
                                 </button>
                                 <button id="refundBtn"
-                                    class="bg-pink-600 hover:bg-pink-700  font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                    class="bg-pink-600 hover:brightness-90 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                     <i class="fas fa-undo mr-2"></i>
                                     Refund
                                 </button>
@@ -169,8 +169,8 @@
             data: [],
             showActions: false,
             emptyMessage: `
-                <i class="fas fa-server text-4xl text-[var(--text-muted)] mb-4"></i>
-                <p class="text-[var(--text-muted)]">
+                <i class="fas fa-server text-4xl text-text-muted mb-4"></i>
+                <p class="text-text-muted">
                     No data available. Click "Get Data" to load information.
                 </p>
             `,

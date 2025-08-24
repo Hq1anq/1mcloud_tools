@@ -4,12 +4,36 @@
 @tailwind utilities;
 
 @theme {
-    --color-dark-900: #14171c;
-    --color-dark-800: #282e38;
-    --color-dark-750: #323a45;
-    --color-dark-700: #3c4653;
-    --color-dark-600: #505d6f;
-    --color-dark-500: #64748b;
+    /* Backgrounds */
+    --color-body: var(--bg-body);
+    --color-surface: var(--bg-surface);
+    --color-wrapper: var(--bg-wrapper);
+    --color-thead: var(--bg-thead);
+    --color-input: var(--bg-input);
+    --color-checkbox: var(--bg-checkbox);
+    --color-toast: var(--bg-toast);
+    --color-icon-hover: var(--icon-hover);
+
+    --color-dropdown: var(--bg-dropdown);
+    --color-dropdown-selected: var(--bg-dropdown-selected);
+
+    --color-navbar: var(--bg-navbar);
+    --color-toggle-theme: var(--bg-toggle-theme);
+    --color-bg-hover: var(--bg-hover);
+    --color-bg-selected: var(--bg-selected);
+
+    --color-reload-btn: var(--bg-reload-btn);
+
+    /* Text */
+    --color-text-title: var(--text-title);
+    --color-text-primary: var(--text-primary);
+    --color-text-secondary: var(--text-secondary);
+    --color-text-muted: var(--text-muted);
+
+    /* Border */
+    --color-border: var(--border);
+    --color-border-input: var(--border-input);
+    --color-border-checkbox-hover: var(--border-checkbox-hover);
 }
 
 /* Theme Variables */
@@ -22,41 +46,63 @@
     --dark-600: #505d6f;
     --dark-500: #64748b;
     /* Light Theme Colors */
-    --light-900: #ffffff;
-    --light-800: #f8fafc;
-    --light-700: #f1f5f9;
-    --light-600: #e2e8f0;
-    --light-500: #cbd5e1;
+    --light-100: #f8fafc;
+    --light-200: #e2e8f0;
+    --light-300: #cbd5e1;
+    --light-400: #94a3b8;
+    --light-500: #64748b;
+
+    --blue-100: #eef5ff;
+    --blue-200: #BBFBFF;
+    --blue-300: #8DD8FF;
+    --blue-400: #46A9FD;
+    --blue-500: #007bfc;
+
     /* Base Theme Variables - Light Mode Default */
-    --color-primary: #60a5fa;    /* blue-400 */
+    --color-primary: #60a5fa;
     --color-success: #22c55e;    /* green-500 */
     --color-warning: #eab308;    /* yellow-500 */
     --color-error: #ef4444;      /* red-500 */
     --color-info: #3b82f6;       /* blue-500 */
+}
 
+[data-theme="light"] {
     /* Background Colors */
-    --bg-body: var(--light-900);
-    --bg-surface: var(--light-800);
-    --bg-wrapper: var(--light-700);
-    --bg-input: var(--light-900);
-    --bg-dropdown: var(--light-900);
-    --bg-toast: var(--light-900);
+    --bg-body: var(--blue-100);
+    --bg-surface: var(--blue-200);
+    --bg-wrapper: var(--blue-300);
+    --bg-thead: var(--blue-500);
+    --bg-input: #F5F0CD;
+    --bg-dropdown: #FADA7A;
+    --bg-checkbox: #F5F0CD;
+    --bg-toast: var(--blue-400);
 
-    --bg-navbar: var(--light-800);
+    --bg-navbar: var(--light-100);
+    --bg-toggle-theme: var(--blue-400);
+    --bg-hover: hsl(from var(--bg-surface) h s calc(l - 10));
+    --bg-selected: hsl(from var(--bg-surface) h s calc(l - 20));
+
+    --bg-reload-btn: #FAC01A;
 
     /* Text Colors */
-    --text-primary: #111827;     /* gray-900 */
-    --text-secondary: #374151;   /* gray-700 */
-    --text-muted: #6b7280;       /* gray-500 */
+    --text-title: #007BFC;
+    --text-primary: var(--light-100);
+    --text-secondary: var(--dark-800);
+    --text-muted: var(--light-200);
+
+    --icon-hover: hsl(from var(--text-secondary) h s calc(l - 10));
 
     /* Border Colors */
-    --border: var(--light-600);
+    --border: var(--light-400);
+    --border-input: var(--light-400);
     --border-checkbox-hover: var(--light-500);
 
-    /* Status Colors - Chips */
-    --status-active: var(--color-success);
-    --status-inactive: var(--color-error);
-    --status-pending: var(--color-warning);
+    --logo-ring: #FAC01A; 
+    --logo-inner: #000000;
+
+    #theme-toggle-slider {
+        transform: translateX(26px);
+    }
 }
 
 /* Dark Theme */
@@ -65,18 +111,24 @@
     --bg-body: var(--dark-900);
     --bg-surface: var(--dark-800);
     --bg-wrapper: var(--dark-700);
+    --bg-thead: var(--dark-700);
     --bg-input: var(--dark-600);
     --bg-dropdown: var(--dark-800);
-    --bg-toast: var(--dark-800);
+    --bg-checkbox: var(--dark-750);
+    --bg-toast: hsl(from var(--bg-surface) h s calc(l + 5));
 
     --bg-navbar: #1e293b;
+    --bg-toggle-theme: var(--dark-500);
     --bg-hover: hsl(from var(--bg-surface) h s calc(l + 5));
     --bg-selected: hsl(from var(--bg-surface) h s calc(l + 10));
 
+    --bg-reload-btn: var(--blue-500);
+
     /* Text Colors */
-    --text-primary: #f3f4f6;     /* gray-100 */
-    --text-secondary: #d1d5db;   /* gray-300 */
-    --text-muted: #9ca3af;       /* gray-400 */
+    --text-title: #4aa3ff;
+    --text-primary: #f3f4f6;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
 
     --icon-hover: hsl(from var(--text-secondary) h s calc(l + 10));
 
@@ -84,6 +136,9 @@
     --border: var(--dark-600);
     --border-input: var(--dark-500);
     --border-checkbox-hover: var(--dark-500);
+
+    --logo-ring: #053fe5; 
+    --logo-inner: #e2e2e4;
 }
 
 /* Custom base styles */
@@ -92,7 +147,7 @@
     input[type="number"],
     input[type="password"],
     textarea {
-        @apply bg-[var(--bg-input)] border border-2 border-[var(--border-input)] rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:border-none focus:ring-2 focus:ring-blue-500 w-full;
+        @apply bg-input text-text-secondary border border-2 border-border-input rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:border-none focus:ring-2 focus:ring-blue-500 w-full;
     }
 
     /* Hides the arrows in Chrome, Safari, Edge */
@@ -104,6 +159,10 @@
 
     textarea {
         @apply min-h-52 resize-none;
+    }
+
+    h1 {
+        @apply text-text-title text-xl
     }
 
     .scrollbar-dark::-webkit-scrollbar {
@@ -128,24 +187,15 @@
         background-color: var(--color-dark-900); /* on hover */
     }
 
-    .selected-row {
-        @apply bg-dark-700;
+    body::-webkit-scrollbar-track,
+    body::-webkit-scrollbar-thumb {
+        border-radius: 0;
+        margin: 0px;
     }
-}
 
-.filter-input {
-    background-color: #1e293b;
-    border: 1px solid #334155;
-    color: #e2e8f0;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    transition: border-color 0.2s ease;
-}
-
-body::-webkit-scrollbar-track,
-body::-webkit-scrollbar-thumb {
-    border-radius: 0;
-    margin: 0px;
+    .selected-row {
+        @apply bg-bg-selected;
+    }
 }
 
 /* Toast Animations */

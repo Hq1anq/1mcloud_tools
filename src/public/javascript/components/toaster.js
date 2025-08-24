@@ -61,11 +61,11 @@ export function showToast(message, type = 'success') {
 
 function createToast(message, type) {
     const toast = document.createElement('div');
-    toast.className = 'float-in flex items-center bg-[var(--bg-toast)] text-[var(--text-muted)] cursor-pointer w-full max-w-xs p-4 rounded-lg shadow-sm';
+    toast.className = 'float-in flex items-center bg-toast text-text-secondary cursor-pointer w-full max-w-xs p-4 rounded-lg shadow-sm';
 
     toast.innerHTML = `
         ${contentDiv(message, type)}
-        <button type="button" class="ms-auto -mx-1.5 -my-1.5 hover:bg-[var(--bg-hover)] text-[var(--text-muted)] hover:text-[var(--icon-hover)] rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8">
+        <button type="button" class="ms-auto -mx-1.5 -my-1.5 hover:bg-bg-hover hover:text-icon-hover rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
             </svg>
@@ -96,7 +96,7 @@ function contentDiv(message, type) {
             <div class="${style.bg} flex items-center justify-center shrink-0 w-8 h-8 rounded-lg">
                 ${style.icon}
             </div>
-            <div id="toast-message" class="mx-3 text-sm font-normal flex-1">${message}</div>
+            <div id="toast-message" class="mx-3 text-sm font-bold flex-1">${message}</div>
         </div>
     `;
 }

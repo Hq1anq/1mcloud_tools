@@ -1,24 +1,24 @@
 <div class="flex-1 overflow-hidden text-xs sm:text-sm">
     <div class="max-w-7xl mx-auto px-4 py-3">
-        <div class="bg-[var(--bg-surface)] rounded-lg shadow-lg">
+        <div class="bg-surface rounded-lg shadow-lg">
             <!-- Table Header -->
-            <div class="bg-[var(--bg-wrapper)] px-4 py-3 border-b-[5px] border-[var(--border)] rounded-t-lg top-0 z-30">
+            <div class="bg-thead px-4 py-3 border-b-[5px] border-input rounded-t-lg top-0 z-30">
                 <div class="flex items-center justify-between">
-                    <h2 class="text-sm sm:text-lg font-semibold text-[var(--text-secondary)]">
+                    <h2 class="text-sm sm:text-lg font-semibold">
                         <i class="fas fa-table mr-2"></i><%= tableTitle %>
                     </h2>
                     <!-- Extra slot -->
                     <div class="flex gap-5 text-xs sm:text-sm items-center">
-                        <span class=" text-[var(--text-muted)] whitespace-nowrap">
+                        <span class=" text-text-muted whitespace-nowrap">
                             Selected:
                             <span id="selectedCount">0</span> rows
                         </span>
-                        <span class=" text-[var(--text-muted)] whitespace-nowrap">
+                        <span class=" text-text-muted whitespace-nowrap">
                             Total:
                             <span id="totalCount">0</span> rows
                         </span>
                         <button id="reloadBtn"
-                            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors duration-200">
+                            class="bg-reload-btn hover:brightness-90 text-text-secondary px-3 py-2 rounded-lg transition-colors duration-200">
                         <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>
@@ -27,7 +27,7 @@
             <!-- Table -->
             <div class="table-container rounded-b-lg overflow-x-auto scrollbar-dark select-none">
                 <table class="table-auto">
-                    <thead class="bg-[var(--bg-wrapper)] top-0 z-20" id="tableHeader">
+                    <thead class="bg-thead top-0 z-20" id="tableHeader">
                         <tr >
                             <th>
                                 <input type="checkbox" id="selectAllCheckbox"
@@ -35,37 +35,37 @@
                             </th>
                             
                             <% headers.forEach(header => { %>
-                                <th class="<%= header === 'note' ? 'w-full' : 'min-w-fit' %> top-0 z-30 px-4 py-3 text-center font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                                <th class="<%= header === 'note' ? 'w-full' : 'min-w-fit' %> top-0 z-30 px-4 py-3 text-center font-medium uppercase tracking-wider">
                                     <div class="relative flex flex-col gap-1 min-w-15">
                                         <%= header %>
-                                        <input type="text" class="<%= header === 'note' || header === 'ip' || header === 'ip:port' ? 'text-left' : 'text-center' %> filter-input mt-1" placeholder="Filter">
+                                        <input type="text" id="filter-input" class="<%= header === 'note' || header === 'ip' || header === 'ip:port' ? 'text-left' : 'text-center' %> bg-dropdown px-2 py-1 mt-1" placeholder="Filter">
                                     </div>
                                 </th>
                             <% }); %>
 
                             <% if (showActions) { %>
-                                <th class="px-4 py-3 text-left font-medium text-[var(--text-secondary)] uppercase tracking-wider">
+                                <th class="px-4 py-3 text-left font-medium uppercase tracking-wider">
                                 Actions
                                 </th>
                             <% } %>
                         </tr>
                     </thead>
-                    <tbody id="tableBody">
+                    <tbody id="tableBody" class="text-text-secondary">
                         <% if (data && data.length > 0) { %>
                             <% data.forEach(row => { %>
-                            <tr class="transition-colors duration-200 hover:bg-[var(--bg-hover)] cursor-pointer">
-                                <td class="px-4 py-2 border-b border-[var(--border)]">
+                            <tr class="transition-colors duration-200 hover:bg-bg-hover cursor-pointer">
+                                <td class="px-4 py-2 border-b border-border">
                                     <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
                                 </td>
 
                                 <% headers.forEach(h => { %>
-                                <td class="px-4 py-2 border-b border-[var(--border)]">
+                                <td class="px-4 py-2 border-b border-border">
                                     <%= row[h.toLowerCase()] %>
                                 </td>
                                 <% }); %>
 
                                 <% if (showActions) { %>
-                                <td class="px-4 py-2 border-b border-[var(--border)] space-x-2">
+                                <td class="px-4 py-2 border-b border-border space-x-2">
                                     <button class="bg-blue-600 py-1 px-4 rounded-lg hover:bg-blue-700" onclick="editRow(this)">Edit</button>
                                     <button class="bg-red-600 py-1 px-4 rounded-lg hover:bg-red-700" onclick="deleteRow(this)">Delete</button>
                                 </td>

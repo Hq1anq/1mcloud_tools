@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-[var(--bg-body)] text-[var(--text-primary)] text-xs sm:text-base font-sans scrollbar-dark">
+<body class="bg-body text-text-primary text-xs sm:text-base font-sans scrollbar-dark">
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Proxy Manager' }) %>
     <!-- Status Display -->
@@ -16,18 +16,18 @@
     <!-- Main Container -->
     <div class="min-h-screen flex flex-col pt-2">
         <!-- ========== TOP CONTROLS ========== -->
-        <div class="bg-[var(--bg-surface)] border-b border-[var(--border)] top-0 z-40 shadow-lg">
+        <div class="bg-surface border-b border-border top-0 z-40 shadow-lg">
             <div class="max-w-7xl mx-auto px-4 py-2">
                 <!-- ========== FEATURE CONTROLS ========== -->
-                <div class="bg-[var(--bg-wrapper)] rounded-lg p-4">
-                    <h3 class="text-lg font-semibold mb-3 text-[var(--text-secondary)]">
+                <div class="bg-wrapper rounded-lg p-4">
+                    <h3 class="text-text-secondary text-lg font-semibold mb-3">
                         <i class="fas fa-cogs mr-2"></i>Actions
                     </h3>
                     <div class="flex flex-col sm:flex-row gap-4">
                         <!-- IPs Input -->
                         <div class="sm:w-1/2 relative flex flex-col">
                             <div class="flex justify-between items-center">
-                                <label class="block font-medium text-[var(--text-secondary)] mb-2">
+                                <label class="block text-text-secondary font-medium mb-2">
                                     <i class="fas fa-server mr-2"></i>
                                     Enter IPs (one per line)
                                 </label>
@@ -49,7 +49,7 @@
                                         placeholder="Enter amount" min="0">
                                     <div class="flex items-center">
                                         <button id="getDataBtn"
-                                            class="flex-1 bg-blue-600 hover:bg-blue-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                            class="flex-1 bg-blue-600 hover:brightness-90 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                             <i class="fas fa-download mr-2"></i>
                                             Get Data
                                         </button>
@@ -72,7 +72,7 @@
                                         placeholder="port:username:password">
                                     <div class="flex">
                                         <button id="reinstallBtn"
-                                            class="flex-1 bg-orange-600 hover:bg-orange-700 font-medium py-2 px-3 rounded-l-lg transition-colors duration-200 flex items-center justify-center">
+                                            class="flex-1 bg-orange-600 hover:brightness-90 font-medium py-2 px-3 rounded-l-lg transition-colors duration-200 flex items-center justify-center">
                                             <i class="fas fa-sync-alt mr-2"></i>
                                             Reinstall
                                         </button>
@@ -91,12 +91,12 @@
                                     <i class="fas fa-exchange-alt mr-2"></i>Change IP
                                 </button>
                                 <button id="copyIpBtn"
-                                    class="bg-yellow-600 hover:bg-yellow-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                    class="bg-yellow-600 hover:brightness-90 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                     <i class="fas fa-copy mr-2"></i>
                                     Copy IP
                                 </button>
                                 <button id="pauseBtn"
-                                    class="bg-red-600 hover:bg-red-700 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                    class="bg-red-600 hover:brightness-90 font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                     <i class="fas fa-pause mr-2"></i>
                                     Pause
                                 </button>
@@ -116,8 +116,8 @@
             data: [],
             showActions: false,
             emptyMessage: `
-                <i class="fas fa-server text-4xl text-[var(--text-muted)] mb-4"></i>
-                <p class="text-[var(--text-muted)]">
+                <i class="fas fa-server text-4xl text-text-muted mb-4"></i>
+                <p class="text-text-muted">
                     No data available. Click "Get Data" to load information.
                 </p>
             `,

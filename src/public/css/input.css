@@ -18,6 +18,8 @@
     --color-dropdown-selected: var(--bg-dropdown-selected);
 
     --color-navbar: var(--bg-navbar);
+    --color-navbar-menu: var(--bg-navbar-menu);
+    --color-navbar-menu-selected: var(--bg-navbar-menu-selected);
     --color-toggle-theme: var(--bg-toggle-theme);
     --color-bg-hover: var(--bg-hover);
     --color-bg-selected: var(--bg-selected);
@@ -57,6 +59,7 @@
     --blue-300: #8DD8FF;
     --blue-400: #46A9FD;
     --blue-500: #007bfc;
+    --blue-700: #053fe5;
 
     /* Base Theme Variables - Light Mode Default */
     --color-primary: #60a5fa;
@@ -78,6 +81,8 @@
     --bg-toast: var(--blue-400);
 
     --bg-navbar: var(--light-100);
+    --bg-navbar-menu: var(--light-200);
+    --bg-navbar-menu-selected: var(--blue-300);
     --bg-toggle-theme: var(--blue-400);
     --bg-hover: hsl(from var(--bg-surface) h s calc(l - 10));
     --bg-selected: hsl(from var(--bg-surface) h s calc(l - 20));
@@ -120,6 +125,8 @@
     --bg-toast: hsl(from var(--bg-surface) h s calc(l + 5));
 
     --bg-navbar: #1e293b;
+    --bg-navbar-menu: #253349;
+    --bg-navbar-menu-selected: var(--blue-700);
     --bg-toggle-theme: var(--dark-500);
     --bg-hover: hsl(from var(--bg-surface) h s calc(l + 5));
     --bg-selected: hsl(from var(--bg-surface) h s calc(l + 10));
@@ -139,10 +146,36 @@
     --border-input: var(--dark-500);
     --border-checkbox-hover: var(--dark-500);
 
-    --logo-ring: #053fe5; 
+    --logo-ring: var(--blue-700); 
     --logo-inner: #e2e2e4;
 
     --highlight-brightness: 120%;
+}
+
+/* Base theme colors without transitions */
+[data-theme] * {
+    /* Disable all color transitions by default */
+    transition: none;
+}
+
+/* Enable transitions only after adding this class */
+.theme-transitions * {
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease,
+                transform 0.3s ease; /* Add transform transition for slider */
+}
+
+.theme-transitions .all-slow {
+    transition-property: all;
+    transition-timing-function: ease-out;
+    transition-duration: 0.5s;
+}
+
+.theme-transitions .navbar-transition {
+    transition-property: all;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.5s;
 }
 
 /* Custom base styles */

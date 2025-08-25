@@ -1,11 +1,15 @@
 <div id="themeToggle"
-    class="relative w-[50px] h-6 bg-toggle-theme cursor-pointer transition-[background-color] duration-[0.3s] rounded-xl">
+    class="relative w-[50px] h-6 bg-toggle-theme cursor-pointer rounded-xl">
     <div id="theme-toggle-slider"
-        class="absolute w-5 h-5 bg-white transition-transform duration-[0.3s] flex items-center justify-center rounded-[50%] left-0.5 top-0.5">
-        <i class="fas fa-moon text-xs text-[var(--dark-800)]" id="themeIcon"></i>
+        class="absolute w-5 h-5 bg-white flex items-center justify-center rounded-[50%] left-0.5 top-0.5">
+        <i class="fas fa-moon text-xs text-toggle-theme" id="themeIcon"></i>
     </div>
 </div>
 <script>
+    // Enable transitions after page loads
+    window.addEventListener('load', () => {
+        document.documentElement.classList.add('theme-transitions');
+    });
     // DOM elements
     const elements = {
         themeToggle: document.getElementById('themeToggle'),

@@ -88,7 +88,7 @@
     --text-title: #007BFC;
     --text-primary: var(--light-100);
     --text-secondary: var(--dark-800);
-    --text-muted: var(--light-200);
+    --text-muted: var(--light-400);
 
     --icon-hover: hsl(from var(--text-secondary) h s calc(l - 10));
 
@@ -99,6 +99,8 @@
 
     --logo-ring: #FAC01A; 
     --logo-inner: #000000;
+
+    --highlight-brightness: 80%;
 
     #theme-toggle-slider {
         transform: translateX(26px);
@@ -127,7 +129,7 @@
     /* Text Colors */
     --text-title: #4aa3ff;
     --text-primary: #f3f4f6;
-    --text-secondary: #d1d5db;
+    --text-secondary: #f3f4f6;
     --text-muted: #9ca3af;
 
     --icon-hover: hsl(from var(--text-secondary) h s calc(l + 10));
@@ -139,6 +141,8 @@
 
     --logo-ring: #053fe5; 
     --logo-inner: #e2e2e4;
+
+    --highlight-brightness: 120%;
 }
 
 /* Custom base styles */

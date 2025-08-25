@@ -1,0 +1,74 @@
+<div id="themeToggle"
+    class="relative w-[50px] h-6 bg-toggle-theme cursor-pointer transition-[background-color] duration-[0.3s] rounded-xl">
+    <div id="theme-toggle-slider"
+        class="absolute w-5 h-5 bg-white transition-transform duration-[0.3s] flex items-center justify-center rounded-[50%] left-0.5 top-0.5">
+        <i class="fas fa-moon text-xs text-[var(--dark-800)]" id="themeIcon"></i>
+    </div>
+</div>
+<script>
+    // DOM elements
+    const elements = {
+        themeToggle: document.getElementById('themeToggle'),
+        themeIcon: document.getElementById('themeIcon'),
+        html: document.documentElement
+    };
+    
+    // Initialize theme based on user preference
+    function initTheme() {
+        // Check if user has a theme preference in localStorage
+        const savedTheme = localStorage.getItem('theme');
+        
+        // If no saved preference, check for system preference
+        if (!savedTheme) {
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDarkScheme) {
+                // Default to dark mode
+                elements.html.setAttribute('data-theme', 'dark');
+            } else {
+                // Set light mode
+                elements.html.setAttribute('data-theme', 'light');
+                elements.themeIcon.classList.remove('fa-moon');
+                elements.themeIcon.classList.add('fa-sun');
+            }
+        } else {
+            // Apply saved preference
+            elements.html.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'light') {
+                elements.themeIcon.classList.remove('fa-moon');
+                elements.themeIcon.classList.add('fa-sun');
+            }
+        }
+    }
+    
+    // Toggle between dark and light mode
+    function toggleTheme() {
+        const currentTheme = elements.html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        // Update the theme
+        elements.html.setAttribute('data-theme', newTheme);
+        
+        // Update the icon
+        if (newTheme === 'light') {
+            elements.themeIcon.classList.remove('fa-moon');
+            elements.themeIcon.classList.add('fa-sun');
+        } else {
+            elements.themeIcon.classList.remove('fa-sun');
+            elements.themeIcon.classList.add('fa-moon');
+        }
+        
+        // Save the preference
+        localStorage.setItem('theme', newTheme);
+    }
+    
+    // Bind event listeners
+    function bindEvents() {
+        elements.themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    // Initialize the application
+    document.addEventListener('DOMContentLoaded', function() {
+        initTheme();
+        bindEvents();
+    });
+</script>

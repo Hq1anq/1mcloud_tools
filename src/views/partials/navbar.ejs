@@ -1,20 +1,20 @@
 <%
-    const linkBase = "block text-base py-2 px-3 rounded-sm md:p-0 flex items-center";
-    const active = "bg-blue-700 md:bg-transparent text-[#cbd5e1] md:text-[#60a5fa]";
-    const inactive = "text-[#cbd5e1] md:hover:text-[#9dc9ff] hover:bg-[#2c3c57] md:hover:bg-transparent";
+    const linkBase = "block text-text-secondary text-base py-2 px-3 rounded-sm md:p-0 flex items-center";
+    const active = "bg-blue-700 md:bg-transparent text-[#cbd5e1] md:text-text-title";
+    const inactive = "md:hover:text-text-title hover:bg-[#2c3c57] md:hover:bg-transparent";
 %>
 
-<nav class="bg-[var(--bg-navbar)] text-white py-3 px-3 border-b-2 border-b-[var(--border)] sticky top-0 z-50 shadow-md">
+<nav class="bg-navbar py-3 px-3 border-b-2 border-b-border sticky top-0 z-50 shadow-md">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
 
         <!-- Logo and Title -->
         <div class="flex items-center space-x-4">
             <svg id="1mcloud-icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 50px; height: 50px; margin-right: 10px;">
-                <path fill="#053fe5" d="M512,95A417.14,417.14,0,0,1,674.29,896.27,417.14,417.14,0,0,1,349.71,127.73,414.29,414.29,0,0,1,512,95m0-95C229.23,0,0,229.23,0,512s229.23,512,512,512,512-229.23,512-512S794.77,0,512,0Z" />
-                <polygon fill="#e2e2e4" points="278.19 279.12 204.29 369.27 204.29 416.09 254.9 416.09 254.9 745.08 362.99 745.08 362.99 279.12 278.19 279.12" />
-                <path fill="#e2e2e4" d="M819.7,443.62c-.9-90.84-75.12-164.24-166.74-164.69a166,166,0,0,0-115.89,47.65,175.87,175.87,0,0,0-119.31-47.64l-1.06,0a116.39,116.39,0,0,0-34.61,5.28V397.11h0a52.2,52.2,0,0,1,38-16.73,64.38,64.38,0,0,1,16.37,2.31A62.84,62.84,0,0,1,469,404.09l.16.2a52.23,52.23,0,0,1,10.93,32.34V745H588.19V442.25a58,58,0,0,1,12.92-36.44,64.34,64.34,0,0,1,99.42,0l.16.19a51.38,51.38,0,0,1,10.94,32V745H819.71V443.62Z" />
+                <path fill="var(--logo-ring)" d="M512,95A417.14,417.14,0,0,1,674.29,896.27,417.14,417.14,0,0,1,349.71,127.73,414.29,414.29,0,0,1,512,95m0-95C229.23,0,0,229.23,0,512s229.23,512,512,512,512-229.23,512-512S794.77,0,512,0Z" />
+                <polygon fill="var(--logo-inner)" points="278.19 279.12 204.29 369.27 204.29 416.09 254.9 416.09 254.9 745.08 362.99 745.08 362.99 279.12 278.19 279.12" />
+                <path fill="var(--logo-inner)" d="M819.7,443.62c-.9-90.84-75.12-164.24-166.74-164.69a166,166,0,0,0-115.89,47.65,175.87,175.87,0,0,0-119.31-47.64l-1.06,0a116.39,116.39,0,0,0-34.61,5.28V397.11h0a52.2,52.2,0,0,1,38-16.73,64.38,64.38,0,0,1,16.37,2.31A62.84,62.84,0,0,1,469,404.09l.16.2a52.23,52.23,0,0,1,10.93,32.34V745H588.19V442.25a58,58,0,0,1,12.92-36.44,64.34,64.34,0,0,1,99.42,0l.16.19a51.38,51.38,0,0,1,10.94,32V745H819.71V443.62Z" />
             </svg>
-            <h1 class="text-xl font-bold"> <%= currentPage %> </h1>
+            <h1 class="font-bold"> <%= currentPage %> </h1>
         </div>
 
         <!-- Mobile Menu Button -->
@@ -46,6 +46,10 @@
                     <a href="/proxyManager" class="<%= linkBase %> <%= currentPage === 'Proxy Manager' ? active : inactive %>">
                         <i class="fas fa-cog mr-2 w-4 h-4"></i>Proxy Manager
                     </a>
+                </li>
+                <li>
+                    <!-- Theme Toggle Button -->
+                    <%- include('themeToggle') %>
                 </li>
             </ul>
         </div>

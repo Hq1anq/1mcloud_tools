@@ -36,7 +36,7 @@ const statusStyles = {
                 cx="25" cy="25" r="20"
                 stroke="currentColor"
                 stroke-width="5"
-                class="text-gray-200/20"
+                class="text-input/60"
             />
             <circle 
                 cx="25" cy="25" r="20"
@@ -48,7 +48,7 @@ const statusStyles = {
             >
             </circle>
         </svg>`,
-        bg: 'text-blue-600'
+        bg: 'text-[var(--logo-ring)]'
     }
 };
 
@@ -59,13 +59,21 @@ export function showToast(message, type = 'success') {
     toaster.appendChild(toast);
 }
 
+export function testToast() {
+    showToast('SUCCESS', 'success');
+    showToast('ERROR', 'error');
+    showToast('WARNING', 'warning');
+    showToast('INFO', 'info');
+    showToast('LOADING', 'loading');
+}
+
 function createToast(message, type) {
     const toast = document.createElement('div');
-    toast.className = 'float-in flex items-center bg-toast text-text-secondary cursor-pointer w-full max-w-xs p-4 rounded-lg shadow-sm';
+    toast.className = 'float-in flex items-center bg-toast text-text-primary cursor-pointer w-full max-w-xs p-4 rounded-lg shadow-sm';
 
     toast.innerHTML = `
         ${contentDiv(message, type)}
-        <button type="button" class="ms-auto -mx-1.5 -my-1.5 hover:bg-bg-hover hover:text-icon-hover rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8">
+        <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-toast hover:brightness-125 hover:text-icon-hover rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
             </svg>

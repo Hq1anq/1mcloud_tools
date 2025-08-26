@@ -189,6 +189,15 @@
     transition-duration: 0.5s;
 }
 
+.theme-transitions .social-link {
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.theme-transitions .social-link:hover {
+    transform: translateY(-3px);
+    color: var(--color-text-title);
+}
+
 /* Custom base styles */
 @layer base {
     input[type="text"],
@@ -243,6 +252,10 @@
 
     .selected-row {
         @apply bg-bg-selected;
+    }
+
+    .social-link {
+        @apply flex items-center text-text-muted;
     }
 }
 

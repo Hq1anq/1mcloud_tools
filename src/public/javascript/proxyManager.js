@@ -121,6 +121,9 @@ async function changeIp() {
     const proxyLines = []; // collect proxies here
     const apiKeyString = elements.apiKey.value.trim();
 
+    let successCount = 0;
+    let failCount = 0;
+
     for (const row of selectedRows) {
         const cells = row.cells;
         if (cells.length < 2) continue;
@@ -130,40 +133,50 @@ async function changeIp() {
         const ip = ipPort.split(':')[0]; // take only IP part
 
         try {
-            const res = await fetch('/proxy/change-ip', {
+            const response = await fetch('/proxy/change-ip', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ip: ip, apiKey: apiKeyString })
             });
 
-            const data = await res.json();
-            if (res.ok && data.proxyInfo) {
+            const data = await response.json();
+
+            if (response.ok && data.success) {
                 const proxyString = data.proxyInfo.join(":");
                 console.log(`✅ IP changed for ${ip}:`, proxyString);
-
                 proxyLines.push(proxyString);
-
                 updateRowContent(row, data.proxyInfo, 'changeIp');
+                successCount++;
             } else {
+                showToast(`Fail to CHANGE IP: ${ip}`, 'error');
                 console.error(`❌ Failed to CHANGE IP for ${ip}:`, data.error);
                 row.classList.add('bg-error-cell');
+                failCount++;
             }
         } catch (err) {
+            showToast(`Fail to CHANGE IP: ${ip}`, 'error');
             console.error(`❌ Error CHANGE IP for ${ip}:`, err);
             row.classList.add('bg-error-cell');
+            failCount++;
         }
 
         await delay(2000);
     }
 
-    changeToToast('Change Ip DONE', 'success');
+    // Show appropriate toast message based on results
+    if (failCount === 0) {
+        changeToToast('IP CHANGE completed successfully', 'success');
+    } else if (successCount === 0) {
+        changeToToast('IP CHANGE failed for all servers', 'error');
+    } else {
+        changeToToast(`IP CHANGE completed: ${successCount} success, ${failCount} failed`, 'warning');
+    }
 
     updateCounts();
 
-    await delay(500);
-
     // ✅ Copy to clipboard if there are any successful proxies
     if (proxyLines.length > 0) {
+        await delay(1000);
         const textToCopy = proxyLines.join('\n');
         try {
             await navigator.clipboard.writeText(textToCopy);
@@ -187,6 +200,10 @@ async function reinstall() {
     const proxyLines = []; // collect proxies here
     const apiKeyString = elements.apiKey.value.trim();
     const proxyType = elements.reinstallType.textContent.trim() === 'SOCKS5' ? 'proxy_sock_5' : 'proxy_https';
+    const customInfo = elements.reinstallInput.value.trim();
+
+    let successCount = 0;
+    let failCount = 0;
 
     for (const row of selectedRows) {
         const cells = row.cells;
@@ -196,42 +213,55 @@ async function reinstall() {
         const sid = cells[1].innerText.trim();
 
         try {
-            const res = await fetch('/proxy/reinstall', {
+            const response = await fetch('/proxy/reinstall', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sid: sid, custom_info: elements.reinstallInput.value.trim(), apiKey: apiKeyString, type: proxyType })
+                body: JSON.stringify({
+                    sid: sid,
+                    custom_info: customInfo,
+                    apiKey: apiKeyString,
+                    type: proxyType
+                })
             });
 
-            const data = await res.json();
-            if (res.ok && data.proxyInfo) {
+            const data = await response.json();
+
+            if (response.ok && data.success) {
                 const proxyString = data.proxyInfo.join(":");
                 console.log(`✅ REINSTALL for sid ${sid}:`, proxyString);
-
                 proxyLines.push(proxyString);
-
                 updateRowContent(row, data.proxyInfo, 'reinstall');
+                successCount++;
             } else {
-                showToast(`Failed to REINSTALL for sid ${sid}`, 'error');
+                showToast(`Fail to REINSTALL sid: ${sid}`, 'error');
                 console.error(`❌ Failed to REINSTALL for sid ${sid}:`, data.error);
                 row.classList.add('bg-error-cell');
+                failCount++;
             }
         } catch (err) {
-            showToast(`Failed to REINSTALL for sid ${sid}`, 'error');
+            showToast(`Fail to REINSTALL sid: ${sid}`, 'error');
             console.error(`❌ Error REINSTALL for sid ${sid}:`, err);
             row.classList.add('bg-error-cell');
+            failCount++;
         }
 
         await delay(2000);
     }
 
-    changeToToast('Reinstall DONE', 'success');
+    // Show appropriate toast message based on results
+    if (failCount === 0) {
+        changeToToast('REINSTALL completed successfully', 'success');
+    } else if (successCount === 0) {
+        changeToToast('REINSTALL failed for all servers', 'error');
+    } else {
+        changeToToast(`REINSTALL completed: ${successCount} success, ${failCount} failed`, 'warning');
+    }
 
     updateCounts();
 
-    await delay(500);
-
     // ✅ Copy to clipboard if there are any successful proxies
     if (proxyLines.length > 0) {
+        await delay(1000);
         const textToCopy = proxyLines.join('\n');
         try {
             await navigator.clipboard.writeText(textToCopy);
@@ -258,17 +288,37 @@ async function pause() {
     const apiKeyString = elements.apiKey.value.trim();
 
     try {
-        const res = await fetch('/proxy/pause', {
+        const response = await fetch('/proxy/pause', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ sids: sids, apiKey: apiKeyString })
         });
 
-        const data = await res.json();
-        if (res.ok && data.success) {
-            for (const row of selectedRows)
-                updateRowContent(row, '', 'pause');
-            changeToToast(`Pause DONE`, 'success');
+        const data = await response.json();
+        if (response.ok && data.success) {
+            // Handle successful and failed pause separately
+            const successIds = data.result.success;
+            const errorIds = Object.keys(data.result.error);
+
+            selectedRows.forEach(row => {
+                const sid = row.cells[1].innerText.trim();
+                if (successIds.includes(Number(sid))) {
+                    updateRowContent(row, '', 'pause');
+                    row.classList.add('bg-success-cell');
+                } else if (errorIds.includes(sid)) {
+                    showToast(`Fail to PAUSE sid: ${sid}`, 'error');
+                    row.classList.add('bg-error-cell');
+                    console.error(`❌ Failed to PAUSE for sid ${sid}:`, data.result.error[sid]);
+                }
+            });
+
+            // Show appropriate toast message
+            if (errorIds.length === 0)
+                changeToToast(`PAUSE successful for all servers`, 'success');
+            else if (successIds.length === 0)
+                changeToToast(`PAUSE failed for all servers`, 'error');
+            else
+                changeToToast(`PAUSE completed with ${successIds.length} success, ${errorIds.length} failed`, 'warning');
         } else {
             changeToToast(`Fail to PAUSE`, 'error');
             console.error(`❌ Failed to PAUSE for sid ${sid}:`, data.error);
@@ -296,20 +346,41 @@ async function reboot() {
     const apiKeyString = elements.apiKey.value.trim();
 
     try {
-        const res = await fetch('/proxy/reboot', {
+        const response = await fetch('/proxy/reboot', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ sids: sids, apiKey: apiKeyString })
         });
 
-        const data = await res.json();
-        if (res.ok && data.success) {
-            for (const row of selectedRows)
-                updateRowContent(row, '', 'reboot');
-            changeToToast(`Reboot DONE`, 'success');
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            // Handle successful and failed reboots separately
+            const successIds = data.result.success;
+            const errorIds = Object.keys(data.result.error);
+
+            selectedRows.forEach(row => {
+                const sid = row.cells[1].innerText.trim();
+                if (successIds.includes(Number(sid))) {
+                    updateRowContent(row, '', 'reboot');
+                    row.classList.add('bg-success-cell');
+                } else if (errorIds.includes(sid)) {
+                    showToast(`Fail to REBOOT sid: ${sid}`, 'error');
+                    row.classList.add('bg-error-cell');
+                    console.error(`❌ Failed to REBOOT for sid ${sid}:`, data.result.error[sid]);
+                }
+            });
+
+            // Show appropriate toast message
+            if (errorIds.length === 0)
+                changeToToast(`Reboot successful for all servers`, 'success');
+            else if (successIds.length === 0)
+                changeToToast(`Reboot failed for all servers`, 'error');
+            else
+                changeToToast(`Reboot completed with ${successIds.length} success, ${errorIds.length} failed`, 'warning');
         } else {
-            changeToToast(`Fail to REBOOT`, 'error');
-            console.error(`❌ Failed to REBOOT for sid ${sid}:`, data.error);
+            changeToToast(`Failed to REBOOT: ${data.error}`, 'error');
+            console.error(`❌ Failed to REBOOT:`, data.error);
         }
     } catch (err) {
         changeToToast('Fail to REBOOT', 'error');
@@ -339,7 +410,7 @@ async function changeNote() {
         const sid = cells[1].innerText.trim();
 
         try {
-            const res = await fetch('/proxy/change-note', {
+            const response = await fetch('/proxy/change-note', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ sid: sid, newNote: noteInput, apiKey: apiKeyString })
@@ -381,8 +452,6 @@ function updateRowContent(row, text, action) {
     if (action === 'reboot') {
         cells[8].innerHTML = getStatusChip('Running');
         updateRowData(id, { status: 'Running' });
-        checkbox.checked = false;
-        row.classList.remove('selected-row');
         return;
     }
     if (action === 'changeNote') {

@@ -9,7 +9,7 @@ const elements = {
     selectAllCheckbox: document.getElementById('selectAllCheckbox'),
     emptyState: document.getElementById('emptyState'),
 
-    filterInputs: document.querySelectorAll('#filter-input')
+    filterInputs: document.querySelectorAll('.filter-input')
 }
 
 let allData = [];

@@ -17,14 +17,18 @@ let filteredData = [];
 let renderedCount = 0;
 const chunkSize = 50;
 
-let lastSelectedIndex = null;
-
 function bindEvents(page) {
     window.addEventListener('scroll', () => handleScroll(page));
     elements.tbody.addEventListener('change', handleRowCheckboxChange);
     elements.tbody.addEventListener('click', handleRowClick);
     elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
-    elements.tbody.addEventListener('dblclick', handleDoubleClick)
+    if ('ontouchstart' in window) {
+        // Mobile → only touch
+        elements.tbody.addEventListener("touchend", handleTableTap);
+    } else {
+        // Desktop → only click
+        elements.tbody.addEventListener("click", handleTableTap);
+    }
     elements.reloadBtn.addEventListener('click', showAllData);
 }
 
@@ -174,6 +178,8 @@ function handleSelectAll(e) {
     updateCounts();
 }
 
+let lastSelectedIndex = null;
+
 function handleRowClick(e) {
     const tr = e.target.closest('tr');
 
@@ -216,20 +222,30 @@ function handleRowClick(e) {
     lastSelectedIndex = clickedIndex;
 }
 
-function handleDoubleClick(e) {
+let lastTapTime = 0;
+let lastCell = null;
+
+function handleTableTap(e) {
     const target = e.target.closest('td');
     if (!target) return;
 
-    const text = target.textContent.trim();
+    const currentTime = Date.now();
+    const tapGap = currentTime - lastTapTime;
 
-    if (text) {
-        navigator.clipboard.writeText(text).then(() => {
-            // Optional: Show tooltip or console log
-            showToast(`Copied: ${text}`, 'info');
-        }).catch(err => {
-            console.error('Clipboard copy failed', err);
-        });
+    if (tapGap < 300 && target === lastCell) {
+        // ✅ It's a "double tap" on the same cell
+        const text = target.textContent.trim();
+        if (text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`Copied: ${text}`, 'info');
+            }).catch(err => {
+                console.error('Clipboard copy failed', err);
+            });
+        }
     }
+
+    lastTapTime = currentTime;
+    lastCell = target;
 }
 
 function handleRowCheckboxChange(e) {

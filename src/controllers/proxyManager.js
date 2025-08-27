@@ -79,9 +79,12 @@ export async function changeIp(req, res) {
     let data;
     if (custom_info) {
         const list_info = custom_info.split(':');
-        if (list_info.length < 4) {
-            return res.status(400).json({ error: 'Invalid custom_info format. Expected format: range_ip:remote_port:username:password' });
-        }
+        if (list_info.length < 4)
+            return res.status(400).json({ 
+                success: false,
+                error: 'Invalid format. Expected: range_ip:remote_port:username:password',
+                ip 
+            });
 
         data = {
             ip: ip,
@@ -112,22 +115,33 @@ export async function changeIp(req, res) {
             body: JSON.stringify(data),
         });
 
-        if (response.ok) {
-            const rawData = await response.json();
-            const proxyInfo = [
+        if (!response.ok) {
+            console.error(`❌ Failed to CHANGE IP for ${ip}:`, response.status);
+            return res.status(response.status).json({ 
+                success: false,
+                error: 'CHANGE IP request failed',
+                ip 
+            });
+        }
+
+        const rawData = await response.json();
+        return res.json({ 
+            success: true,
+            proxyInfo: [
                 rawData.new_ip,
                 rawData.remote_port,
                 rawData.username,
                 rawData.password
-            ];
-            return res.json({ proxyInfo });
-        } else {
-            console.error('❌ Failed to change IP:', response.status);
-            return res.status(response.status).json({ error: 'Failed to change IP' });
-        }
+            ],
+            type: type
+        });
     } catch (error) {
         console.error(`❌ Failed to CHANGE IP for ${ip}`, error.response?.data || error.message);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ 
+            success: false,
+            error: 'Internal server error',
+            ip 
+        });
     }
 };
 
@@ -187,22 +201,33 @@ export async function reinstall(req, res) {
             body: JSON.stringify(data),
         });
 
-        if (response.ok) {
-            const rawData = await response.json();
-            const proxyInfo = [
+        if (!response.ok) {
+            console.error(`❌ Failed to REINSTALL for sid ${sid}:`, response.status);
+            return res.status(response.status).json({ 
+                success: false,
+                error: 'REINSTALL request failed',
+                ip 
+            });
+        }
+
+        const rawData = await response.json();
+        return res.json({ 
+            success: true,
+            proxyInfo: [
                 rawData.ip,
                 rawData.remote_port,
                 rawData.username,
                 rawData.password
-            ];
-            res.json({ proxyInfo });
-        } else {
-            console.error(`❌ Failed to REINSTALL for sid: ${sid}: `, response.status);
-            return res.status(response.status).json({ error: 'Failed to CHANGE IP' });
-        }
+            ],
+            type: type
+        });
     } catch (error) {
         console.error(`❌ Failed to REINSTALL for sid: ${sid}`, error.response?.data || error.message);
-        res.status(500).json({ success: false, error: 'Reinstall failed', sid });
+        res.status(500).json({
+            success: false,
+            error: 'Internal server error',
+            sid
+        });
     }
 }
 
@@ -228,14 +253,28 @@ export async function pause(req, res) {
             body: JSON.stringify({ sid: sids })
         });
 
-        if (response.ok) res.json({ success: true });
-        else {
-            console.log(`❌ Failed to PAUSE for sids: ${sids}: `, response.status);
-            return res.status(response.status).json({ success: false, error: 'Pause failed', sids });
+        if (!response.ok) {
+            console.error(`❌ Failed to PAUSE for sids: ${sids}:`, response.status);
+            return res.status(response.status).json({ 
+                success: false, 
+                error: 'Request failed', 
+                sids 
+            });
         }
+
+        const data = await response.json();
+        // Return the actual response data for better client-side handling
+        res.json({ 
+            success: true,
+            result: data.result
+        });
     } catch (error) {
         console.error(`❌ Failed to PAUSE for sid: ${sids}`, error.response?.data || error.message);
-        res.status(500).json({ success: false, error: 'Pause failed', sids });
+        res.status(500).json({ 
+            success: false, 
+            error: 'Internal server error', 
+            sids 
+        });
     }
 }
 
@@ -261,14 +300,28 @@ export async function reboot(req, res) {
             body: JSON.stringify({ sid: sids })
         });
 
-        if (response.ok) res.json({ success: true });
-        else {
-            console.log(`❌ Failed to REBOOT for sids: ${sids}: `, response.status);
-            return res.status(response.status).json({ success: false, error: 'Pause failed', sids });
+        if (!response.ok) {
+            console.error(`❌ Failed to REBOOT for sids: ${sids}:`, response.status);
+            return res.status(response.status).json({ 
+                success: false, 
+                error: 'Request failed', 
+                sids 
+            });
         }
+
+        const data = await response.json();
+        // Return the actual response data for better client-side handling
+        res.json({ 
+            success: true,
+            result: data.result
+        });
     } catch (error) {
         console.error(`❌ Failed to REBOOT for sid: ${sids}`, error.response?.data || error.message);
-        res.status(500).json({ success: false, error: 'Reboot failed', sids });
+        res.status(500).json({ 
+            success: false, 
+            error: 'Internal server error', 
+            sids 
+        });
     }
 }
 
@@ -297,15 +350,23 @@ export async function changeNote(req, res) {
             })
         });
 
-        if (response.ok) {
-            const rawData = await response.json();
-            res.json({ success: rawData.result === 'success' });
-        } else {
+        if (!response.ok) {
             console.log(`❌ Failed to CHANGE NOTE for sid: ${sid}: `, response.status);
-            return res.status(response.status).json({ error: 'Failed to CHANGE NOTE' });
+            return res.status(response.status).json({ 
+                success: false, 
+                error: 'Request failed', 
+                sid 
+            });
         }
+
+        const rawData = await response.json();
+        res.json({ success: rawData.result === 'success' });
     } catch (error) {
         console.error(`❌ Failed to CHANGE NOTE for sid: ${sid}`, error.response?.data || error.message);
-        res.status(500).json({ success: false, error: 'Reinstall failed', sid });
+        res.status(500).json({ 
+            success: false, 
+            error: 'Internal server error', 
+            sid
+        });
     }
 }

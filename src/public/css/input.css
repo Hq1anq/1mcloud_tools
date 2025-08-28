@@ -1,8 +1,5 @@
 @import 'tailwindcss';
 
-@tailwind base;
-@tailwind utilities;
-
 @theme {
     /* Backgrounds */
     --color-body: var(--bg-body);
@@ -25,6 +22,10 @@
     --color-bg-selected: var(--bg-selected);
 
     --color-reload-btn: var(--bg-reload-btn);
+
+    --color-scrollbar-track: var(--scrollbar-track);
+    --color-scrollbar-thumb: var(--scrollbar-thumb);
+    --color-scrollbar-thumb-hover: var(--scrollbar-thumb-hover);
 
     /* Text */
     --color-text-title: var(--text-title);
@@ -88,6 +89,10 @@
 
     --bg-reload-btn: #FAC01A;
 
+    --scrollbar-track: #F5F0CD;
+    --scrollbar-thumb: var(--blue-300);
+    --scrollbar-thumb-hover: var(--blue-400);
+
     /* Text Colors */
     --text-title: #007BFC;
     --text-primary: var(--light-100);
@@ -137,6 +142,10 @@
     --bg-selected: hsl(from var(--bg-surface) h s calc(l + 10));
 
     --bg-reload-btn: var(--blue-500);
+
+    --scrollbar-track: var(--dark-700);
+    --scrollbar-thumb: var(--dark-800);
+    --scrollbar-thumb-hover: var(--dark-900);
 
     /* Text Colors */
     --text-title: #4aa3ff;
@@ -204,7 +213,7 @@
     input[type="number"],
     input[type="password"],
     textarea {
-        @apply bg-input text-text-secondary border border-2 border-border-input rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:border-none focus:ring-2 focus:ring-blue-500 w-full;
+        @apply bg-input text-text-secondary border-2 border-border-input rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:border-none focus:ring-2 focus:ring-blue-500 w-full;
     }
 
     /* Hides the arrows in Chrome, Safari, Edge */
@@ -219,29 +228,27 @@
     }
 
     h1 {
-        @apply text-text-title text-xl
+        @apply text-text-title text-xl;
     }
 
-    .scrollbar-dark::-webkit-scrollbar {
-        width: 8px;
-        position: relative;
+    textarea::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        @apply w-2;
     }
 
-    .scrollbar-dark::-webkit-scrollbar-track {
-        background-color: var(--color-dark-700);
-        border-top: none;
-        border-radius: 100vw;
-        margin-block: .3em;
+    textarea::-webkit-scrollbar-track,
+    body::-webkit-scrollbar-track {
+        @apply bg-scrollbar-track rounded-full my-1;
     }
 
-    .scrollbar-dark::-webkit-scrollbar-thumb {
-        background-color: var(--color-dark-800);
-        border-radius: 100vw;
-        cursor: pointer;
+    textarea::-webkit-scrollbar-thumb,
+    body::-webkit-scrollbar-thumb {
+        @apply bg-scrollbar-thumb rounded-full cursor-pointer;
     }
 
-    .scrollbar-dark::-webkit-scrollbar-thumb:hover {
-        background-color: var(--color-dark-900); /* on hover */
+    textarea::-webkit-scrollbar-thumb:hover,
+    body::-webkit-scrollbar-thumb:hover {
+        @apply bg-scrollbar-thumb-hover;
     }
 
     body::-webkit-scrollbar-track,

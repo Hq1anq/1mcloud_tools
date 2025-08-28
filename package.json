@@ -5,9 +5,11 @@
   "main": "./src/server/server.js",
   "type": "module",
   "scripts": {
-    "setup": "tailwindcss -i ./src/public/css/input.css -o ./src/public/css/style.css",
-    "debug": "node --inspect ./src/server.js",
-    "dev": "nodemon ./src/server.js"
+    "build:css": "tailwindcss -i ./src/public/css/input.css -o ./src/public/css/style.css --minify",
+    "dev:css": "tailwindcss -i ./src/public/css/input.css -o ./src/public/css/style.css --watch",
+    "dev:server": "nodemon ./src/server.js",
+    "dev": "concurrently \"npm run dev:css\" \"npm run dev:server\"",
+    "debug": "node --inspect ./src/server.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,10 @@
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.12",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
+    "cssnano": "^7.1.1",
     "nodemon": "^3.1.10"
   }
 }

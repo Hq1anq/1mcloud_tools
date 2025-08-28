@@ -416,8 +416,8 @@ async function changeNote() {
                 body: JSON.stringify({ sid: sid, newNote: noteInput, apiKey: apiKeyString })
             });
 
-            const data = await res.json();
-            if (res.ok && data.success)
+            const data = await response.json();
+            if (response.ok && data.success)
                 updateRowContent(row, noteInput, 'changeNote');
             else {
                 showToast(`Failed to changeNote for sid ${sid}`, 'error');

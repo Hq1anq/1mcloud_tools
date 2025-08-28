@@ -11,7 +11,6 @@
     --color-red-600: oklch(57.7% 0.245 27.325);
     --color-red-700: oklch(50.5% 0.213 27.518);
     --color-red-800: oklch(44.4% 0.177 26.899);
-    --color-red-900: oklch(39.6% 0.141 25.723);
     --color-orange-600: oklch(64.6% 0.222 41.116);
     --color-yellow-200: oklch(94.5% 0.129 101.54);
     --color-yellow-500: oklch(79.5% 0.184 86.047);
@@ -21,7 +20,6 @@
     --color-green-500: oklch(72.3% 0.219 149.579);
     --color-green-600: oklch(62.7% 0.194 149.214);
     --color-green-800: oklch(44.8% 0.119 151.328);
-    --color-green-900: oklch(39.3% 0.095 152.535);
     --color-sky-600: oklch(58.8% 0.158 241.966);
     --color-blue-200: oklch(88.2% 0.059 254.128);
     --color-blue-500: oklch(62.3% 0.214 259.815);
@@ -88,6 +86,8 @@
     --color-border: var(--border);
     --color-border-input: var(--border-input);
     --color-border-checkbox-hover: var(--border-checkbox-hover);
+    --color-success-cell: var(--success-cell);
+    --color-error-cell: var(--error-cell);
   }
 }
 @layer base {
@@ -691,6 +691,9 @@
   .bg-dropdown {
     background-color: var(--color-dropdown);
   }
+  .bg-error-cell {
+    background-color: var(--color-error-cell);
+  }
   .bg-gray-500 {
     background-color: var(--color-gray-500);
   }
@@ -699,12 +702,6 @@
   }
   .bg-green-800 {
     background-color: var(--color-green-800);
-  }
-  .bg-green-900\/40 {
-    background-color: color-mix(in srgb, oklch(39.3% 0.095 152.535) 40%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-green-900) 40%, transparent);
-    }
   }
   .bg-navbar {
     background-color: var(--color-navbar);
@@ -730,17 +727,14 @@
   .bg-red-800 {
     background-color: var(--color-red-800);
   }
-  .bg-red-900\/40 {
-    background-color: color-mix(in srgb, oklch(39.6% 0.141 25.723) 40%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-red-900) 40%, transparent);
-    }
-  }
   .bg-reload-btn {
     background-color: var(--color-reload-btn);
   }
   .bg-sky-600 {
     background-color: var(--color-sky-600);
+  }
+  .bg-success-cell {
+    background-color: var(--color-success-cell);
   }
   .bg-surface {
     background-color: var(--color-surface);
@@ -1300,11 +1294,6 @@
   --blue-400: #46A9FD;
   --blue-500: #007bfc;
   --blue-700: #053fe5;
-  --color-primary: #60a5fa;
-  --color-success: #22c55e;
-  --color-warning: #eab308;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
 }
 [data-theme="light"] {
   --bg-body: var(--blue-100);
@@ -1333,6 +1322,10 @@
   --logo-ring: #FAC01A;
   --logo-inner: #000000;
   --highlight-brightness: 80%;
+  --success-cell: #00c95066;
+  --error-cell: #fb2c3666;
+  --warning: #eab308;
+  --info: #3b82f6;
   #theme-toggle-slider {
     transform: translateX(26px);
   }
@@ -1364,6 +1357,10 @@
   --logo-ring: var(--blue-700);
   --logo-inner: #e2e2e4;
   --highlight-brightness: 120%;
+  --success-cell: #0d542b99;
+  --error-cell: #82181a99;
+  --warning: #eab308;
+  --info: #3b82f6;
 }
 [data-theme] * {
   transition: none;

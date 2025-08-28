@@ -23,33 +23,34 @@
                     <h3 class="text-text-secondary text-lg font-semibold mb-3">
                         <i class="fas fa-cogs mr-2"></i>Actions
                     </h3>
-                    <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex flex-col sm:flex-row gap-1">
                         <!-- IPs Input -->
-                        <div class="sm:w-1/2 relative flex flex-col">
+                        <div class="flex-1 relative flex flex-col m-1">
                             <div class="flex justify-between items-center">
                                 <label class="block text-text-secondary font-medium mb-2">
                                     <i class="fas fa-server mr-2"></i>
                                     Enter IPs (one per line)
                                 </label>
                                 <button id="deleteBtn"
-                                    class="bg-red-600 hover:brightness-90 font-medium mb-2 py-1 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
+                                    class="static md:absolute lg:static right-0 bottom-[-8px] text-nowrap bg-red-600 hover:brightness-90 font-medium mb-2 py-1 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
                                     <i class="fas fa-trash-alt mr-2"></i>Delete
                                 </button>
                             </div>
                             <textarea id="ip-list" class="flex-grow min-h-[6rem]"
                                 placeholder="192.168.1.1&#10;10.0.0.1&#10;172.16.0.1"></textarea>
                         </div>
-                        <!-- GetData & Change Note & Reinstall and Simple Action Buttons -->
-                        <div class="flex flex-col space-y-4 w-full">
-                            <!-- Getdata & Change Note & Reinstall (top) -->
-                            <div class="flex gap-3 sm:gap-4">
+                        <div class="flex-[1.5]">
+                            <!-- GetData & Change Note & Reinstall and Simple Action Buttons -->
+                            <div class="grid grid-cols-[1fr_1fr_1fr] auto-rows-auto gap-1 w-full items-start p-0">
+
                                 <!-- Get Data -->
-                                <div class="space-y-2">
+                                <div class="row-start-1 row-end-2 col-start-1 col-end-2
+                                            md:row-end-3 space-y-1 m-1">
                                     <input type="number" id="amount"
                                         placeholder="Enter amount" min="0">
                                     <div class="flex items-center">
                                         <button id="getDataBtn"
-                                            class="flex-1 bg-blue-600 hover:brightness-90 font-medium py-2 px-3 rounded-lg flex items-center justify-center">
+                                            class="flex-1 bg-blue-600 hover:brightness-90 text-nowrap font-medium py-2 px-3 rounded-lg flex items-center justify-center">
                                             <i class="fas fa-download mr-2"></i>
                                             Get Data
                                         </button>
@@ -57,7 +58,7 @@
                                 </div>
 
                                 <!-- Change Note -->
-                                <div class="space-y-2 flex-1">
+                                <div class="row-start-1 row-end-2 md:row-end-3 col-start-2 col-end-4 md:col-end-3 space-y-1 flex-1 m-1">
                                     <input type="text" id="noteInput"
                                         placeholder="Enter note">
                                     <button id="changeNoteBtn"
@@ -67,7 +68,7 @@
                                 </div>
 
                                 <!-- Reinstall -->
-                                <div class="space-y-2">
+                                <div class="row-start-2 md:row-start-1 row-end-3 col-start-1 md:col-start-3 col-end-3 md:col-end-4 space-y-1 m-1">
                                     <input type="text" id="reinstallInput"
                                         placeholder="port:username:password">
                                     <div class="flex">
@@ -83,38 +84,52 @@
                                         }) %>
                                     </div>
                                 </div>
+                                
+                                <!-- Change IP -->
+                                <div class="row-start-3 col-start-1 row-end-4 col-end-3 md:col-end-2 flex m-1 mb-0">
+                                    <button id="changeIpBtn"
+                                        class="w-full bg-green-600 hover:bg-green-700 text-nowrap font-medium py-2 px-3 rounded-l-lg transition-colors duration-200 flex items-center justify-center">
+                                        <i class="fas fa-exchange-alt mr-2"></i>Change IP
+                                    </button>
+                                    <%- include('partials/dropDown', {
+                                        dropdownId: 'changeIpType',
+                                        dropdownOptions: ['HTTPS', 'SOCKS5'],
+                                        defaultOption: 'HTTPS'
+                                    }) %>
+                                </div>
+
+                                <!-- Simple button -->
+                                <div class="row-start-2 col-start-3 row-end-4 col-end-4
+                                            md:row-start-3 md:col-start-2 flex-1 grid grid-cols-1 md:grid-cols-3 gap-1">
+                                    <button id="copyIpBtn"
+                                        class="bg-yellow-600 hover:brightness-90 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center m-1">
+                                        <i class="fas fa-copy mr-2"></i>
+                                        Copy IP
+                                    </button>
+                                    <button id="rebootBtn"
+                                        class="bg-gray-500 hover:brightness-90 font-medium py-2 px-3 rounded-lg flex items-center justify-center m-1">
+                                        <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+                                        <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2 flex-shrink-0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                                        <g style="fill:none; stroke:var(--text-primary); stroke-width:12px; stroke-linecap:round; stroke-linejoin:round;">
+                                            <path d="m 50,10 0,35"/>
+                                            <path d="M 20,29 C 4,52 15,90 50,90 85,90 100,47 74,20"/>
+                                        </g>
+                                        <path style="fill:var(--text-primary)" d="m 2,21 29,-2 2,29"/>
+                                        </svg>
+                                        Reboot
+                                    </button>
+                                    <button id="pauseBtn"
+                                        class="bg-red-600 hover:brightness-90 font-medium py-2 px-3 rounded-lg flex items-center justify-center m-1">
+                                        <i class="fas fa-pause mr-2"></i>
+                                        Pause
+                                    </button>
+                                </div>
                             </div>
-                            <!-- Simple Action Buttons (bottom) -->
-                            <div class="grid grid-cols-4 gap-2 sm:gap-3">
-                                <button id="changeIpBtn"
-                                    class="bg-green-600 hover:bg-green-700 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                    <i class="fas fa-exchange-alt mr-2"></i>Change IP
-                                </button>
-                                <button id="copyIpBtn"
-                                    class="bg-yellow-600 hover:brightness-90 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                    <i class="fas fa-copy mr-2"></i>
-                                    Copy IP
-                                </button>
-                                <button id="rebootBtn"
-                                    class="bg-gray-500 hover:brightness-90 font-medium py-2 px-3 rounded-lg flex items-center justify-center">
-                                    <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-                                    <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2 flex-shrink-0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                                    <g style="fill:none; stroke:var(--text-primary); stroke-width:12px; stroke-linecap:round; stroke-linejoin:round;">
-                                        <path d="m 50,10 0,35"/>
-                                        <path d="M 20,29 C 4,52 15,90 50,90 85,90 100,47 74,20"/>
-                                    </g>
-                                    <path style="fill:var(--text-primary)" d="m 2,21 29,-2 2,29"/>
-                                    </svg>
-                                    Reboot
-                                </button>
-                                <button id="pauseBtn"
-                                    class="bg-red-600 hover:brightness-90 font-medium py-2 px-3 rounded-lg flex items-center justify-center">
-                                    <i class="fas fa-pause mr-2"></i>
-                                    Pause
-                                </button>
-                            </div>
-                            <input type="password" id="api-key"
+                            <div class="flex">
+                                <input type="password" id="api-key"
+                                class="m-1"
                                 placeholder="Enter API Key">
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -43,6 +43,9 @@
 
     --color-warning: var(--warning);
     --color-info: var(--info);
+
+    --breakpoint-sm: 772px;
+    --breakpoint-md: 863px;
 }
 
 /* Theme Variables */

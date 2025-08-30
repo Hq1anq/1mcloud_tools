@@ -16,7 +16,9 @@ const elements = {
     reinstallType: document.getElementById('reinstallType-trigger'),
     reinstallBtn: document.getElementById('reinstallBtn'),
 
+    changeIpType: document.getElementById('changeIpType-trigger'),
     changeIpBtn: document.getElementById('changeIpBtn'),
+
     copyIpBtn: document.getElementById('copyIpBtn'),
     pauseBtn: document.getElementById('pauseBtn'),
     rebootBtn: document.getElementById('rebootBtn'),
@@ -120,6 +122,7 @@ async function changeIp() {
 
     const proxyLines = []; // collect proxies here
     const apiKeyString = elements.apiKey.value.trim();
+    const proxyType = elements.changeIpType.textContent.trim() === 'SOCKS5' ? 'proxy_sock_5' : 'proxy_https';
 
     let successCount = 0;
     let failCount = 0;
@@ -136,7 +139,7 @@ async function changeIp() {
             const response = await fetch('/proxy/change-ip', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ip: ip, apiKey: apiKeyString })
+                body: JSON.stringify({ ip: ip, apiKey: apiKeyString, type: proxyType })
             });
 
             const data = await response.json();
@@ -479,12 +482,16 @@ function updateRowContent(row, text, action) {
 
     // Update 'changed' count if it's changeIp
     if (action === 'changeIp') {
+        const changeIpType = elements.changeIpType.textContent.trim() === 'SOCKS5' ? 'SOCKS5 Proxy' : 'HTTPS Proxy'
+        cells[typeIndex].innerText = changeIpType;
+
         const changedCell = cells[changedIndex];
         const currentValue = parseInt(changedCell.innerText.trim()) || 0;
         changedCell.innerText = currentValue + 1;
 
         updateRowData(id, {
             ip_port: `${newProxy[0]}:${newProxy[1]}`,
+            type: changeIpType,
             changed: currentValue + 1,
             status: 'Running'
         });

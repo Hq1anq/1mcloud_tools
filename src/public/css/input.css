@@ -23,6 +23,10 @@
 
     --color-reload-btn: var(--bg-reload-btn);
 
+    --color-dialog: var(--bg-dialog);
+    --color-dialog-thead: var(--bg-dialog-thead);
+    --color-dialog-td: var(--bg-dialog-td);
+
     --color-scrollbar-track: var(--scrollbar-track);
     --color-scrollbar-thumb: var(--scrollbar-thumb);
     --color-scrollbar-thumb-hover: var(--scrollbar-thumb-hover);
@@ -91,6 +95,10 @@
 
     --bg-reload-btn: #FAC01A;
 
+    --bg-dialog: var(--light-100);
+    --bg-dialog-thead: var(--blue-500);
+    --bg-dialog-td: var(--blue-200);
+
     --scrollbar-track: #F5F0CD;
     --scrollbar-thumb: var(--blue-300);
     --scrollbar-thumb-hover: var(--blue-400);
@@ -144,6 +152,10 @@
     --bg-selected: hsl(from var(--bg-surface) h s calc(l + 10));
 
     --bg-reload-btn: var(--blue-500);
+
+    --bg-dialog: var(--dark-700);
+    --bg-dialog-thead: var(--dark-600);
+    --bg-dialog-td: var(--dark-800);
 
     --scrollbar-track: var(--dark-700);
     --scrollbar-thumb: var(--dark-800);
@@ -234,22 +246,26 @@
     }
 
     textarea::-webkit-scrollbar,
-    body::-webkit-scrollbar {
-        @apply w-2;
+    body::-webkit-scrollbar,
+    .scroll-container::-webkit-scrollbar {
+        @apply w-2 h-2;
     }
 
     textarea::-webkit-scrollbar-track,
-    body::-webkit-scrollbar-track {
+    body::-webkit-scrollbar-track,
+    .scroll-container::-webkit-scrollbar-track {
         @apply bg-scrollbar-track rounded-full my-1;
     }
 
     textarea::-webkit-scrollbar-thumb,
-    body::-webkit-scrollbar-thumb {
+    body::-webkit-scrollbar-thumb,
+    .scroll-container::-webkit-scrollbar-thumb {
         @apply bg-scrollbar-thumb rounded-full cursor-pointer;
     }
 
     textarea::-webkit-scrollbar-thumb:hover,
-    body::-webkit-scrollbar-thumb:hover {
+    body::-webkit-scrollbar-thumb:hover,
+    .scroll-container::-webkit-scrollbar-thumb:hover {
         @apply bg-scrollbar-thumb-hover;
     }
 

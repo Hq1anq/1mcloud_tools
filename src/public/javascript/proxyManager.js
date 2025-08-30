@@ -1,6 +1,7 @@
 import { setData, initTable, updateRowData, updateCounts, getSelectedRows, getStatusChip } from '/javascript/components/table.js';
-import { showToast, changeToToast, testToast } from '/javascript/components/toaster.js';
+import { showToast, changeToToast } from '/javascript/components/toaster.js';
 import { showCopyDialog } from '/javascript/components/copyDialog.js';
+import { showChangeIpDialog, closeChangeIpDialog } from '/javascript/components/ChangeIpDialog.js';
 // DOM elements
 const elements = {
     ipList: document.getElementById('ip-list'),
@@ -21,6 +22,7 @@ const elements = {
     changeIpInput: document.getElementById('changeIpInput'),
     changeIpType: document.getElementById('changeIpType-trigger'),
     changeIpBtn: document.getElementById('changeIpBtn'),
+    confirmChangeIp : document.getElementById('confirmChangeIp'),
 
     copyIpBtn: document.getElementById('copyIpBtn'),
     pauseBtn: document.getElementById('pauseBtn'),
@@ -31,7 +33,7 @@ const elements = {
 // Initialize
 function init() {
     setData([
-        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2"},
+        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Running", "note": "0208 tung2aaaaaaaaaaaaaaaa"},
         {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Paused", "note": "0208 tung2"},
         {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Stopped", "note": "0208 tung2"},
         {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTPS Proxy", "from": "19-07-2025", "to": "18-08-2025", "changed": 0,"status": "Unknowed", "note": "0208 tung2"},
@@ -109,22 +111,24 @@ function bindEvents() {
                 console.error('Failed to copy:', err);
             });
     })
-    // elements.deleteBtn.addEventListener('click', deleteProxies);
+
     elements.copyIpBtn.addEventListener('click', copyIp);
     elements.shuffleBtn.addEventListener('click', shuffleListIp);
     elements.amount.addEventListener('keydown', event => {
-        if (event.key === 'Enter') {
-            getData();
-        }
+        if (event.key === 'Enter') getData();
     });
     elements.getDataBtn.addEventListener('click', getData);
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.reinstallBtn.addEventListener('click', reinstall);
     elements.pauseBtn.addEventListener('click', pause);
     elements.rebootBtn.addEventListener('click', reboot);
-    elements.changeIpBtn.addEventListener('click', changeIp);
-    // elements.pauseBtn.addEventListener('click', testToast);
-    elements.refundBtn.addEventListener('click', testToast);
+
+    elements.changeIpBtn.addEventListener('click', () => {
+        const proxyType = elements.changeIpType.textContent.trim();
+        showChangeIpDialog(proxyType);
+    });
+    elements.confirmChangeIp.addEventListener('click', changeIp);
+    // elements.refundBtn.addEventListener('click', test);
 }
 
 function copyIp() {
@@ -224,6 +228,7 @@ async function changeIp() {
         return;
     }
 
+    closeChangeIpDialog();
     showToast('Change Ip...', 'loading');
 
     const proxyLines = []; // collect proxies here

@@ -25,17 +25,17 @@
                 </div>
             </div>
             <!-- Table -->
-            <div class="table-container rounded-b-lg overflow-x-auto select-none">
-                <table class="table-auto">
-                    <thead class="bg-thead top-0 z-20" id="tableHeader">
-                        <tr >
+            <div class="rounded-b-lg overflow-x-auto select-none">
+                <table class="table-fixed">
+                    <thead class="bg-thead" id="tableHeader">
+                        <tr>
                             <th class="px-3 sm:px-4">
                                 <input type="checkbox" id="selectAllCheckbox"
                                     class="w-4 h-4 rounded">
                             </th>
                             
                             <% headers.forEach(header => { %>
-                                <th class="<%= header === 'note' ? 'w-full' : 'min-w-fit' %> top-0 z-30 px-3 sm:px-4 py-3 text-center font-medium uppercase tracking-wider">
+                                <th class="px-3 sm:px-4 py-3 text-center font-medium uppercase tracking-wider">
                                     <div class="relative flex flex-col gap-1 min-w-15">
                                         <%= header %>
                                         <input type="text" class="filter-input <%= header === 'note' || header === 'ip' || header === 'ip:port' ? 'text-left' : 'text-center' %> bg-dropdown px-2 py-1 mt-1" placeholder="Filter">

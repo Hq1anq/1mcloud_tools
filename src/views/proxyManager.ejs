@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-body text-text-primary text-xs sm:text-base font-sans scrollbar-dark">
+<body class="bg-body text-text-primary text-xs sm:text-base font-sans">
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Proxy Manager' }) %>
     <!-- Status Display -->
@@ -43,7 +43,7 @@
                                 </svg>
                                 Copy
                             </button>
-                            <textarea id="ip-list" class="flex-grow min-h-[6rem] scrollbar-dark"
+                            <textarea id="ip-list" class="flex-grow min-h-[6rem]"
                                 placeholder="192.168.1.1&#10;10.0.0.1&#10;172.16.0.1"></textarea>
                         </div>
                         <!-- GetData & Change Note & Reinstall and Simple Action Buttons -->

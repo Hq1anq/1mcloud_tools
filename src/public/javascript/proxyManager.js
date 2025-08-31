@@ -1,6 +1,7 @@
 import { setData, initTable, updateRowData, updateCounts, getSelectedRows, getStatusChip } from '/javascript/components/table.js';
 import { showToast, changeToToast } from '/javascript/components/toaster.js';
 import { showCopyDialog } from '/javascript/components/copyDialog.js';
+import { showChangeIpDialog, closeChangeIpDialog } from '/javascript/components/ChangeIpDialog.js';
 // DOM elements
 const elements = {
     ipList: document.getElementById('ip-list'),
@@ -18,6 +19,7 @@ const elements = {
 
     changeIpType: document.getElementById('changeIpType-trigger'),
     changeIpBtn: document.getElementById('changeIpBtn'),
+    confirmChangeIp : document.getElementById('confirmChangeIp'),
 
     copyIpBtn: document.getElementById('copyIpBtn'),
     pauseBtn: document.getElementById('pauseBtn'),
@@ -36,16 +38,20 @@ function bindEvents() {
     elements.copyIpBtn.addEventListener('click', copyIp);
     elements.deleteBtn.addEventListener('click', deleteIP);
     elements.amount.addEventListener('keydown', event => {
-        if (event.key === 'Enter') {
-            getData();
-        }
+        if (event.key === 'Enter') getData();
     });
     elements.getDataBtn.addEventListener('click', getData);
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.reinstallBtn.addEventListener('click', reinstall);
     elements.pauseBtn.addEventListener('click', pause);
     elements.rebootBtn.addEventListener('click', reboot);
-    elements.changeIpBtn.addEventListener('click', changeIp);
+
+    elements.changeIpBtn.addEventListener('click', () => {
+        const proxyType = elements.changeIpType.textContent.trim();
+        showChangeIpDialog(proxyType);
+    });
+    elements.confirmChangeIp.addEventListener('click', changeIp);
+    // elements.refundBtn.addEventListener('click', test);
 }
 
 function copyIp() {
@@ -118,6 +124,7 @@ async function changeIp() {
         return;
     }
 
+    closeChangeIpDialog();
     showToast('Change Ip...', 'loading');
 
     const proxyLines = []; // collect proxies here

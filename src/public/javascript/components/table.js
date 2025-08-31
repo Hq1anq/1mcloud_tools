@@ -12,6 +12,62 @@ const elements = {
     filterInputs: document.querySelectorAll('.filter-input')
 }
 
+export let columnMap = {
+    checkbox: 0,
+    sid: 1,
+    ip_port: 2,
+    country: 3,
+    type: 4,
+    from: 5,
+    to: 6,
+    changed: 7,
+    status: 8,
+    note: 9
+};
+
+const desktopOrder = ['sid', 'ip_port', 'country', 'type', 'from', 'to', 'changed', 'status', 'note'];
+const mobileOrder  = ['ip_port', 'status', 'note', 'to', 'country', 'type', 'from', 'changed', 'sid'];
+const order = isMobile() ? mobileOrder : desktopOrder;
+
+const headerCells = elements.table.tHead?.rows[0]?.cells;
+
+order.forEach((col, idx) => {
+    const headerCell = headerCells[idx + 1]; // +1 because first <th> is checkbox
+    headerCell.firstElementChild.firstChild.nodeValue = col;
+});
+
+function renderChunk() {
+    const nextChunk = filteredData.slice(renderedCount, renderedCount + chunkSize);
+
+    columnMap = { checkbox: 0 };
+    order.forEach((col, idx) => {
+        columnMap[col] = idx + 1; // +1 because 0 is reserved for checkbox
+    });
+
+    nextChunk.forEach(row => {
+        const orderedRow = reorderRowData(row, order);
+        addRow(orderedRow);
+    });
+    renderedCount += nextChunk.length;
+    updateCounts();
+}
+
+function isMobile() {
+    return window.matchMedia("(max-width: 640px)").matches; // Tailwind `sm:` breakpoint
+}
+
+function reorderRowData(row, order) {
+    // build a new object with reordered keys
+    const reordered = {};
+    order.forEach(key => {
+        if (row.hasOwnProperty(key)) {
+            reordered[key] = row[key];
+        }
+    });
+
+    return reordered; // still an object
+}
+
 let allData = [];
 let filteredData = [];
 let renderedCount = 0;
@@ -40,8 +96,16 @@ export function initTable(page) {
 
 export function setData(data) {
     clearTable();
-    allData = data;
-    filteredData = [...data];
+    allData = data.map(row => {
+        const reordered = {};
+        order.forEach(key => {
+            if (row.hasOwnProperty(key)) {
+                reordered[key] = row[key];
+            }
+        });
+        return reordered;
+    });
+    filteredData = [...allData];
     renderedCount = 0;
     renderChunk();
 }
@@ -59,7 +123,7 @@ export function addRow(data, addData = false, includeActions = false) {
     tr.classList.add('hover:bg-bg-hover');
 
     let rowHTML = `
-        <td class="px-4 py-2 border-b border-border">
+        <td class="px-1 sm:px-4 py-2 border-b border-border">
             <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
         </td>
     `;
@@ -69,7 +133,7 @@ export function addRow(data, addData = false, includeActions = false) {
         const content = key === 'status' ? getStatusChip(value) : value;
 
         rowHTML += `
-        <td class="px-4 py-2 border-b border-border whitespace-nowrap ${alignment}">
+        <td class="px-1 sm:px-4 py-2 border-b border-border whitespace-nowrap ${alignment}">
             ${content}
         </td>
         `;
@@ -77,9 +141,9 @@ export function addRow(data, addData = false, includeActions = false) {
 
     if (includeActions) {
         rowHTML += `
-        <td class="px-4 py-2 border-b border-border space-x-2">
-            <button class="bg-blue-600 py-1 px-4 rounded-lg hover:bg-blue-700" onclick="editRow(this)">Edit</button>
-            <button class="bg-red-600 py-1 px-4 rounded-lg hover:bg-red-700" onclick="deleteRow(this)">Delete</button>
+        <td class="px-1 sm:px-4 py-2 border-b border-border space-x-2">
+            <button class="bg-blue-600 py-1 px-1 sm:px-4 rounded-lg hover:bg-blue-700" onclick="editRow(this)">Edit</button>
+            <button class="bg-red-600 py-1 px-1 sm:px-4 rounded-lg hover:bg-red-700" onclick="deleteRow(this)">Delete</button>
         </td>
         `;
     }
@@ -310,17 +374,6 @@ function handleScroll(page) {
     if (nearBottom && renderedCount < filteredData.length) {
         if (page !== 'proxyChecker') renderChunk();
     }
-}
-
-function renderChunk() {
-    const nextChunk = filteredData.slice(renderedCount, renderedCount + chunkSize);
-    nextChunk.forEach(row => addRow(row));
-    renderedCount += nextChunk.length;
-    updateCounts();
-    addColumnClass(1, 'hidden lg:table-cell');
-    addColumnClass(3, 'hidden md:table-cell');
-    addColumnClass(4, 'hidden md:table-cell');
-    addColumnClass(5, 'hidden sm:table-cell');
 }
 
 export function addColumnClass(colIndex, className) {

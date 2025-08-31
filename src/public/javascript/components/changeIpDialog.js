@@ -1,4 +1,4 @@
-import { getSelectedRows } from '/javascript/components/table.js';
+import { getSelectedRows, columnMap } from '/javascript/components/table.js';
 import { showToast } from '/javascript/components/toaster.js';
 
 const elements = {
@@ -21,11 +21,13 @@ export function showChangeIpDialog(proxyType) {
         // Build row
         const tr = document.createElement("tr");
         tr.classList.add('hover:bg-bg-hover');
-        // Pick specific columns: ip:port (2), country (3), type (4), status (8), note (9)
-        const indexes = [2, 3, 4, 8, 9];
+        
+        const indexes = [columnMap.ip_port, columnMap.country, columnMap.type, columnMap.status, columnMap.note];
 
         indexes.forEach(i => {
             const td = row.cells[i].cloneNode(true); // clone existing cell
+            if (i === 4) td.innerText = td.innerText.split('Proxy')[0].trim();
+            td.classList.remove('hidden');
             tr.appendChild(td);
         });
 

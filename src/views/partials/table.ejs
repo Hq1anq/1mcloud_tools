@@ -29,13 +29,13 @@
                 <table class="table-fixed">
                     <thead class="bg-thead" id="tableHeader">
                         <tr>
-                            <th class="px-3 sm:px-4">
+                            <th class="px-1 sm:px-4">
                                 <input type="checkbox" id="selectAllCheckbox"
                                     class="w-4 h-4 rounded">
                             </th>
                             
                             <% headers.forEach(header => { %>
-                                <th class="px-3 sm:px-4 py-3 text-center font-medium uppercase tracking-wider">
+                                <th class="px-1 sm:px-4 py-3 text-center font-medium uppercase tracking-wider">
                                     <div class="relative flex flex-col gap-1 min-w-15">
                                         <%= header %>
                                         <input type="text" class="filter-input <%= header === 'note' || header === 'ip' || header === 'ip:port' ? 'text-left' : 'text-center' %> bg-dropdown px-2 py-1 mt-1" placeholder="Filter">
@@ -44,7 +44,7 @@
                             <% }); %>
 
                             <% if (showActions) { %>
-                                <th class="px3 sm:px-4 py-3 text-left font-medium uppercase tracking-wider">
+                                <th class="px-1 sm:px-4 py-3 text-left font-medium uppercase tracking-wider">
                                 Actions
                                 </th>
                             <% } %>
@@ -54,18 +54,18 @@
                         <% if (data && data.length > 0) { %>
                             <% data.forEach(row => { %>
                             <tr class="hover:bg-bg-hover cursor-pointer">
-                                <td class="px-3 sm:px-4 py-2 border-b border-border">
+                                <td class="px-1 sm:px-4 py-2 border-b border-border">
                                     <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
                                 </td>
 
                                 <% headers.forEach(h => { %>
-                                <td class="px-3 sm:px-4 py-2 border-b border-border">
+                                <td class="px-1 sm:px-4 py-2 border-b border-border">
                                     <%= row[h.toLowerCase()] %>
                                 </td>
                                 <% }); %>
 
                                 <% if (showActions) { %>
-                                <td class="px-3 sm:px-4 py-2 border-b border-border space-x-2">
+                                <td class="px-1 sm:px-4 py-2 border-b border-border space-x-2">
                                     <button class="bg-blue-600 py-1 px-4 rounded-lg hover:bg-blue-700" onclick="editRow(this)">Edit</button>
                                     <button class="bg-red-600 py-1 px-4 rounded-lg hover:bg-red-700" onclick="deleteRow(this)">Delete</button>
                                 </td>

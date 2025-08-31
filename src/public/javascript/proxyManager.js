@@ -1,4 +1,4 @@
-import { setData, initTable, updateRowData, updateCounts, getSelectedRows, getStatusChip } from '/javascript/components/table.js';
+import { setData, columnMap, getSelectedRows, initTable, updateRowData, updateCounts, getStatusChip } from '/javascript/components/table.js';
 import { showToast, changeToToast } from '/javascript/components/toaster.js';
 import { showCopyDialog } from '/javascript/components/copyDialog.js';
 import { showChangeIpDialog, closeChangeIpDialog } from '/javascript/components/ChangeIpDialog.js';
@@ -128,7 +128,9 @@ function bindEvents() {
         showChangeIpDialog(proxyType);
     });
     elements.confirmChangeIp.addEventListener('click', changeIp);
-    // elements.refundBtn.addEventListener('click', test);
+    elements.refundBtn.addEventListener('click', () => {
+        showCopyDialog('Tét', 'just tét');
+    });
 }
 
 function copyIp() {
@@ -138,7 +140,7 @@ function copyIp() {
         return;
     }
     const ipList = selectedRows
-        .map(row => row.cells[2]?.textContent.split(':')[0].trim())
+        .map(row => row.cells[columnMap.ip_port]?.textContent.split(':')[0].trim())
         .filter(Boolean) // remove null/undefined
         .join('\n'); // multi-line string
 
@@ -244,7 +246,7 @@ async function changeIp() {
         if (cells.length < 2) continue;
 
         // Extract IP from the 'ip_port' column (assumed to be the second column)
-        const ipPort = cells[2].innerText.trim();
+        const ipPort = cells[columnMap.ip_port].innerText.trim();
         const ip = ipPort.split(':')[0]; // take only IP part
 
         try {
@@ -329,8 +331,7 @@ async function reinstall() {
         const cells = row.cells;
         if (cells.length < 2) continue;
 
-        // Extract IP from the 'ip_port' column (assumed to be the second column)
-        const sid = cells[1].innerText.trim();
+        const sid = cells[columnMap.sid].innerText.trim();
 
         try {
             const response = await fetch('/proxy/reinstall', {
@@ -403,7 +404,7 @@ async function pause() {
     showToast("Pausing...", 'loading');
 
     const sids = selectedRows
-        .map(row => row.cells[1].innerText.trim())
+        .map(row => row.cells[columnMap.sid].innerText.trim())
         .join(',');
     const apiKeyString = elements.apiKey.value.trim();
 
@@ -421,7 +422,7 @@ async function pause() {
             const errorIds = Object.keys(data.result.error);
 
             selectedRows.forEach(row => {
-                const sid = row.cells[1].innerText.trim();
+                const sid = row.cells[columnMap.sid].innerText.trim();
                 if (successIds.includes(Number(sid))) {
                     updateRowContent(row, '', 'pause');
                     row.classList.add('bg-success-cell');
@@ -461,7 +462,7 @@ async function reboot() {
     showToast("REBOOT...", 'loading');
 
     const sids = selectedRows
-        .map(row => row.cells[1].innerText.trim())
+        .map(row => row.cells[columnMap.sid].innerText.trim())
         .join(',');
     const apiKeyString = elements.apiKey.value.trim();
 
@@ -480,7 +481,7 @@ async function reboot() {
             const errorIds = Object.keys(data.result.error);
 
             selectedRows.forEach(row => {
-                const sid = row.cells[1].innerText.trim();
+                const sid = row.cells[columnMap.sid].innerText.trim();
                 if (successIds.includes(Number(sid))) {
                     updateRowContent(row, '', 'reboot');
                     row.classList.add('bg-success-cell');
@@ -529,9 +530,8 @@ async function changeNote() {
         if (cells.length < 2) continue;
 
         // Extract IP from the 'ip_port' column (assumed to be the second column)
-        const sid = cells[1].innerText.trim();
-        // const oldNote = cells[9].innerText.trim();
-        const oldNote = cells[9].innerText.trim();
+        const sid = cells[columnMap.sid].innerText.trim();
+        const oldNote = cells[columnMap.note].innerText.trim();
 
         if (isReplace) {
             newNote = noteInput;
@@ -573,23 +573,23 @@ async function changeNote() {
 function updateRowContent(row, text, action) {
     const cells = row.children;
     const id = row.dataset.id;
-    const checkbox = cells[0].firstElementChild;
+    const checkbox = cells[columnMap.checkbox].firstElementChild;
     row.classList.add('bg-success-cell');
     if (action === 'pause') {
-        cells[8].innerHTML = getStatusChip('Paused');
+        cells[columnMap.status].innerHTML = getStatusChip('Paused');
         updateRowData(id, { status: 'Paused' });
         checkbox.checked = false;
         row.classList.remove('selected-row');
         return;
     }
     if (action === 'reboot') {
-        cells[8].innerHTML = getStatusChip('Running');
+        cells[columnMap.status].innerHTML = getStatusChip('Running');
         updateRowData(id, { status: 'Running' });
         return;
     }
     if (action === 'changeNote') {
         const newNote = text;
-        cells[9].innerText = newNote;
+        cells[columnMap.note].innerText = newNote;
         updateRowData(id, { note: newNote });
         checkbox.checked = false;
         row.classList.remove('selected-row');
@@ -597,25 +597,18 @@ function updateRowContent(row, text, action) {
     }
     const newProxy = text;
 
-    // Column indexes based on header:
-    // [checkbox, 'sid', 'ip:port', 'country', 'type', 'from', 'to', 'changed', 'status', 'note']
-    const ipPortIndex = 2;
-    const typeIndex = 4;
-    const changedIndex = 7;
-    const statusIndex = 8;
-
     // Update ip:port
-    cells[ipPortIndex].innerText = `${newProxy[0]}:${newProxy[1]}`;
+    cells[columnMap.ip_port].innerText = `${newProxy[0]}:${newProxy[1]}`;
 
     // Update status to 'Running'
-    cells[statusIndex].innerHTML = getStatusChip('Running');
+    cells[columnMap.status].innerHTML = getStatusChip('Running');
 
     // Update 'changed' count if it's changeIp
     if (action === 'changeIp') {
         const changeIpType = elements.changeIpType.textContent.trim() === 'SOCKS5' ? 'SOCKS5 Proxy' : 'HTTPS Proxy'
-        cells[typeIndex].innerText = changeIpType;
+        cells[columnMap.type].innerText = changeIpType;
 
-        const changedCell = cells[changedIndex];
+        const changedCell = cells[columnMap.changed];
         const currentValue = parseInt(changedCell.innerText.trim()) || 0;
         changedCell.innerText = currentValue + 1;
 
@@ -627,7 +620,7 @@ function updateRowContent(row, text, action) {
         });
     } else if (action === 'reinstall') {
         const reinstallType = elements.reinstallType.textContent.trim() === 'SOCKS5' ? 'SOCKS5 Proxy' : 'HTTPS Proxy'
-        cells[typeIndex].innerText = reinstallType;
+        cells[columnMap.type].innerText = reinstallType;
         updateRowData(id, {
             type: reinstallType,
             status: 'Running'

@@ -1,9 +1,11 @@
-import { setData, columnMap, getSelectedRows, initTable, updateRowData, updateCounts, getStatusChip } from '/javascript/components/table.js';
+import { setData, columnMap, reorderHeader, getSelectedRows, initTable, updateRowData, updateCounts, getStatusChip } from '/javascript/components/table.js';
 import { showToast, changeToToast } from '/javascript/components/toaster.js';
 import { showCopyDialog } from '/javascript/components/copyDialog.js';
 import { showChangeIpDialog, closeChangeIpDialog } from '/javascript/components/ChangeIpDialog.js';
 // DOM elements
 const elements = {
+    table: document.querySelector('table'),
+
     ipList: document.getElementById('ip-list'),
     apiKey: document.getElementById('api-key'),
     amount: document.getElementById('amount'),
@@ -30,6 +32,8 @@ const elements = {
 function init() {
     bindEvents();
     initTable('proxyManager');
+
+    reorderHeader();
 }
 
 // Bind event listeners
@@ -51,9 +55,6 @@ function bindEvents() {
         showChangeIpDialog(proxyType);
     });
     elements.confirmChangeIp.addEventListener('click', changeIp);
-    elements.refundBtn.addEventListener('click', () => {
-        showCopyDialog('Tét', 'just tét');
-    });
 }
 
 function copyIp() {

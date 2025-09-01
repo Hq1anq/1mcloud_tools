@@ -12,37 +12,40 @@ const elements = {
     filterInputs: document.querySelectorAll('.filter-input')
 }
 
-export let columnMap = {
-    checkbox: 0,
-    sid: 1,
-    ip_port: 2,
-    country: 3,
-    type: 4,
-    from: 5,
-    to: 6,
-    changed: 7,
-    status: 8,
-    note: 9
-};
-
 const desktopOrder = ['sid', 'ip_port', 'country', 'type', 'from', 'to', 'changed', 'status', 'note'];
 const mobileOrder  = ['ip_port', 'status', 'note', 'to', 'country', 'type', 'from', 'changed', 'sid'];
-const order = isMobile() ? mobileOrder : desktopOrder;
+export let order;
+export let columnMap = { checkbox: 0 };
 
-const headerCells = elements.table.tHead?.rows[0]?.cells;
+export function reorderHeader() {
+    const headerCells = elements.table.tHead.rows[0].cells;
 
-order.forEach((col, idx) => {
-    const headerCell = headerCells[idx + 1]; // +1 because first <th> is checkbox
-    headerCell.firstElementChild.firstChild.nodeValue = col;
-});
+    if (isMobile()) {
+        order = mobileOrder;
+        headerCells[1].firstElementChild.querySelector('input').classList.remove('text-center');
+        headerCells[1].firstElementChild.classList.add('items-start');
+        headerCells[3].firstElementChild.querySelector('input').classList.remove('text-center');
+        headerCells[3].firstElementChild.classList.add('items-start');
+    } else {
+        order = desktopOrder;
+        headerCells[2].firstElementChild.querySelector('input').classList.remove('text-center');
+        headerCells[2].firstElementChild.classList.add('items-start');
+        headerCells[9].firstElementChild.querySelector('input').classList.remove('text-center');
+        headerCells[9].firstElementChild.classList.add('items-start');
+    }
 
-function renderChunk() {
-    const nextChunk = filteredData.slice(renderedCount, renderedCount + chunkSize);
-
-    columnMap = { checkbox: 0 };
     order.forEach((col, idx) => {
         columnMap[col] = idx + 1; // +1 because 0 is reserved for checkbox
     });
+
+    order.forEach((col, idx) => {
+        const headerCell = headerCells[idx + 1]; // +1 because first <th> is checkbox
+        headerCell.firstElementChild.firstChild.nodeValue = col;
+    });
+}
+
+function renderChunk() {
+    const nextChunk = filteredData.slice(renderedCount, renderedCount + chunkSize);
 
     nextChunk.forEach(row => {
         const orderedRow = reorderRowData(row, order);

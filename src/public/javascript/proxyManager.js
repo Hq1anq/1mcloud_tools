@@ -98,9 +98,9 @@ async function getData() {
 
         if (response.ok && response.status === 200) {
             const result = await response.json();
+            console.log(result.data);
             setData(result.data || []); // delegate everything to table.js
             changeToToast('Get Data DONE!', 'success');
-            // saveToLocal(allData);
         } else {
             console.log(`❌ Error: ${response.status}`);
             switch (response.status) {
@@ -178,7 +178,7 @@ async function changeIp() {
 
     // Show appropriate toast message based on results
     if (failCount === 0) {
-        changeToToast('IP CHANGE completed successfully', 'success');
+        changeToToast(`IP CHANGE completed: ${successCount} success`, 'success');
     } else if (successCount === 0) {
         changeToToast('IP CHANGE failed for all servers', 'error');
     } else {
@@ -262,7 +262,7 @@ async function reinstall() {
 
     // Show appropriate toast message based on results
     if (failCount === 0) {
-        changeToToast('REINSTALL completed successfully', 'success');
+        changeToToast(`REINSTALL completed: ${successCount} success`, 'success');
     } else if (successCount === 0) {
         changeToToast('REINSTALL failed for all servers', 'error');
     } else {
@@ -326,11 +326,11 @@ async function pause() {
 
             // Show appropriate toast message
             if (errorIds.length === 0)
-                changeToToast(`PAUSE successful for all servers`, 'success');
+                changeToToast(`PAUSE completed: ${successIds.length} success`, 'success');
             else if (successIds.length === 0)
                 changeToToast(`PAUSE failed for all servers`, 'error');
             else
-                changeToToast(`PAUSE completed with ${successIds.length} success, ${errorIds.length} failed`, 'warning');
+                changeToToast(`PAUSE completed: ${successIds.length} success, ${errorIds.length} failed`, 'warning');
         } else {
             changeToToast(`Fail to PAUSE`, 'error');
             console.error(`❌ Failed to PAUSE for sid ${sid}:`, data.error);
@@ -385,11 +385,11 @@ async function reboot() {
 
             // Show appropriate toast message
             if (errorIds.length === 0)
-                changeToToast(`Reboot successful for all servers`, 'success');
+                changeToToast(`Reboot completed: ${successIds.length} success`, 'success');
             else if (successIds.length === 0)
                 changeToToast(`Reboot failed for all servers`, 'error');
             else
-                changeToToast(`Reboot completed with ${successIds.length} success, ${errorIds.length} failed`, 'warning');
+                changeToToast(`Reboot completed: ${successIds.length} success, ${errorIds.length} failed`, 'warning');
         } else {
             changeToToast(`Failed to REBOOT: ${data.error}`, 'error');
             console.error(`❌ Failed to REBOOT:`, data.error);
@@ -481,19 +481,19 @@ function updateRowContent(row, text, action) {
     // Update status to 'Running'
     cells[columnMap.status].innerHTML = getStatusChip('Running');
 
-    // Update 'changed' count if it's changeIp
+    // Update 'ip_changed' count if it's changeIp
     if (action === 'changeIp') {
         const changeIpType = elements.changeIpType.textContent.trim() === 'SOCKS5' ? 'SOCKS5 Proxy' : 'HTTPS Proxy'
         cells[columnMap.type].innerText = changeIpType;
 
-        const changedCell = cells[columnMap.changed];
+        const changedCell = cells[columnMap.ip_changed];
         const currentValue = parseInt(changedCell.innerText.trim()) || 0;
         changedCell.innerText = currentValue + 1;
 
         updateRowData(id, {
             ip_port: `${newProxy[0]}:${newProxy[1]}`,
             type: changeIpType,
-            changed: currentValue + 1,
+            ip_changed: currentValue + 1,
             status: 'Running'
         });
     } else if (action === 'reinstall') {

@@ -46,9 +46,9 @@ export async function getData(req, res) {
             ip_port: server.ip_port,
             country: server.country,
             type: server.he_dieu_hanh,
-            from: server.ngay_mua,
-            to: server.het_han,
-            changed: server.change_ip_time,
+            created: server.ngay_mua,
+            expired: server.het_han,
+            ip_changed: server.change_ip_time,
             status: server.trang_thai,
             note: server.note
         }));

@@ -12,8 +12,8 @@ const elements = {
     filterInputs: document.querySelectorAll('.filter-input')
 }
 
-const desktopOrder = ['sid', 'ip_port', 'country', 'type', 'from', 'to', 'changed', 'status', 'note'];
-const mobileOrder  = ['ip_port', 'status', 'note', 'to', 'country', 'type', 'from', 'changed', 'sid'];
+const desktopOrder = ['sid', 'ip_port', 'country', 'type', 'created', 'expired', 'ip_changed', 'status', 'note'];
+const mobileOrder  = ['ip_port', 'status', 'note', 'expired', 'country', 'type', 'created', 'ip_changed', 'sid'];
 export let order;
 export let columnMap = { checkbox: 0 };
 
@@ -126,7 +126,7 @@ export function addRow(data, addData = false, includeActions = false) {
     tr.classList.add('hover:bg-bg-hover');
 
     let rowHTML = `
-        <td class="px-1 sm:px-4 py-2 border-b border-border">
+        <td class="px-2 sm:px-4 py-2 border-b border-border">
             <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
         </td>
     `;
@@ -136,7 +136,7 @@ export function addRow(data, addData = false, includeActions = false) {
         const content = key === 'status' ? getStatusChip(value) : value;
 
         rowHTML += `
-        <td class="px-1 sm:px-4 py-2 border-b border-border whitespace-nowrap ${alignment}">
+        <td class="px-2 sm:px-4 py-2 border-b border-border whitespace-nowrap ${alignment}">
             ${content}
         </td>
         `;
@@ -144,9 +144,9 @@ export function addRow(data, addData = false, includeActions = false) {
 
     if (includeActions) {
         rowHTML += `
-        <td class="px-1 sm:px-4 py-2 border-b border-border space-x-2">
-            <button class="bg-blue-600 py-1 px-1 sm:px-4 rounded-lg hover:bg-blue-700" onclick="editRow(this)">Edit</button>
-            <button class="bg-red-600 py-1 px-1 sm:px-4 rounded-lg hover:bg-red-700" onclick="deleteRow(this)">Delete</button>
+        <td class="px-2 sm:px-4 py-2 border-b border-border space-x-2">
+            <button class="bg-blue-600 py-1 px-2 sm:px-4 rounded-lg hover:bg-blue-700" onclick="editRow(this)">Edit</button>
+            <button class="bg-red-600 py-1 px-2 sm:px-4 rounded-lg hover:bg-red-700" onclick="deleteRow(this)">Delete</button>
         </td>
         `;
     }

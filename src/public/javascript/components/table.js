@@ -166,16 +166,16 @@ export function getStatusChip(status) {
     switch (status) {
         case 'Running':
         case 'Active':
-            return `<span class="${baseClasses} bg-green-600 text-white">${status}</span>`;
+            return `<span class="${baseClasses} bg-bg-success text-text-success">${status}</span>`;
         case 'Paused':
         case 'Stopped':
-            return `<span class="${baseClasses} bg-yellow-500 text-black">${status}</span>`;
+            return `<span class="${baseClasses} bg-bg-warning text-text-warning">${status}</span>`;
         case 'Off':
         case 'Inactive':
-            return `<span class="${baseClasses} bg-red-600 text-white">${status}</span>`;
+            return `<span class="${baseClasses} bg-bg-error text-text-error">${status}</span>`;
         case 'Unknow':
         default:
-            return `<span class="${baseClasses} bg-gray-500 text-white">${status}</span>`;
+            return `<span class="${baseClasses} bg-bg-unknowed text-text-unknowed">${status}</span>`;
     }
 }
 

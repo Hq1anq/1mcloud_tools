@@ -7,25 +7,16 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-red-200: oklch(88.5% 0.062 18.334);
     --color-red-600: oklch(57.7% 0.245 27.325);
     --color-red-700: oklch(50.5% 0.213 27.518);
-    --color-red-800: oklch(44.4% 0.177 26.899);
     --color-orange-600: oklch(64.6% 0.222 41.116);
-    --color-yellow-200: oklch(94.5% 0.129 101.54);
-    --color-yellow-500: oklch(79.5% 0.184 86.047);
     --color-yellow-600: oklch(68.1% 0.162 75.834);
-    --color-yellow-700: oklch(55.4% 0.135 66.442);
-    --color-green-200: oklch(92.5% 0.084 155.995);
     --color-green-600: oklch(62.7% 0.194 149.214);
     --color-green-700: oklch(52.7% 0.154 150.069);
-    --color-green-800: oklch(44.8% 0.119 151.328);
     --color-sky-600: oklch(58.8% 0.158 241.966);
-    --color-blue-200: oklch(88.2% 0.059 254.128);
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-blue-600: oklch(54.6% 0.245 262.881);
     --color-blue-700: oklch(48.8% 0.243 264.376);
-    --color-blue-800: oklch(42.4% 0.199 265.638);
     --color-violet-600: oklch(54.1% 0.281 293.009);
     --color-purple-600: oklch(55.8% 0.288 302.321);
     --color-purple-700: oklch(49.6% 0.265 301.924);
@@ -33,7 +24,6 @@
     --color-gray-500: oklch(55.1% 0.027 264.364);
     --color-gray-600: oklch(44.6% 0.03 256.802);
     --color-gray-700: oklch(37.3% 0.034 259.733);
-    --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
     --breakpoint-xl: 80rem;
@@ -72,7 +62,9 @@
     --color-thead: var(--bg-thead);
     --color-input: var(--bg-input);
     --color-toast: var(--bg-toast);
-    --color-icon-hover: var(--icon-hover);
+    --color-text-toast: var(--text-toast);
+    --color-text-toast-hover: var(--text-toast-hover);
+    --color-closeToast-hover: var(--closeToast-hover);
     --color-dropdown: var(--bg-dropdown);
     --color-navbar: var(--bg-navbar);
     --color-navbar-menu: var(--bg-navbar-menu);
@@ -95,6 +87,15 @@
     --color-border-input: var(--border-input);
     --color-success-cell: var(--success-cell);
     --color-error-cell: var(--error-cell);
+    --color-bg-success: var(--bg-success);
+    --color-text-success: var(--text-success);
+    --color-bg-error: var(--bg-error);
+    --color-text-error: var(--text-error);
+    --color-bg-warning: var(--bg-warning);
+    --color-text-warning: var(--text-warning);
+    --color-bg-info: var(--bg-info);
+    --color-text-info: var(--text-info);
+    --color-bg-unknowed: var(--bg-unknowed);
   }
 }
 @layer base {
@@ -593,9 +594,6 @@
   .gap-3 {
     gap: calc(var(--spacing) * 3);
   }
-  .gap-5 {
-    gap: calc(var(--spacing) * 5);
-  }
   .space-y-1 {
     :where(& > :not(:last-child)) {
       --tw-space-y-reverse: 0;
@@ -724,11 +722,23 @@
   .bg-\[rgba\(0\,0\,0\,0\.5\)\] {
     background-color: rgba(0,0,0,0.5);
   }
+  .bg-bg-error {
+    background-color: var(--color-bg-error);
+  }
+  .bg-bg-info {
+    background-color: var(--color-bg-info);
+  }
+  .bg-bg-success {
+    background-color: var(--color-bg-success);
+  }
+  .bg-bg-unknowed {
+    background-color: var(--color-bg-unknowed);
+  }
+  .bg-bg-warning {
+    background-color: var(--color-bg-warning);
+  }
   .bg-blue-600 {
     background-color: var(--color-blue-600);
-  }
-  .bg-blue-800 {
-    background-color: var(--color-blue-800);
   }
   .bg-body {
     background-color: var(--color-body);
@@ -754,9 +764,6 @@
   .bg-green-600 {
     background-color: var(--color-green-600);
   }
-  .bg-green-800 {
-    background-color: var(--color-green-800);
-  }
   .bg-navbar {
     background-color: var(--color-navbar);
   }
@@ -774,9 +781,6 @@
   }
   .bg-red-600 {
     background-color: var(--color-red-600);
-  }
-  .bg-red-800 {
-    background-color: var(--color-red-800);
   }
   .bg-reload-btn {
     background-color: var(--color-reload-btn);
@@ -808,14 +812,8 @@
   .bg-wrapper {
     background-color: var(--color-wrapper);
   }
-  .bg-yellow-500 {
-    background-color: var(--color-yellow-500);
-  }
   .bg-yellow-600 {
     background-color: var(--color-yellow-600);
-  }
-  .bg-yellow-700 {
-    background-color: var(--color-yellow-700);
   }
   .fill-current {
     fill: currentcolor;
@@ -837,9 +835,6 @@
   }
   .p-6 {
     padding: calc(var(--spacing) * 6);
-  }
-  .px-1 {
-    padding-inline: calc(var(--spacing) * 1);
   }
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);
@@ -885,6 +880,9 @@
   }
   .text-left {
     text-align: left;
+  }
+  .text-right {
+    text-align: right;
   }
   .font-sans {
     font-family: var(--font-sans);
@@ -941,20 +939,11 @@
   .text-\[var\(--logo-ring\)\] {
     color: var(--logo-ring);
   }
-  .text-black {
-    color: var(--color-black);
-  }
-  .text-blue-200 {
-    color: var(--color-blue-200);
-  }
   .text-blue-600 {
     color: var(--color-blue-600);
   }
   .text-gray-400 {
     color: var(--color-gray-400);
-  }
-  .text-green-200 {
-    color: var(--color-green-200);
   }
   .text-input\/60 {
     color: var(--color-input);
@@ -962,8 +951,11 @@
       color: color-mix(in oklab, var(--color-input) 60%, transparent);
     }
   }
-  .text-red-200 {
-    color: var(--color-red-200);
+  .text-text-error {
+    color: var(--color-text-error);
+  }
+  .text-text-info {
+    color: var(--color-text-info);
   }
   .text-text-muted {
     color: var(--color-text-muted);
@@ -974,17 +966,23 @@
   .text-text-secondary {
     color: var(--color-text-secondary);
   }
+  .text-text-success {
+    color: var(--color-text-success);
+  }
   .text-text-title {
     color: var(--color-text-title);
+  }
+  .text-text-toast {
+    color: var(--color-text-toast);
+  }
+  .text-text-warning {
+    color: var(--color-text-warning);
   }
   .text-toggle-theme {
     color: var(--color-toggle-theme);
   }
   .text-white {
     color: var(--color-white);
-  }
-  .text-yellow-200 {
-    color: var(--color-yellow-200);
   }
   .uppercase {
     text-transform: uppercase;
@@ -1044,6 +1042,20 @@
   .select-none {
     -webkit-user-select: none;
     user-select: none;
+  }
+  .group-hover\:bg-closeToast-hover {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        background-color: var(--color-closeToast-hover);
+      }
+    }
+  }
+  .group-hover\:text-text-toast-hover {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        color: var(--color-text-toast-hover);
+      }
+    }
   }
   .group-hover\:brightness-\[var\(--highlight-brightness\)\] {
     &:is(:where(.group):hover *) {
@@ -1109,13 +1121,6 @@
       }
     }
   }
-  .hover\:text-icon-hover {
-    &:hover {
-      @media (hover: hover) {
-        color: var(--color-icon-hover);
-      }
-    }
-  }
   .hover\:brightness-90 {
     &:hover {
       @media (hover: hover) {
@@ -1128,14 +1133,6 @@
     &:hover {
       @media (hover: hover) {
         --tw-brightness: brightness(110%);
-        filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
-      }
-    }
-  }
-  .hover\:brightness-125 {
-    &:hover {
-      @media (hover: hover) {
-        --tw-brightness: brightness(125%);
         filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
       }
     }
@@ -1214,6 +1211,11 @@
       gap: calc(var(--spacing) * 4);
     }
   }
+  .sm\:gap-5 {
+    @media (width >= 772px) {
+      gap: calc(var(--spacing) * 5);
+    }
+  }
   .sm\:space-x-6 {
     @media (width >= 772px) {
       :where(& > :not(:last-child)) {
@@ -1232,12 +1234,6 @@
     @media (width >= 772px) {
       font-size: var(--text-base);
       line-height: var(--tw-leading, var(--text-base--line-height));
-    }
-  }
-  .sm\:text-lg {
-    @media (width >= 772px) {
-      font-size: var(--text-lg);
-      line-height: var(--tw-leading, var(--text-lg--line-height));
     }
   }
   .sm\:text-sm {
@@ -1414,6 +1410,9 @@
   --bg-dropdown: #FADA7A;
   --bg-checkbox: #F5F0CD;
   --bg-toast: var(--blue-400);
+  --text-toast: #FAC01A;
+  --text-toast-hover: #FBCC4B;
+  --closeToast-hover: hsl(from var(--color-toast) h s calc(l + 10));
   --bg-navbar: var(--light-100);
   --bg-navbar-menu: var(--light-200);
   --bg-navbar-menu-selected: var(--blue-300);
@@ -1431,7 +1430,6 @@
   --text-primary: var(--light-100);
   --text-secondary: var(--dark-800);
   --text-muted: var(--light-400);
-  --icon-hover: hsl(from var(--text-secondary) h s calc(l - 10));
   --border: var(--light-400);
   --border-input: var(--light-400);
   --border-checkbox-hover: var(--light-500);
@@ -1440,8 +1438,16 @@
   --highlight-brightness: 80%;
   --success-cell: #00c95066;
   --error-cell: #fb2c3666;
-  --warning: #eab308;
-  --info: #3b82f6;
+  --bg-success: #22C55E;
+  --text-success: #DFFFEF;
+  --bg-error: #F87171;
+  --text-error: #FFE7E7;
+  --bg-warning: #F59E0B;
+  --text-warning: #FFF6E0;
+  --bg-info: #0B64F4;
+  --text-info: #E5F4FF;
+  --bg-unknowed: #A2C7CC;
+  --text-unknowed: #374151;
   #theme-toggle-slider {
     transform: translateX(26px);
   }
@@ -1455,6 +1461,9 @@
   --bg-dropdown: var(--dark-800);
   --bg-checkbox: var(--dark-750);
   --bg-toast: hsl(from var(--bg-surface) h s calc(l + 5));
+  --text-toast: #B3B3B3;
+  --text-toast-hover: #fff;
+  --closeToast-hover: hsl(from var(--color-toast) h s calc(l + 10));
   --bg-navbar: #1e293b;
   --bg-navbar-menu: #253349;
   --bg-navbar-menu-selected: var(--blue-700);
@@ -1472,7 +1481,6 @@
   --text-primary: #f3f4f6;
   --text-secondary: #f3f4f6;
   --text-muted: #9ca3af;
-  --icon-hover: hsl(from var(--text-secondary) h s calc(l + 10));
   --border: var(--dark-600);
   --border-input: var(--dark-500);
   --border-checkbox-hover: var(--dark-500);
@@ -1481,8 +1489,16 @@
   --highlight-brightness: 120%;
   --success-cell: #0d542b99;
   --error-cell: #82181a99;
-  --warning: #eab308;
-  --info: #3b82f6;
+  --bg-success: #1E7D4B;
+  --text-success: #4DFFA3;
+  --bg-error: #922C3C;
+  --text-error: #FF99A3;
+  --bg-warning: #9A5B12;
+  --text-warning: #FFC861;
+  --bg-info: #1B4E89;
+  --text-info: #6CC3FF;
+  --bg-unknowed: #6a7282;
+  --text-unknowed: #D1D5DB;
 }
 [data-theme] * {
   transition: none;

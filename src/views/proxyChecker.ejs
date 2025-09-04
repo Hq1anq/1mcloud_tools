@@ -10,14 +10,12 @@
 <body class="bg-body text-text-primary text-xs sm:text-base font-sans">
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Proxy Checker' }) %>
-    <!-- Status Display -->
-    <%- include('partials/toaster') %>
 
     <!-- Main Container -->
-    <div class="min-h-screen flex flex-col pt-2">
+    <div class="min-h-screen flex flex-col">
         <!-- Fixed Top Controls -->
-        <div class="bg-surface border-b border-border top-16 z-40 shadow-lg">
-            <div class="max-w-7xl mx-auto px-4 py-2">
+        <div class="bg-surface border-b border-border z-40 select-none">
+            <div class="max-w-7xl mx-auto px-4 py-4">
                 <!-- Top Controls Area -->
                 <div class="bg-wrapper rounded-lg p-4 pb-2">
                     <div class="flex flex-col lg:flex-row gap-3 sm:gap-4">
@@ -30,7 +28,7 @@
                                         Proxy List (ip:port:username:password)
                                     </label>
                                     <button id="deleteBtn"
-                                        class="bg-red-600 hover:brightness-90 font-medium py-1 px-3 rounded-lg text-sm flex items-center justify-center">
+                                        class="bg-bg-pause hover:brightness-[var(--highlight-brightness)] font-medium py-1 px-3 rounded-lg text-sm flex items-center justify-center">
                                         <i class="fas fa-trash-alt mr-2"></i>
                                         Delete
                                     </button>
@@ -51,7 +49,7 @@
                                         Check Proxies
                                     </label>
                                     <button id="checkProxiesBtn"
-                                        class="w-full bg-orange-600 hover:brightness-90 font-bold py-2 px-4 rounded-l-lg flex items-center justify-center">
+                                        class="w-full bg-bg-getData hover:brightness-[var(--highlight-brightness)] font-bold py-2 px-4 rounded-l-lg flex items-center justify-center">
                                         <i class="fas fa-play mr-2"></i>
                                         Check Now
                                     </button>
@@ -72,13 +70,13 @@
                             <!-- Copy Buttons -->
                             <div class="flex">
                                 <button id="copyIpBtn"
-                                    class="flex-1 bg-sky-600 hover:brightness-90 font-medium py-3 px-4 rounded-l-xl flex items-center justify-center">
+                                    class="flex-1 bg-bg-reinstall hover:brightness-[var(--highlight-brightness)] font-medium py-3 px-4 rounded-l-xl flex items-center justify-center">
                                     <i class="fas fa-copy mr-2"></i>
                                     Copy IPs
                                 </button>
 
                                 <button id="copyFullProxyBtn"
-                                    class="flex-1 bg-violet-600 hover:brightness-90 font-medium py-3 px-4 rounded-r-xl flex items-center justify-center">
+                                    class="flex-1 bg-bg-changeNote hover:brightness-[var(--highlight-brightness)] font-medium py-3 px-4 rounded-r-xl flex items-center justify-center">
                                     <i class="fas fa-copy mr-2"></i>
                                     Copy Full Proxies
                                 </button>
@@ -87,13 +85,13 @@
                             <!-- Selection buttons-->
                             <div class="flex">
                                 <button id="selectActiveBtn"
-                                    class="flex-1 bg-green-600 hover:brightness-90 text-nowrap font-medium py-3 px-4 rounded-l-xl flex items-center justify-center">
+                                    class="flex-1 bg-bg-copyIp hover:brightness-[var(--highlight-brightness)] text-nowrap font-medium py-3 px-4 rounded-l-xl flex items-center justify-center">
                                     <i class="fas fa-check-circle mr-2"></i>
                                     Select Active Proxies
                                 </button>
 
                                 <button id="selectErrorBtn"
-                                    class="flex-1 bg-red-600 hover:brightness-90 text-nowrap font-medium py-3 px-4 rounded-r-xl flex items-center justify-center">
+                                    class="flex-1 bg-bg-pause hover:brightness-[var(--highlight-brightness)] text-nowrap font-medium py-3 px-4 rounded-r-xl flex items-center justify-center">
                                     <i class="fas fa-exclamation-circle mr-2"></i>
                                     Select Error Proxies
                                 </button>
@@ -140,7 +138,11 @@
             `,
             showActions: false,
         }) %>
-        <!-- Footer -->
+
+        <%- include('partials/toaster') %>
+
+        <%- include('partials/copyDialog') %>
+
         <%- include('partials/footer') %>
     </div>
     <script type="module" src="javascript/proxyChecker.js"></script>

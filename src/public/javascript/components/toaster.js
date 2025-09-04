@@ -48,7 +48,7 @@ const statusStyles = {
             >
             </circle>
         </svg>`,
-        bg: 'text-[var(--logo-ring)]'
+        bg: 'text-text-toast'
     }
 };
 

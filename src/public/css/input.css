@@ -58,6 +58,16 @@
     --color-text-info: var(--text-info);
 
     --color-bg-unknowed: var(--bg-unknowed);
+    --color-text-unknowed: var(--text-unknowed);
+
+    --color-bg-getData: var(--bg-getData);
+    --color-bg-changeNote: var(--bg-changeNote);
+    --color-bg-reinstall: var(--bg-reinstall);
+    --color-bg-changeIp: var(--bg-changeIp);
+    --color-bg-copyIp: var(--bg-copyIp);
+    --color-bg-reboot: var(--bg-reboot);
+    --color-bg-pause: var(--bg-pause);
+    --color-bg-refund: var(--bg-refund);
 
     --breakpoint-sm: 772px;
     --breakpoint-md: 863px;
@@ -98,7 +108,7 @@
     --bg-checkbox: #F5F0CD;
 
     --bg-toast: var(--blue-400);
-    --text-toast: #FAC01A;
+    --text-toast: #43119c;
     --text-toast-hover: #FBCC4B;
     --closeToast-hover: hsl(from var(--color-toast) h s calc(l + 10));
 
@@ -133,7 +143,7 @@
     --logo-ring: #FAC01A; 
     --logo-inner: #000000;
 
-    --highlight-brightness: 80%;
+    --highlight-brightness: 90%;
 
     --success-cell: #00c95066;    /* green-500/40 */
     --error-cell: #fb2c3666;      /* red-500/40 */
@@ -148,6 +158,15 @@
     --text-info: #E5F4FF;
     --bg-unknowed: #A2C7CC;
     --text-unknowed: #374151;
+
+    --bg-getData: #ed0ce2;
+    --bg-changeNote: #A78BFA;
+    --bg-reinstall: #6080fa;
+    --bg-changeIp: #4ADE80;
+    --bg-copyIp: #34D399;
+    --bg-reboot: #FBBF24;
+    --bg-pause: #F87171;
+    --bg-refund: #F472B6;
 
     #theme-toggle-slider {
         transform: translateX(26px);
@@ -216,6 +235,24 @@
     --text-info: #6CC3FF;
     --bg-unknowed: #6a7282;
     --text-unknowed: #D1D5DB;
+
+    /* --bg-getData: #155dfc;
+    --bg-changeNote: #9810fa;
+    --bg-reinstall: ##f54a00;
+    --bg-changeIp: ##00a63e;
+    --bg-copyIp: ##d08700;
+    --bg-reboot: ##6a7282;
+    --bg-pause: ##e7000b;
+    --bg-refund: ##e60076; */
+    
+    --bg-getData: #900e80;
+    --bg-changeNote: #7C3AED;
+    --bg-reinstall: #0E7490;
+    --bg-changeIp: #16A34A;
+    --bg-copyIp: #059669;
+    --bg-reboot: #D97706;
+    --bg-pause: #DC2626;
+    --bg-refund: #DB2777;
 }
 
 /* Base theme colors without transitions */
@@ -236,6 +273,12 @@
     transition-property: all;
     transition-timing-function: ease-out;
     transition-duration: 0.5s;
+}
+
+.theme-transitions .checkbox-transition {
+    transition-property: opacity;
+    transition-timing-function: ease-out;
+    transition-duration: 0.4s;
 }
 
 .theme-transitions .navbar-transition {

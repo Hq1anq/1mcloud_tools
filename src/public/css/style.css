@@ -96,6 +96,14 @@
     --color-bg-info: var(--bg-info);
     --color-text-info: var(--text-info);
     --color-bg-unknowed: var(--bg-unknowed);
+    --color-text-unknowed: var(--text-unknowed);
+    --color-bg-getData: var(--bg-getData);
+    --color-bg-changeNote: var(--bg-changeNote);
+    --color-bg-reinstall: var(--bg-reinstall);
+    --color-bg-changeIp: var(--bg-changeIp);
+    --color-bg-copyIp: var(--bg-copyIp);
+    --color-bg-reboot: var(--bg-reboot);
+    --color-bg-pause: var(--bg-pause);
   }
 }
 @layer base {
@@ -276,9 +284,6 @@
   }
   .top-6 {
     top: calc(var(--spacing) * 6);
-  }
-  .top-16 {
-    top: calc(var(--spacing) * 16);
   }
   .right-0 {
     right: calc(var(--spacing) * 0);
@@ -722,11 +727,32 @@
   .bg-\[rgba\(0\,0\,0\,0\.5\)\] {
     background-color: rgba(0,0,0,0.5);
   }
+  .bg-bg-changeIp {
+    background-color: var(--color-bg-changeIp);
+  }
+  .bg-bg-changeNote {
+    background-color: var(--color-bg-changeNote);
+  }
+  .bg-bg-copyIp {
+    background-color: var(--color-bg-copyIp);
+  }
   .bg-bg-error {
     background-color: var(--color-bg-error);
   }
+  .bg-bg-getData {
+    background-color: var(--color-bg-getData);
+  }
   .bg-bg-info {
     background-color: var(--color-bg-info);
+  }
+  .bg-bg-pause {
+    background-color: var(--color-bg-pause);
+  }
+  .bg-bg-reboot {
+    background-color: var(--color-bg-reboot);
+  }
+  .bg-bg-reinstall {
+    background-color: var(--color-bg-reinstall);
   }
   .bg-bg-success {
     background-color: var(--color-bg-success);
@@ -773,20 +799,11 @@
   .bg-navbar-menu-selected {
     background-color: var(--color-navbar-menu-selected);
   }
-  .bg-orange-600 {
-    background-color: var(--color-orange-600);
-  }
-  .bg-purple-600 {
-    background-color: var(--color-purple-600);
-  }
   .bg-red-600 {
     background-color: var(--color-red-600);
   }
   .bg-reload-btn {
     background-color: var(--color-reload-btn);
-  }
-  .bg-sky-600 {
-    background-color: var(--color-sky-600);
   }
   .bg-success-cell {
     background-color: var(--color-success-cell);
@@ -803,17 +820,11 @@
   .bg-toggle-theme {
     background-color: var(--color-toggle-theme);
   }
-  .bg-violet-600 {
-    background-color: var(--color-violet-600);
-  }
   .bg-white {
     background-color: var(--color-white);
   }
   .bg-wrapper {
     background-color: var(--color-wrapper);
-  }
-  .bg-yellow-600 {
-    background-color: var(--color-yellow-600);
   }
   .fill-current {
     fill: currentcolor;
@@ -862,9 +873,6 @@
   }
   .py-12 {
     padding-block: calc(var(--spacing) * 12);
-  }
-  .pt-2 {
-    padding-top: calc(var(--spacing) * 2);
   }
   .pr-4 {
     padding-right: calc(var(--spacing) * 4);
@@ -936,9 +944,6 @@
   .text-\[\#cbd5e1\] {
     color: #cbd5e1;
   }
-  .text-\[var\(--logo-ring\)\] {
-    color: var(--logo-ring);
-  }
   .text-blue-600 {
     color: var(--color-blue-600);
   }
@@ -974,6 +979,9 @@
   }
   .text-text-toast {
     color: var(--color-text-toast);
+  }
+  .text-text-unknowed {
+    color: var(--color-text-unknowed);
   }
   .text-text-warning {
     color: var(--color-text-warning);
@@ -1104,13 +1112,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-green-700);
-      }
-    }
-  }
-  .hover\:bg-purple-700 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-purple-700);
       }
     }
   }
@@ -1410,7 +1411,7 @@
   --bg-dropdown: #FADA7A;
   --bg-checkbox: #F5F0CD;
   --bg-toast: var(--blue-400);
-  --text-toast: #FAC01A;
+  --text-toast: #43119c;
   --text-toast-hover: #FBCC4B;
   --closeToast-hover: hsl(from var(--color-toast) h s calc(l + 10));
   --bg-navbar: var(--light-100);
@@ -1435,7 +1436,7 @@
   --border-checkbox-hover: var(--light-500);
   --logo-ring: #FAC01A;
   --logo-inner: #000000;
-  --highlight-brightness: 80%;
+  --highlight-brightness: 90%;
   --success-cell: #00c95066;
   --error-cell: #fb2c3666;
   --bg-success: #22C55E;
@@ -1448,6 +1449,14 @@
   --text-info: #E5F4FF;
   --bg-unknowed: #A2C7CC;
   --text-unknowed: #374151;
+  --bg-getData: #ed0ce2;
+  --bg-changeNote: #A78BFA;
+  --bg-reinstall: #6080fa;
+  --bg-changeIp: #4ADE80;
+  --bg-copyIp: #34D399;
+  --bg-reboot: #FBBF24;
+  --bg-pause: #F87171;
+  --bg-refund: #F472B6;
   #theme-toggle-slider {
     transform: translateX(26px);
   }
@@ -1499,6 +1508,14 @@
   --text-info: #6CC3FF;
   --bg-unknowed: #6a7282;
   --text-unknowed: #D1D5DB;
+  --bg-getData: #900e80;
+  --bg-changeNote: #7C3AED;
+  --bg-reinstall: #0E7490;
+  --bg-changeIp: #16A34A;
+  --bg-copyIp: #059669;
+  --bg-reboot: #D97706;
+  --bg-pause: #DC2626;
+  --bg-refund: #DB2777;
 }
 [data-theme] * {
   transition: none;
@@ -1510,6 +1527,11 @@
   transition-property: all;
   transition-timing-function: ease-out;
   transition-duration: 0.5s;
+}
+.theme-transitions .checkbox-transition {
+  transition-property: opacity;
+  transition-timing-function: ease-out;
+  transition-duration: 0.4s;
 }
 .theme-transitions .navbar-transition {
   transition-property: all;

@@ -10,14 +10,12 @@
 <body class="bg-body text-text-primary text-xs sm:text-base font-sans">
     <!-- Navbar -->
     <%- include('partials/navbar', { currentPage: 'Proxy Manager' }) %>
-    <!-- Status Display -->
-    <%- include('partials/toaster') %>
 
     <!-- Main Container -->
-    <div class="min-h-screen flex flex-col pt-2">
+    <div class="min-h-screen flex flex-col">
         <!-- ========== TOP CONTROLS ========== -->
-        <div class="bg-surface border-b border-border top-0 z-40 shadow-lg">
-            <div class="max-w-7xl mx-auto px-4 py-2">
+        <div class="bg-surface border-b border-border z-40 select-none">
+            <div class="max-w-7xl mx-auto px-4 py-4">
                 <!-- ========== FEATURE CONTROLS ========== -->
                 <div class="bg-wrapper rounded-lg p-4">
                     <h3 class="text-text-secondary text-lg font-semibold mb-3">
@@ -32,7 +30,7 @@
                                     Enter IPs (one per line)
                                 </label>
                                 <button id="deleteBtn"
-                                    class="static md:absolute lg:static right-0 bottom-[-8px] text-nowrap bg-red-600 hover:brightness-90 font-medium mb-2 py-1 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
+                                    class="static md:absolute lg:static right-0 bottom-[-8px] text-nowrap bg-bg-pause hover:brightness-[var(--highlight-brightness)] font-medium mb-2 py-1 px-3 rounded-lg transition-colors duration-200 text-sm flex items-center justify-center">
                                     <i class="fas fa-trash-alt mr-2"></i>Delete
                                 </button>
                             </div>
@@ -50,7 +48,7 @@
                                         placeholder="Enter amount" min="0">
                                     <div class="flex items-center">
                                         <button id="getDataBtn"
-                                            class="flex-1 bg-blue-600 hover:brightness-90 text-nowrap font-medium py-2 px-3 rounded-lg flex items-center justify-center">
+                                            class="flex-1 bg-bg-getData hover:brightness-[var(--highlight-brightness)] font-medium py-2 px-3 rounded-lg flex items-center justify-center">
                                             <i class="fas fa-download mr-2"></i>
                                             Get Data
                                         </button>
@@ -62,7 +60,7 @@
                                     <input type="text" id="noteInput"
                                         placeholder="Enter note">
                                     <button id="changeNoteBtn"
-                                        class="w-full bg-purple-600 hover:bg-purple-700 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
+                                        class="w-full bg-bg-changeIp hover:brightness-[var(--highlight-brightness)] text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
                                         <i class="fas fa-edit mr-2"></i>Change Note
                                     </button>
                                 </div>
@@ -73,7 +71,7 @@
                                         placeholder="port:username:password">
                                     <div class="flex">
                                         <button id="reinstallBtn"
-                                            class="flex-1 bg-orange-600 hover:brightness-90 font-medium py-2 px-3 rounded-l-lg flex items-center justify-center">
+                                            class="flex-1 bg-bg-reinstall hover:brightness-[var(--highlight-brightness)] font-medium py-2 px-3 rounded-l-lg flex items-center justify-center">
                                             <i class="fas fa-sync-alt mr-2"></i>
                                             Reinstall
                                         </button>
@@ -102,12 +100,12 @@
                                 <div class="row-start-2 col-start-3 row-end-4 col-end-4
                                             md:row-start-3 md:col-start-2 flex-1 grid grid-cols-1 md:grid-cols-3 gap-1">
                                     <button id="copyIpBtn"
-                                        class="bg-yellow-600 hover:brightness-90 text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center m-1">
+                                        class="bg-bg-copyIp hover:brightness-[var(--highlight-brightness)] text-nowrap font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center m-1">
                                         <i class="fas fa-copy mr-2"></i>
                                         Copy IP
                                     </button>
                                     <button id="rebootBtn"
-                                        class="bg-gray-500 hover:brightness-90 font-medium py-2 px-3 rounded-lg flex items-center justify-center m-1">
+                                        class="bg-bg-reboot hover:brightness-[var(--highlight-brightness)] font-medium py-2 px-3 rounded-lg flex items-center justify-center m-1">
                                         <!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
                                         <svg class="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2 flex-shrink-0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" version="1.1">
                                         <g style="fill:none; stroke:var(--text-primary); stroke-width:12px; stroke-linecap:round; stroke-linejoin:round;">
@@ -119,7 +117,7 @@
                                         Reboot
                                     </button>
                                     <button id="pauseBtn"
-                                        class="bg-red-600 hover:brightness-90 font-medium py-2 px-3 rounded-lg flex items-center justify-center m-1">
+                                        class="bg-bg-pause hover:brightness-[var(--highlight-brightness)] font-medium py-2 px-3 rounded-lg flex items-center justify-center m-1">
                                         <i class="fas fa-pause mr-2"></i>
                                         Pause
                                     </button>
@@ -149,14 +147,14 @@
                 </p>
             `,
         }) %>
-
-        <!-- Copy dialog modal -->
-        <%- include('partials/copyDialog') %>
-
-        <!-- Change ip dialog-->
-        <%- include('partials/ChangeIpDialog') %>
     </div>
-    <!-- Footer -->
+
+    <%- include('partials/toaster') %>
+
+    <%- include('partials/copyDialog') %>
+
+    <%- include('partials/ChangeIpDialog') %>
+    
     <%- include('partials/footer') %>
     <script type="module" src="javascript/proxyManager.js"></script>
 </body>

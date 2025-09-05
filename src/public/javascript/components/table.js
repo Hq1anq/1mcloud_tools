@@ -123,17 +123,17 @@ export function addRow(data, addData = false, includeActions = false) {
 
     tr.dataset.id = data.sid; // Unique key
 
-    tr.classList.add('hover:bg-bg-hover');
+    tr.classList.add('hover:bg-bg-hover', 'group');
 
     let rowHTML = `
         <td class="px-2 sm:px-4 py-2 border-b border-border">
-            <label class="inline-flex items-center cursor-pointer select-none group">
+            <label class="inline-flex items-center cursor-pointer select-none">
                 <!-- Hidden native checkbox -->
                 <input type="checkbox" class="rowCheckbox sr-only" />
 
                 <!-- Custom box -->
                 <span class="w-5 h-5 text-text-secondary flex items-center justify-center checkbox-transition
-                            rounded border border-border bg-checkbox
+                            rounded-md border border-border bg-checkbox
                             group-hover:border-border-checkbox-hover group-hover:brightness-125 relative overflow-visible">
                     <!-- Big check -->
                     <svg class="w-5 h-5 opacity-0 scale-0 checkbox-transition

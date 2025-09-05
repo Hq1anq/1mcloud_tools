@@ -125,7 +125,9 @@ function bindEvents() {
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.reinstallBtn.addEventListener('click', reinstall);
     elements.pauseBtn.addEventListener('click', pause);
-    elements.rebootBtn.addEventListener('click', reboot);
+    elements.rebootBtn.addEventListener('click', () => {
+        showToast(`IP CHANGE completed\n 8 success, 9 failed`, 'warning');
+    });
 
     elements.changeIpBtn.addEventListener('click', () => {
         const proxyType = elements.changeIpType.textContent.trim();
@@ -204,7 +206,6 @@ async function getData() {
 
         if (response.ok && response.status === 200) {
             const result = await response.json();
-            console.log(result.data);
             setData(result.data || []); // delegate everything to table.js
             changeToToast('Get Data DONE!', 'success');
         } else {
@@ -294,7 +295,7 @@ async function changeIp() {
     } else if (successCount === 0) {
         changeToToast('IP CHANGE failed for all servers', 'error');
     } else {
-        changeToToast(`IP CHANGE completed: ${successCount} success, ${failCount} failed`, 'warning');
+        changeToToast(`IP CHANGE completed\n ${successCount} success, ${failCount} failed`, 'warning');
     }
 
     updateCounts();

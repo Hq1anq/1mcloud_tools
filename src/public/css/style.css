@@ -40,8 +40,11 @@
     --font-weight-bold: 700;
     --tracking-wider: 0.05em;
     --radius-sm: 0.25rem;
+    --radius-md: 0.375rem;
     --radius-lg: 0.5rem;
     --radius-xl: 0.75rem;
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --animate-spin: spin 1s linear infinite;
     --blur-sm: 8px;
     --default-transition-duration: 150ms;
@@ -644,6 +647,9 @@
   .rounded-lg {
     border-radius: var(--radius-lg);
   }
+  .rounded-md {
+    border-radius: var(--radius-md);
+  }
   .rounded-sm {
     border-radius: var(--radius-sm);
   }
@@ -926,6 +932,9 @@
   }
   .whitespace-nowrap {
     white-space: nowrap;
+  }
+  .whitespace-pre-line {
+    white-space: pre-line;
   }
   .text-\[\#cbd5e1\] {
     color: #cbd5e1;
@@ -1421,9 +1430,9 @@
   --bg-getData: #ed0ce2;
   --bg-changeNote: #A78BFA;
   --bg-reinstall: #6080fa;
-  --bg-changeIp: #4ADE80;
-  --bg-copyIp: #34D399;
-  --bg-reboot: #FBBF24;
+  --bg-changeIp: #28be2b;
+  --bg-copyIp: #8e34d3;
+  --bg-reboot: #fba124;
   --bg-pause: #F87171;
   --bg-refund: #F472B6;
   #theme-toggle-slider {
@@ -1481,7 +1490,7 @@
   --bg-changeNote: #7C3AED;
   --bg-reinstall: #0E7490;
   --bg-changeIp: #16A34A;
-  --bg-copyIp: #059669;
+  --bg-copyIp: #620596;
   --bg-reboot: #D97706;
   --bg-pause: #DC2626;
   --bg-refund: #DB2777;

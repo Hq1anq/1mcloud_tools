@@ -135,7 +135,7 @@ function selectProxies(status='Active') {
     for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
         const statusCell = row.cells[6]; // Status is at index 6
-        const checkbox = row.cells[0].firstElementChild;
+        const checkbox = row.cells[0].querySelector('input');
         if (statusCell && checkbox) {
             const statusText = statusCell.textContent.trim();
             checkbox.checked = (statusText === status);

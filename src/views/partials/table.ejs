@@ -33,7 +33,22 @@
 					<thead class="bg-thead" id="tableHeader">
 						<tr>
 							<th class="px-2 sm:px-4">
-								<input type="checkbox" id="selectAllCheckbox" class="h-4 w-4 rounded" />
+								<label class="inline-flex items-center cursor-pointer select-none group">
+									<!-- Hidden native checkbox -->
+									<input id="selectAllCheckbox" type="checkbox" class="sr-only" />
+
+									<!-- Custom box -->
+									<span class="w-5 h-5 text-text-secondary flex items-center justify-center checkbox-transition
+												rounded border border-border bg-checkbox
+												group-hover:border-border-checkbox-hover group-hover:brightness-125 relative overflow-visible">
+										<!-- Big check -->
+										<svg class="w-5 h-5 opacity-0 scale-0 checkbox-transition
+													group-has-[input:checked]:opacity-100 group-has-[input:checked]:scale-100 absolute"
+											viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+										</svg>
+									</span>
+								</label>
 							</th>
 
 							<% headers.forEach(header=> { %>
@@ -59,7 +74,22 @@
 							<% data.forEach(row=> { %>
 								<tr class="hover:bg-bg-hover cursor-pointer">
 									<td class="border-border border-b px-2 py-2 sm:px-4">
-										<input type="checkbox" class="rowCheckbox h-4 w-4 rounded text-blue-600" />
+										<label class="inline-flex items-center cursor-pointer select-none group">
+											<!-- Hidden native checkbox -->
+											<input type="checkbox" class="sr-only" />
+
+											<!-- Custom box -->
+											<span class="w-5 h-5 text-text-secondary flex items-center justify-center checkbox-transition
+														rounded border border-border bg-checkbox
+														group-hover:border-border-checkbox-hover group-hover:brightness-125 relative overflow-visible">
+												<!-- Big check -->
+												<svg class="w-5 h-5 opacity-0 scale-0 checkbox-transition
+															group-has-[input:checked]:opacity-100 group-has-[input:checked]:scale-100 absolute"
+													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+												</svg>
+											</span>
+										</label>
 									</td>
 
 									<% headers.forEach(h=> { %>

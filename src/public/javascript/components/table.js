@@ -127,7 +127,22 @@ export function addRow(data, addData = false, includeActions = false) {
 
     let rowHTML = `
         <td class="px-2 sm:px-4 py-2 border-b border-border">
-            <input type="checkbox" class="rowCheckbox w-4 h-4 text-blue-600 rounded">
+            <label class="inline-flex items-center cursor-pointer select-none group">
+                <!-- Hidden native checkbox -->
+                <input type="checkbox" class="rowCheckbox sr-only" />
+
+                <!-- Custom box -->
+                <span class="w-5 h-5 text-text-secondary flex items-center justify-center checkbox-transition
+                            rounded border border-border bg-checkbox
+                            group-hover:border-border-checkbox-hover group-hover:brightness-125 relative overflow-visible">
+                    <!-- Big check -->
+                    <svg class="w-5 h-5 opacity-0 scale-0 checkbox-transition
+                                group-has-[input:checked]:opacity-100 group-has-[input:checked]:scale-100 absolute"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </span>
+            </label>
         </td>
     `;
 
@@ -205,7 +220,7 @@ export function updateCounts() {
     );
 
     const checkboxes = visibleRows
-        .map(row => row.querySelector('.rowCheckbox'));
+        .map(row => row.querySelector('input'));
     const selected = [...checkboxes].filter(cb => cb.checked);
 
     elements.totalCount.textContent = filteredData.length;
@@ -223,8 +238,8 @@ export function getSelectedRows() {
     const selectedRows = [];
     const rows = elements.tbody.rows;
     for (let i = 0; i < rows.length; i++) {
-        const firstCellChild = rows[i].cells[0].firstElementChild;
-        if (firstCellChild && firstCellChild.checked) {
+        const checkbox = rows[i].cells[0].querySelector('input');
+        if (checkbox && checkbox.checked) {
             selectedRows.push(rows[i]);
         }
     }

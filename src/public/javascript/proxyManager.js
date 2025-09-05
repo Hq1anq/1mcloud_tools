@@ -451,7 +451,7 @@ async function changeNote() {
 function updateRowContent(row, text, action) {
     const cells = row.children;
     const id = row.dataset.id;
-    const checkbox = cells[columnMap.checkbox].firstElementChild;
+    const checkbox = cells[columnMap.checkbox].querySelector('input');
     row.classList.add('bg-success-cell');
     if (action === 'pause') {
         cells[columnMap.status].innerHTML = getStatusChip('Paused');

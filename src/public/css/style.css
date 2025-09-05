@@ -9,17 +9,11 @@
       "Courier New", monospace;
     --color-red-600: oklch(57.7% 0.245 27.325);
     --color-red-700: oklch(50.5% 0.213 27.518);
-    --color-orange-600: oklch(64.6% 0.222 41.116);
-    --color-yellow-600: oklch(68.1% 0.162 75.834);
     --color-green-600: oklch(62.7% 0.194 149.214);
     --color-green-700: oklch(52.7% 0.154 150.069);
-    --color-sky-600: oklch(58.8% 0.158 241.966);
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-blue-600: oklch(54.6% 0.245 262.881);
     --color-blue-700: oklch(48.8% 0.243 264.376);
-    --color-violet-600: oklch(54.1% 0.281 293.009);
-    --color-purple-600: oklch(55.8% 0.288 302.321);
-    --color-purple-700: oklch(49.6% 0.265 301.924);
     --color-gray-400: oklch(70.7% 0.022 261.325);
     --color-gray-500: oklch(55.1% 0.027 264.364);
     --color-gray-600: oklch(44.6% 0.03 256.802);
@@ -61,6 +55,7 @@
     --color-wrapper: var(--bg-wrapper);
     --color-thead: var(--bg-thead);
     --color-input: var(--bg-input);
+    --color-checkbox: var(--bg-checkbox);
     --color-toast: var(--bg-toast);
     --color-text-toast: var(--text-toast);
     --color-text-toast-hover: var(--text-toast-hover);
@@ -85,6 +80,7 @@
     --color-text-muted: var(--text-muted);
     --color-border: var(--border);
     --color-border-input: var(--border-input);
+    --color-border-checkbox-hover: var(--border-checkbox-hover);
     --color-success-cell: var(--success-cell);
     --color-error-cell: var(--error-cell);
     --color-bg-success: var(--bg-success);
@@ -254,6 +250,17 @@
 @layer utilities {
   .pointer-events-none {
     pointer-events: none;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
   .absolute {
     position: absolute;
@@ -536,6 +543,12 @@
     --tw-translate-y: calc(var(--spacing) * 0);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
+  .scale-0 {
+    --tw-scale-x: 0%;
+    --tw-scale-y: 0%;
+    --tw-scale-z: 0%;
+    scale: var(--tw-scale-x) var(--tw-scale-y);
+  }
   .scale-95 {
     --tw-scale-x: 95%;
     --tw-scale-y: 95%;
@@ -639,6 +652,9 @@
   }
   .overflow-hidden {
     overflow: hidden;
+  }
+  .overflow-visible {
+    overflow: visible;
   }
   .overflow-x-auto {
     overflow-x: auto;
@@ -768,6 +784,9 @@
   }
   .bg-body {
     background-color: var(--color-body);
+  }
+  .bg-checkbox {
+    background-color: var(--color-checkbox);
   }
   .bg-dialog {
     background-color: var(--color-dialog);
@@ -944,9 +963,6 @@
   .text-\[\#cbd5e1\] {
     color: #cbd5e1;
   }
-  .text-blue-600 {
-    color: var(--color-blue-600);
-  }
   .text-gray-400 {
     color: var(--color-gray-400);
   }
@@ -1051,6 +1067,13 @@
     -webkit-user-select: none;
     user-select: none;
   }
+  .group-hover\:border-border-checkbox-hover {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        border-color: var(--color-border-checkbox-hover);
+      }
+    }
+  }
   .group-hover\:bg-closeToast-hover {
     &:is(:where(.group):hover *) {
       @media (hover: hover) {
@@ -1065,12 +1088,33 @@
       }
     }
   }
+  .group-hover\:brightness-125 {
+    &:is(:where(.group):hover *) {
+      @media (hover: hover) {
+        --tw-brightness: brightness(125%);
+        filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+      }
+    }
+  }
   .group-hover\:brightness-\[var\(--highlight-brightness\)\] {
     &:is(:where(.group):hover *) {
       @media (hover: hover) {
         --tw-brightness: brightness(var(--highlight-brightness));
         filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
       }
+    }
+  }
+  .group-has-\[input\:checked\]\:scale-100 {
+    &:is(:where(.group):has(*:is(input:checked)) *) {
+      --tw-scale-x: 100%;
+      --tw-scale-y: 100%;
+      --tw-scale-z: 100%;
+      scale: var(--tw-scale-x) var(--tw-scale-y);
+    }
+  }
+  .group-has-\[input\:checked\]\:opacity-100 {
+    &:is(:where(.group):has(*:is(input:checked)) *) {
+      opacity: 100%;
     }
   }
   .hover\:bg-\[\#2c3c57\] {

@@ -11,8 +11,8 @@
 
     --color-toast: var(--bg-toast);
     --color-text-toast: var(--text-toast);
-    --color-text-toast-hover: var(--text-toast-hover);
-    --color-closeToast-hover: var(--closeToast-hover);
+    --color-text-toast-success: var(--text-toast-success);
+    --color-text-toast-error: var(--text-toast-error);
 
     --color-dropdown: var(--bg-dropdown);
     --color-dropdown-selected: var(--bg-dropdown-selected);
@@ -20,6 +20,8 @@
     --color-navbar: var(--bg-navbar);
     --color-navbar-menu: var(--bg-navbar-menu);
     --color-navbar-menu-selected: var(--bg-navbar-menu-selected);
+    --color-navbar-menu-hover: var(--bg-navbar-menu-hover);
+
     --color-toggle-theme: var(--bg-toggle-theme);
     --color-bg-hover: var(--bg-hover);
     --color-bg-selected: var(--bg-selected);
@@ -107,13 +109,15 @@
     --bg-checkbox: #F5F0CD;
 
     --bg-toast: var(--blue-400);
-    --text-toast: #43119c;
-    --text-toast-hover: #FBCC4B;
-    --closeToast-hover: hsl(from var(--color-toast) h s calc(l + 10));
+    --text-toast: #151da4;
+    --text-toast-success: #0B6623;
+    --text-toast-error: #B00020;
 
     --bg-navbar: var(--light-100);
     --bg-navbar-menu: var(--light-200);
     --bg-navbar-menu-selected: var(--blue-300);
+    --bg-navbar-menu-hover: var(--light-300);
+
     --bg-toggle-theme: var(--blue-400);
     --bg-hover: hsl(from var(--bg-surface) h s calc(l - 10));
     --bg-selected: hsl(from var(--bg-surface) h s calc(l - 20));
@@ -185,12 +189,14 @@
 
     --bg-toast: hsl(from var(--bg-surface) h s calc(l + 5));
     --text-toast: #B3B3B3;
-    --text-toast-hover: #fff;
-    --closeToast-hover: hsl(from var(--color-toast) h s calc(l + 10));
+    --text-toast-success: #4DFFA3;
+    --text-toast-error: #FF99A3;
 
     --bg-navbar: #1e293b;
     --bg-navbar-menu: #253349;
     --bg-navbar-menu-selected: var(--blue-700);
+    --bg-navbar-menu-hover: #2c3c57;
+
     --bg-toggle-theme: var(--dark-500);
     --bg-hover: hsl(from var(--bg-surface) h s calc(l + 5));
     --bg-selected: hsl(from var(--bg-surface) h s calc(l + 10));
@@ -275,7 +281,7 @@
 }
 
 .theme-transitions .checkbox-transition {
-    transition-property: opacity;
+    transition-property: opacity, background-color;
     transition-timing-function: ease-out;
     transition-duration: 0.4s;
 }

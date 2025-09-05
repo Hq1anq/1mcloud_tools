@@ -125,9 +125,7 @@ function bindEvents() {
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.reinstallBtn.addEventListener('click', reinstall);
     elements.pauseBtn.addEventListener('click', pause);
-    elements.rebootBtn.addEventListener('click', () => {
-        showToast(`IP CHANGE completed\n 8 success, 9 failed`, 'warning');
-    });
+    elements.rebootBtn.addEventListener('click', reboot);
 
     elements.changeIpBtn.addEventListener('click', () => {
         const proxyType = elements.changeIpType.textContent.trim();
@@ -291,11 +289,13 @@ async function changeIp() {
 
     // Show appropriate toast message based on results
     if (failCount === 0) {
-        changeToToast(`IP CHANGE completed: ${successCount} success`, 'success');
+        changeToToast(`IP CHANGE completed <br>
+            <span class="text-text-toast-success">${successCount} success</span>`, 'success');
     } else if (successCount === 0) {
-        changeToToast('IP CHANGE failed for all servers', 'error');
+        changeToToast(`IP CHANGE failed for <span class="text-text-toast-error">${failCount}</span> servers`, 'error');
     } else {
-        changeToToast(`IP CHANGE completed\n ${successCount} success, ${failCount} failed`, 'warning');
+        changeToToast(`IP CHANGE completed <br>
+            <span class="text-text-toast-success">${successCount} success</span>, <span class="text-text-toast-error">${failCount} failed</span>`, 'warning');
     }
 
     updateCounts();
@@ -375,11 +375,13 @@ async function reinstall() {
 
     // Show appropriate toast message based on results
     if (failCount === 0) {
-        changeToToast(`REINSTALL completed: ${successCount} success`, 'success');
+        changeToToast(`REINSTALL completed <br>
+            <span class="text-text-toast-success">${successCount} success</span>`, 'success');
     } else if (successCount === 0) {
-        changeToToast('REINSTALL failed for all servers', 'error');
+        changeToToast(`REINSTALL failed for <span class="text-text-toast-error">${failCount}</span> servers`, 'error');
     } else {
-        changeToToast(`REINSTALL completed: ${successCount} success, ${failCount} failed`, 'warning');
+        changeToToast(`REINSTALL completed <br>
+            <span class="text-text-toast-success">${successCount} success</span>, <span class="text-text-toast-error">${failCount} failed</span>`, 'warning');
     }
 
     updateCounts();
@@ -441,7 +443,7 @@ async function pause() {
             if (errorIds.length === 0)
                 changeToToast(`PAUSE completed: ${successIds.length} success`, 'success');
             else if (successIds.length === 0)
-                changeToToast(`PAUSE failed for all servers`, 'error');
+                changeToToast(`PAUSE failed for <span class="text-text-toast-error">${errorIds.length}</span> servers`, 'error');
             else
                 changeToToast(`PAUSE completed: ${successIds.length} success, ${errorIds.length} failed`, 'warning');
         } else {
@@ -498,11 +500,13 @@ async function reboot() {
 
             // Show appropriate toast message
             if (errorIds.length === 0)
-                changeToToast(`Reboot completed: ${successIds.length} success`, 'success');
+                changeToToast(`Reboot completed <br>
+                    <span class="text-text-toast-success">${successIds.length} success</span>`, 'success');
             else if (successIds.length === 0)
-                changeToToast(`Reboot failed for all servers`, 'error');
+                changeToToast(`Reboot failed for <span class="text-text-toast-error">${errorIds.length}</span> servers`, 'error');
             else
-                changeToToast(`Reboot completed: ${successIds.length} success, ${errorIds.length} failed`, 'warning');
+                changeToToast(`Reboot completed <br>
+                    <span class="text-text-toast-success">${successIds.length} success</span>, <span class="text-text-toast-error">${errorIds.length} failed</span>`, 'warning');
         } else {
             changeToToast(`Failed to REBOOT: ${data.error}`, 'error');
             console.error(`❌ Failed to REBOOT:`, data.error);

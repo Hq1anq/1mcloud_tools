@@ -68,7 +68,7 @@ function createToast(message, type) {
 
     toast.innerHTML = `
         ${contentDiv(message, type)}
-        <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-toast group-hover:bg-closeToast-hover group-hover:text-text-toast-hover rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8">
+        <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-toast group-hover:brightness-125 rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
             </svg>
@@ -99,7 +99,7 @@ function contentDiv(message, type) {
             <div class="${style.bg} flex items-center justify-center shrink-0 w-8 h-8 rounded-lg">
                 ${style.icon}
             </div>
-            <div id="toast-message" class="mx-3 text-sm font-bold flex-1 whitespace-pre-line">${message}</div>
+            <div id="toast-message" class="mx-3 text-sm font-bold flex-1">${message}</div>
         </div>
     `;
 }

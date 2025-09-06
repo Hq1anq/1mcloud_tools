@@ -190,16 +190,27 @@ function copyFullProxies() {
 
 // Parse proxy list from text
 function parseProxyList(text) {
-    const lines = text.split('\n').filter(line => line.trim());
+    const lines = text.split('\n').filter(line => line.trim()).filter(Boolean);;
+
     return lines.map(line => {
-        const parts = line.split(':');
-        if (parts.length >= 4) {
-            return {
-                ip: parts[0],
-                port: parts[1],
-                username: parts[2],
-                password: parts[3]
-            };
+        let ip, port, username, password;
+
+        if (line.includes('@')) {
+            // Format: username:password@ip:port
+            const [authPart, addressPart] = line.split('@');
+            [username, password] = authPart.split(':');
+            [ip, port] = addressPart.split(':');
+            return { ip, port, username, password };
+        } else {
+            // Format: ip:port or ip:port:username:password
+            const parts = line.split(':');
+            if (parts.length >= 4) {
+                [ip, port, username, password] = parts;
+            }
+        }
+
+        if (ip && port) {
+            return { ip: ip, port: port, username: username || null, password: password || null };
         }
         return null;
     }).filter(proxy => proxy !== null);

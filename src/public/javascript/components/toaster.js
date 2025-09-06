@@ -67,7 +67,9 @@ function createToast(message, type) {
     toast.className = "group float-in flex items-center bg-toast text-text-toast cursor-pointer w-full max-w-xs p-4 rounded-lg shadow-sm";
 
     toast.innerHTML = `
-        ${contentDiv(message, type)}
+        <div id="toast-content" class="flex items-center">
+            ${contentDiv(message, type)}
+        </div>
         <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-toast group-hover:brightness-125 rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
@@ -95,16 +97,14 @@ function createToast(message, type) {
 function contentDiv(message, type) {
     const style = statusStyles[type] || statusStyles.info;
     return `
-        <div id="toast-content" class="flex items-center">
-            <div class="${style.bg} flex items-center justify-center shrink-0 w-8 h-8 rounded-lg">
-                ${style.icon}
-            </div>
-            <div id="toast-message" class="mx-3 text-sm font-bold flex-1">${message}</div>
+        <div class="${style.bg} flex items-center justify-center shrink-0 w-8 h-8 rounded-lg">
+            ${style.icon}
         </div>
+        <div id="toast-message" class="mx-3 text-sm font-bold flex-1">${message}</div>
     `;
 }
 
-export function changeToToast(message, type = "info") {
+export function changeToToast(message, type = "info", noTransition = false) {
     if (!toaster) return;
 
     let loadingToast = null;
@@ -112,10 +112,11 @@ export function changeToToast(message, type = "info") {
     for (let i = 0; i < toaster.children.length; i++) {
         const toast = toaster.children[i];
         const messageDiv = toast.querySelector("#toast-message");
-        if (messageDiv && messageDiv.textContent.includes("...")) {
-            loadingToast = toast;
-            break;
-        }
+        if (messageDiv)
+            if (messageDiv.textContent.includes("...") || messageDiv.textContent.includes("/")) {
+                loadingToast = toast;
+                break;
+            }
     }
 
     if (!loadingToast) {
@@ -124,8 +125,14 @@ export function changeToToast(message, type = "info") {
         return;
     }
 
+    const contentWrapper = loadingToast.firstElementChild;
+    
+    if (noTransition) {
+        contentWrapper.lastElementChild.textContent = message;
+        return;
+    }
+
     // Icon transition
-    const contentWrapper = loadingToast.querySelector("div:first-child");
     contentWrapper.classList.add("float-out");
 
     setTimeout(() => {

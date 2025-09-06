@@ -189,8 +189,8 @@ async function getData() {
     showToast("Getting data...", 'loading');
     const ipString = elements.ipList.value
         .split('\n')
-        .map(ip => ip.split(':')[0].trim())
-        .filter(ip => ip.length > 0)
+        .map(line => extractIP(line))
+        .filter(ip => ip != 0)
         .join(',');
     const apiKeyString = elements.apiKey.value.trim();
     const amountString = elements.amount.value.trim();
@@ -227,13 +227,19 @@ async function getData() {
 
 async function changeIp() {
     const selectedRows = getSelectedRows();
-    if (selectedRows.length === 0) {
-        showToast('Select at least one row to CHANGE IP.', 'info');
+    const rowCount = selectedRows.length;
+
+    if (rowCount === 0) {
+        showToast('Select at least one row to CHANGE IP', 'info');
         return;
     }
 
     closeChangeIpDialog();
-    showToast('Change Ip...', 'loading');
+
+    if (rowCount > 1)
+        showToast(`Changing IP 1/${rowCount}`, 'loading');
+    else
+        showToast(`Changing IP...`, 'loading');
 
     const proxyLines = []; // collect proxies here
     const apiKeyString = elements.apiKey.value.trim();
@@ -243,13 +249,16 @@ async function changeIp() {
     let successCount = 0;
     let failCount = 0;
 
-    for (const row of selectedRows) {
+    for (let i = 0; i < rowCount; i++) {
+        const row = selectedRows[i];
         const cells = row.cells;
         if (cells.length < 2) continue;
 
         // Extract IP from the 'ip_port' column (assumed to be the second column)
         const ipPort = cells[columnMap.ip_port].innerText.trim();
         const ip = ipPort.split(':')[0]; // take only IP part
+
+        if (i > 0) changeToToast(`Changing IP ${i + 1}/${rowCount}`, 'loading', true);
 
         try {
             const response = await fetch('/proxy/change-ip', {
@@ -272,31 +281,41 @@ async function changeIp() {
                 updateRowContent(row, data.proxyInfo, 'changeIp');
                 successCount++;
             } else {
-                showToast(`Fail to CHANGE IP: ${ip}`, 'error');
+                failCount++;
                 console.error(`❌ Failed to CHANGE IP for ${ip}:`, data.error);
                 row.classList.add('bg-error-cell');
-                failCount++;
+                if (rowCount === 1) {
+                    changeToToast(`Fail to CHANGE IP ${ip}`, 'error');
+                    return;
+                };
+                showToast(`Fail to CHANGE IP ${ip}`, 'error');
             }
         } catch (err) {
-            showToast(`Fail to CHANGE IP: ${ip}`, 'error');
+            failCount++;
             console.error(`❌ Error CHANGE IP for ${ip}:`, err);
             row.classList.add('bg-error-cell');
-            failCount++;
+            if (rowCount === 1) {
+                changeToToast(`Fail to CHANGE IP ${ip}`, 'error');
+                return;
+            };
+            showToast(`Fail to CHANGE IP ${ip}`, 'error');
         }
 
-        await delay(2000);
+        // Delay only between rows, not after the last one
+        if (rowCount > 1 && i < rowCount - 1) {
+            await delay(2000);
+        }
     }
 
     // Show appropriate toast message based on results
-    if (failCount === 0) {
+    if (failCount === 0)
         changeToToast(`IP CHANGE completed <br>
             <span class="text-text-toast-success">${successCount} success</span>`, 'success');
-    } else if (successCount === 0) {
+    else if (successCount === 0)
         changeToToast(`IP CHANGE failed for <span class="text-text-toast-error">${failCount}</span> servers`, 'error');
-    } else {
+    else
         changeToToast(`IP CHANGE completed <br>
             <span class="text-text-toast-success">${successCount} success</span>, <span class="text-text-toast-error">${failCount} failed</span>`, 'warning');
-    }
 
     updateCounts();
 
@@ -316,12 +335,17 @@ async function changeIp() {
 
 async function reinstall() {
     const selectedRows = getSelectedRows();
-    if (selectedRows.length === 0) {
+    const rowCount = selectedRows.length;
+
+    if (rowCount === 0) {
         showToast('Select at least one row to REINSTALL', 'info');
         return;
     }
 
-    showToast("Reinstalling...", 'loading');
+    if (rowCount > 1)
+        showToast(`Reinstalling 1/${rowCount}`, 'loading');
+    else
+        showToast(`Reinstalling...`, 'loading');
 
     const proxyLines = []; // collect proxies here
     const apiKeyString = elements.apiKey.value.trim();
@@ -331,11 +355,14 @@ async function reinstall() {
     let successCount = 0;
     let failCount = 0;
 
-    for (const row of selectedRows) {
+    for (let i = 0; i < rowCount; i++) {
+        const row = selectedRows[i];
         const cells = row.cells;
         if (cells.length < 2) continue;
 
         const sid = cells[columnMap.sid].innerText.trim();
+
+        if (i > 0) changeToToast(`Reinstalling ${i + 1}/${rowCount}`, 'loading', true);
 
         try {
             const response = await fetch('/proxy/reinstall', {
@@ -358,31 +385,40 @@ async function reinstall() {
                 updateRowContent(row, data.proxyInfo, 'reinstall');
                 successCount++;
             } else {
-                showToast(`Fail to REINSTALL sid: ${sid}`, 'error');
+                failCount++;
                 console.error(`❌ Failed to REINSTALL for sid ${sid}:`, data.error);
                 row.classList.add('bg-error-cell');
-                failCount++;
+                if (rowCount === 1) {
+                    changeToToast(`Fail to REINSTALL sid ${sid}`, 'error');
+                    return;
+                };
+                showToast(`Fail to REINSTALL sid ${sid}`, 'error');
             }
         } catch (err) {
-            showToast(`Fail to REINSTALL sid: ${sid}`, 'error');
+            failCount++;
             console.error(`❌ Error REINSTALL for sid ${sid}:`, err);
             row.classList.add('bg-error-cell');
-            failCount++;
+            if (rowCount === 1) {
+                changeToToast(`Fail to REINSTALL sid ${sid}`, 'error');
+                return;
+            };
+            showToast(`Fail to REINSTALL sid ${sid}`, 'error');
         }
 
-        await delay(2000);
+        if (rowCount > 1 && i < rowCount - 1) {
+            await delay(2000);
+        }
     }
 
     // Show appropriate toast message based on results
-    if (failCount === 0) {
+    if (failCount === 0)
         changeToToast(`REINSTALL completed <br>
             <span class="text-text-toast-success">${successCount} success</span>`, 'success');
-    } else if (successCount === 0) {
+    else if (successCount === 0)
         changeToToast(`REINSTALL failed for <span class="text-text-toast-error">${failCount}</span> servers`, 'error');
-    } else {
+    else
         changeToToast(`REINSTALL completed <br>
             <span class="text-text-toast-success">${successCount} success</span>, <span class="text-text-toast-error">${failCount} failed</span>`, 'warning');
-    }
 
     updateCounts();
 
@@ -433,7 +469,7 @@ async function pause() {
                     updateRowContent(row, '', 'pause');
                     row.classList.add('bg-success-cell');
                 } else if (errorIds.includes(sid)) {
-                    showToast(`Fail to PAUSE sid: ${sid}`, 'error');
+                    showToast(`Fail to PAUSE sid ${sid}`, 'error');
                     row.classList.add('bg-error-cell');
                     console.error(`❌ Failed to PAUSE for sid ${sid}:`, data.result.error[sid]);
                 }
@@ -441,7 +477,7 @@ async function pause() {
 
             // Show appropriate toast message
             if (errorIds.length === 0)
-                changeToToast(`PAUSE completed: ${successIds.length} success`, 'success');
+                changeToToast(`PAUSE completed ${successIds.length} success`, 'success');
             else if (successIds.length === 0)
                 changeToToast(`PAUSE failed for <span class="text-text-toast-error">${errorIds.length}</span> servers`, 'error');
             else
@@ -525,29 +561,39 @@ async function changeNote() {
     const apiKeyString = elements.apiKey.value.trim();
 
     const selectedRows = getSelectedRows();
-    if (selectedRows.length === 0) {
+    const rowCount = selectedRows.length;
+    if (rowCount === 0) {
         showToast('Select at least one row to CHANGE NOTE', 'info');
         return;
     }
 
-    showToast("Changing note...", 'loading');
+    if (rowCount > 1)
+        showToast(`Changing Note 1/${rowCount}`, 'loading');
+    else
+        showToast(`Changing Note...`, 'loading');
 
-    for (const row of selectedRows) {
-        let newNote;
+    let successCount = 0;
+    let failCount = 0;
+
+    for (let i = 0; i < rowCount; i++) {
+        const row = selectedRows[i];
         const cells = row.cells;
+        let newNote;
         if (cells.length < 2) continue;
 
         // Extract IP from the 'ip_port' column (assumed to be the second column)
         const sid = cells[columnMap.sid].innerText.trim();
         const oldNote = cells[columnMap.note].innerText.trim();
 
-        if (isReplace) {
+        if (isReplace)
             newNote = noteInput;
-        } else {
+        else {
             const firstSpaceIndex = oldNote.indexOf(' ');
             const suffix = oldNote.slice(firstSpaceIndex + 1);
             newNote = noteInput + suffix;
         }
+
+        if (i > 0) changeToToast(`Changing Note ${i + 1}/${rowCount}`, 'loading', true);
 
         try {
             const response = await fetch('/proxy/change-note', {
@@ -557,25 +603,47 @@ async function changeNote() {
             });
 
             const data = await response.json();
-
-            if (response.ok && data.success)
+            if (response.ok && data.success) {
+                successCount++;
+                console.log(`✅ CHANGE NOTE for ${sid}`);
                 updateRowContent(row, newNote, 'changeNote');
-            else {
-                showToast(`Failed to changeNote for sid ${sid}`, 'error');
+            } else {
+                failCount++;
                 console.error(`❌ Failed to CHANGE NOTE for sid ${sid}:`, data.error);
                 row.classList.add('bg-error-cell');
+                if (rowCount === 1) {
+                    changeToToast(`Fail to CHANGE IP ${ip}`, 'error');
+                    return;
+                };
+                showToast(`Failed to CHANGE NOTE for sid ${sid}`, 'error');
             }
         } catch (err) {
-            showToast(`Failed to changeNote for sid ${sid}`, 'error');
+            failCount++;
             console.error(`❌ Error CHANGE NOTE for sid ${sid}:`, err);
             row.classList.add('bg-error-cell');
+            if (rowCount === 1) {
+                changeToToast(`Fail to CHANGE NOTE for sid ${sid}`, 'error');
+                return;
+            }
+            showToast(`Failed to CHANGE NOTE for sid ${sid}`, 'error');
         }
 
-        await delay(1000);
+        if (rowCount > 1 && i < rowCount - 1) {
+            await delay(1000);
+        }
     }
 
+    // Show appropriate toast message based on results
+    if (failCount === 0)
+        changeToToast(`CHANGE NOTE completed <br>
+            <span class="text-text-toast-success">${successCount} success</span>`, 'success');
+    else if (successCount === 0)
+        changeToToast(`CHANGE NOTE failed for <span class="text-text-toast-error">${failCount}</span> servers`, 'error');
+    else
+        changeToToast(`CHANGE NOTE completed <br>
+            <span class="text-text-toast-success">${successCount} success</span>, <span class="text-text-toast-error">${failCount} failed</span>`, 'warning');
+
     updateCounts();
-    changeToToast(`Change note DONE`, 'success');
 }
 
 function updateRowContent(row, text, action) {
@@ -638,6 +706,24 @@ function updateRowContent(row, text, action) {
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function extractIP(str) {
+    // Looser regex: grab four groups of digits separated by dots
+    const ipv4Candidate = str.match(/\d+\.\d+\.\d+\.\d+/);
+    if (!ipv4Candidate) return null;
+
+    const ip = ipv4Candidate[0];
+
+    // Validate each octet (0–255)
+    const parts = ip.split('.');
+    if (parts.length !== 4) return null;
+    for (let part of parts) {
+        const num = Number(part);
+        if (num < 0 || num > 255) return null;
+    }
+
+    return ip;
 }
 
 init();

@@ -67,7 +67,7 @@
     --color-bg-copyIp: var(--bg-copyIp);
     --color-bg-reboot: var(--bg-reboot);
     --color-bg-pause: var(--bg-pause);
-    --color-bg-refund: var(--bg-refund);
+    --color-bg-renew: var(--bg-renew);
     --color-bg-getAPIKey: var(--bg-getAPIKey);
 
     --breakpoint-sm: 749px;
@@ -168,7 +168,7 @@
     --bg-copyIp: #8e34d3;
     --bg-reboot: #fba124;
     --bg-pause: #F87171;
-    --bg-refund: #F472B6;
+    --bg-renew: #e07211;
     --bg-getAPIKey: #ef4646;
 
     #theme-toggle-slider {
@@ -246,7 +246,7 @@
     --bg-copyIp: #620596;
     --bg-reboot: #D97706;
     --bg-pause: #DC2626;
-    --bg-refund: #DB2777;
+    --bg-renew: #a1520c;
     --bg-getAPIKey: #263edc;
 }
 

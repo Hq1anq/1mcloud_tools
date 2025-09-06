@@ -2,6 +2,7 @@ import { setData, columnMap, reorderHeader, getSelectedRows, initTable, updateRo
 import { showToast, changeToToast } from '/javascript/components/toaster.js';
 import { showCopyDialog } from '/javascript/components/copyDialog.js';
 import { showChangeIpDialog, closeChangeIpDialog } from '/javascript/components/ChangeIpDialog.js';
+import { showGetAPIKeyDialog } from '/javascript/components/getAPIKey.js';
 // DOM elements
 const elements = {
     table: document.querySelector('table'),
@@ -26,6 +27,8 @@ const elements = {
     copyIpBtn: document.getElementById('copyIpBtn'),
     pauseBtn: document.getElementById('pauseBtn'),
     rebootBtn: document.getElementById('rebootBtn'),
+
+    getAPIKeyBtn: document.getElementById('getAPIKeyBtn'),
 }
 
 // Initialize
@@ -55,6 +58,8 @@ function bindEvents() {
         showChangeIpDialog(proxyType);
     });
     elements.confirmChangeIp.addEventListener('click', changeIp);
+
+    elements.getAPIKeyBtn.addEventListener('click', showGetAPIKeyDialog);
 }
 
 function copyIp() {

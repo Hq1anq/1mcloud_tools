@@ -154,8 +154,17 @@
 										</button>
 									</div>
 								</div>
-								<div class="flex">
-									<input type="password" id="api-key" class="m-1" placeholder="Enter API Key" />
+								<div class="flex m-1 mt-2">
+									<input type="password" id="api-key" placeholder="Enter API Key"
+										class="rounded-r-none border-r-0" />
+									<button id="getAPIKeyBtn"
+										class="bg-bg-getAPIKey flex items-center justify-center rounded-r-lg px-3 py-2 font-medium text-nowrap transition-colors duration-200 hover:brightness-[var(--highlight-brightness)]">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
+											class="mr-1 h-5 w-5 flex-shrink-0 fill-current sm:mr-2 sm:h-7 sm:w-7">
+											<path d="M400 416C497.2 416 576 337.2 576 240C576 142.8 497.2 64 400 64C302.8 64 224 142.8 224 240C224 258.7 226.9 276.8 232.3 293.7L71 455C66.5 459.5 64 465.6 64 472L64 552C64 565.3 74.7 576 88 576L168 576C181.3 576 192 565.3 192 552L192 512L232 512C245.3 512 256 501.3 256 488L256 448L296 448C302.4 448 308.5 445.5 313 441L346.3 407.7C363.2 413.1 381.3 416 400 416zM440 160C462.1 160 480 177.9 480 200C480 222.1 462.1 240 440 240C417.9 240 400 222.1 400 200C400 177.9 417.9 160 440 160z"/>
+										</svg>
+										Get API Key
+									</button>
 								</div>
 							</div>
 						</div>
@@ -188,7 +197,8 @@
 		
 		<%- include('partials/ChangeIpDialog') %>
 
+		<%- include('partials/getAPIKey') %>
+
 		<%- include('partials/footer') %>
 		<script type="module" src="javascript/proxyManager.js"></script>
 </body>
-</html>

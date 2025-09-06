@@ -1,0 +1,71 @@
+<div id="getAPIKeyDialog"
+	class="hidden text-text-secondary fixed inset-0 z-50 items-center justify-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
+	<div
+		class="border-border bg-dialog relative mx-auto flex w-[90%] max-w-md flex-col rounded-xl border p-6 shadow-[0_0_25px_rgba(0,0,0,0.5)]">
+		
+		<!-- Title -->
+		<h2 class="text-text-title mb-6 text-center text-2xl font-bold">
+			Authenticate to Get API Key
+		</h2>
+
+		<!-- Form -->
+		<div class="flex flex-col space-y-4">
+			<div>
+				<label for="username" class="mb-1 block text-sm font-medium text-text-secondary">
+					Email
+				</label>
+				<div class="relative">
+					<span class="absolute inset-y-0 left-0 flex items-center pl-1 text-text-secondary">
+						<!-- User SVG -->
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
+                            class="mr-1 h-7 w-7 flex-shrink-0 fill-current">
+                            <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z"/>
+                        </svg>
+					</span>
+					<input type="text" id="email" name="email"
+						class="pl-10" placeholder="Enter your email" />
+				</div>
+			</div>
+
+			<div>
+				<label for="password" class="mb-1 block text-sm font-medium text-text-secondary">
+					Password
+				</label>
+				<div class="relative">
+					<span class="absolute inset-y-0 left-0 flex items-center pl-1 text-text-secondary">
+						<!-- Lock SVG -->
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
+                            class="mr-1 h-7 w-7 flex-shrink-0 fill-current">
+                            <path d="M256 160L256 224L384 224L384 160C384 124.7 355.3 96 320 96C284.7 96 256 124.7 256 160zM192 224L192 160C192 89.3 249.3 32 320 32C390.7 32 448 89.3 448 160L448 224C483.3 224 512 252.7 512 288L512 512C512 547.3 483.3 576 448 576L192 576C156.7 576 128 547.3 128 512L128 288C128 252.7 156.7 224 192 224z"/>
+                        </svg>
+					</span>
+					<input type="password" id="password" name="password"
+                        class="pl-10" placeholder="Enter your password" />
+					<button type="button"
+						class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-secondary hover:text-text-primary">
+						<!-- Eye SVG (Show Password) -->
+						<svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
+							class="fill-current h-7 w-7 text-text-muted cursor-pointer hover:brightness-[var(--highlight-brightness)]">
+							<path d="M73 39.1C63.6 29.7 48.4 29.7 39.1 39.1C29.8 48.5 29.7 63.7 39 73.1L567 601.1C576.4 610.5 591.6 610.5 600.9 601.1C610.2 591.7 610.3 576.5 600.9 567.2L504.5 470.8C507.2 468.4 509.9 466 512.5 463.6C559.3 420.1 590.6 368.2 605.5 332.5C608.8 324.6 608.8 315.8 605.5 307.9C590.6 272.2 559.3 220.2 512.5 176.8C465.4 133.1 400.7 96.2 319.9 96.2C263.1 96.2 214.3 114.4 173.9 140.4L73 39.1zM236.5 202.7C260 185.9 288.9 176 320 176C399.5 176 464 240.5 464 320C464 351.1 454.1 379.9 437.3 403.5L402.6 368.8C415.3 347.4 419.6 321.1 412.7 295.1C399 243.9 346.3 213.5 295.1 227.2C286.5 229.5 278.4 232.9 271.1 237.2L236.4 202.5zM357.3 459.1C345.4 462.3 332.9 464 320 464C240.5 464 176 399.5 176 320C176 307.1 177.7 294.6 180.9 282.7L101.4 203.2C68.8 240 46.4 279 34.5 307.7C31.2 315.6 31.2 324.4 34.5 332.3C49.4 368 80.7 420 127.5 463.4C174.6 507.1 239.3 544 320.1 544C357.4 544 391.3 536.1 421.6 523.4L357.4 459.2z"/>
+						</svg>
+					</button>
+				</div>
+			</div>
+
+			<!-- Buttons -->
+			<div class="mt-6 flex justify-between items-center">
+				<a href="https://manage.1mcloud.vn/register" target="_blank" class="text-blue-500 hover:underline">Register</a>
+				<div class="space-x-3">
+					<button id="cancelGetAPIKey"
+                        class="rounded-xl bg-gray-500 px-4 py-2 text-white hover:bg-gray-600">
+                        Cancel
+                    </button>
+					<button id="getAPIKeyBtn" type="submit" 
+						class="rounded-xl bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+						Get API Key
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

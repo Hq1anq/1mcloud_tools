@@ -1,14 +1,13 @@
-import { setData, columnMap, reorderHeader, getSelectedRows, initTable, updateRowData, updateCounts, getStatusChip } from '/javascript/components/table.js';
-import { showToast, changeToToast, testToast } from '/javascript/components/toaster.js';
-import { showCopyDialog } from '/javascript/components/copyDialog.js';
-import { showChangeIpDialog, closeChangeIpDialog } from '/javascript/components/ChangeIpDialog.js';
-import { showGetAPIKeyDialog } from '/javascript/components/getAPIKey.js';
+import { setData, columnMap, reorderHeader, getSelectedRows, initTable, updateRowData, updateCounts, getStatusChip } from './components/table.js';
+import { showToast, changeToToast } from './components/toaster.js';
+import { showCopyDialog } from './components/copyDialog.js';
+import { showChangeIpDialog, closeChangeIpDialog } from './components/ChangeIpDialog.js';
+import { showGetAPIKeyDialog, closeGetAPIKeyDialog, showConfirmAPIKeyDialog } from './components/getAPIKey.js';
 // DOM elements
 const elements = {
     table: document.querySelector('table'),
 
     ipList: document.getElementById('ip-list'),
-    apiKey: document.getElementById('api-key'),
     amount: document.getElementById('amount'),
     getDataBtn: document.getElementById('getDataBtn'),
     shuffleBtn: document.getElementById('shuffleBtn'),
@@ -31,7 +30,10 @@ const elements = {
     pauseBtn: document.getElementById('pauseBtn'),
     rebootBtn: document.getElementById('rebootBtn'),
 
+    apiKey: document.getElementById('api-key'),
     getAPIKeyBtn: document.getElementById('getAPIKeyBtn'),
+    getKeyBtn: document.getElementById('getKey'),
+    eyeIconAPIKey: document.getElementById('eyeIconAPIKey')
 }
 
 // Initialize
@@ -136,6 +138,24 @@ function bindEvents() {
     elements.confirmChangeIp.addEventListener('click', changeIp);
 
     elements.getAPIKeyBtn.addEventListener('click', showGetAPIKeyDialog);
+    elements.getKeyBtn.addEventListener('click', getAPIKey);
+    elements.eyeIconAPIKey.addEventListener('click', () => {
+        showConfirmAPIKeyDialog(elements.apiKey, elements.eyeIconAPIKey)
+    });
+}
+
+function getAPIKey() {
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value.trim();
+
+    if (!email || !password) {
+        showToast('Please enter both email and password', 'warning');
+        return;
+    }
+
+    closeGetAPIKeyDialog();
+    
+    elements.apiKey.value = password;
 }
 
 function copyIp() {

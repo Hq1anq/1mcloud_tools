@@ -1,13 +1,19 @@
-<div id="copyDialog" class="fixed inset-0 bg-[rgba(0,0,0,0.5)] backdrop-blur-sm hidden content-center z-50">
-    <div class="relative border border-border flex flex-col mx-auto bg-dialog p-6 pb-4 pr-4 rounded-xl w-[80%] max-w-lg text-text-title shadow-[0_0_25px_rgba(0,0,0,0.5)] select-none">
-        <h2 id="dialogTitle" class="text-text-secondary text-xl font-bold mb-4"></h2>
-        <button id="dialogCopyBtn" class="group absolute top-6 right-6 text-text-muted hover:brightness-[var(--highlight-brightness)] rounded-lg inline-flex items-center justify-center cursor-pointer">
-            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" class="text-text-muted group-hover:brightness-[var(--highlight-brightness)]" stroke-linejoin="round" stroke-width="2" d="M9 8v3a1 1 0 0 1-1 1H5m11 4h2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-7a1 1 0 0 0-1 1v1m4 3v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7.13a1 1 0 0 1 .24-.65L7.7 8.35A1 1 0 0 1 8.46 8H13a1 1 0 0 1 1 1Z"/>
-            </svg>
-            Copy
-        </button>
-        <textarea id="dialogText" readonly></textarea>
-        <button id="closeDialogBtn" class="self-end bg-reload-btn hover:brightness-90 text-text-secondary py-2 px-3 mt-4 rounded-xl">Close</button>
-    </div>
+<div id="copyDialog" class="fixed inset-0 z-50 hidden content-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
+	<div class="border-border bg-dialog text-text-title relative mx-auto flex w-[80%] max-w-lg flex-col rounded-xl border p-6 pr-4 pb-4 shadow-[0_0_25px_rgba(0,0,0,0.5)] select-none">
+		<h2 id="dialogTitle" class="text-text-secondary mb-4 text-xl font-bold"></h2>
+		<button id="dialogCopyBtn"
+			class="group text-text-muted absolute top-6 right-6 inline-flex cursor-pointer items-center justify-center rounded-lg hover:brightness-[var(--highlight-brightness)]">
+			<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+				class="w-7 h-7 fill-none">
+				<path stroke-linejoin="round" stroke-width="2"
+					class="text-text-muted stroke-current group-hover:brightness-[var(--highlight-brightness)]"
+					d="M9 8v3a1 1 0 0 1-1 1H5m11 4h2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-7a1 1 0 0 0-1 1v1m4 3v10a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7.13a1 1 0 0 1 .24-.65L7.7 8.35A1 1 0 0 1 8.46 8H13a1 1 0 0 1 1 1Z" />
+			</svg>Copy
+		</button>
+		<textarea id="dialogText" readonly></textarea>
+		<button id="closeDialogBtn"
+			class="bg-reload-btn text-text-secondary mt-4 self-end rounded-xl px-3 py-2 hover:brightness-90">
+			Close
+		</button>
+	</div>
 </div>

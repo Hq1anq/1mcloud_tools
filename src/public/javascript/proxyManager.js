@@ -1,8 +1,8 @@
-import { setData, columnMap, reorderHeader, getSelectedRows, initTable, updateRowData, updateCounts, getStatusChip } from './components/table.js';
+import { displayData, columnMap, reorderHeader, getSelectedRows, initTable, updateRowData, updateCounts, getStatusChip, setAllData } from './components/table.js';
 import { showToast, changeToToast } from './components/toaster.js';
 import { showCopyDialog } from './components/copyDialog.js';
 import { showChangeIpDialog, closeChangeIpDialog } from './components/ChangeIpDialog.js';
-import { showGetAPIKeyDialog, closeGetAPIKeyDialog, showConfirmAPIKeyDialog } from './components/getAPIKey.js';
+import { showGetAPIKeyDialog, closeAPIKeyDialog, showViewKeyDialog, setUsingAuth, setAuthAccount } from './components/getAPIKey.js';
 // DOM elements
 const elements = {
     table: document.querySelector('table'),
@@ -42,39 +42,7 @@ function init() {
     initTable('proxyManager');
 
     reorderHeader();
-    setData([
-        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Paused", "note": "0208 tung2"},
-        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Stopped", "note": "0208 tung2"},
-        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Unknowed", "note": "0208 tung2"},
-        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Off", "note": "0208 tung2"},
-        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        
-        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Paused", "note": "0208 tung2"},
-        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Stopped", "note": "0208 tung2"},
-        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Unknowed", "note": "0208 tung2"},
-        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-
-        {"sid": 583192, "ip_port": "103.16.161.159:38927", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583191, "ip_port": "157.66.195.189:35605", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Paused", "note": "0208 tung2"},
-        {"sid": 583190, "ip_port": "160.250.62.145:37555", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Stopped", "note": "0208 tung2"},
-        {"sid": 583189, "ip_port": "103.184.96.105:18460", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Unknowed", "note": "0208 tung2"},
-        {"sid": 583188, "ip_port": "157.66.163.148:54702", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583187, "ip_port": "103.16.214.134:55464", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583186, "ip_port": "103.189.202.6:47104", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583185, "ip_port": "160.250.63.51:24672", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        {"sid": 583184, "ip_port": "103.16.225.156:46807", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"},
-        
-        {"sid": 583183, "ip_port": "103.190.36.207:21095", "country": "VN", "type": "HTTPS Proxy", "created": "19-07-2025", "expired": "18-08-2025", "ip_changed": 0,"status": "Running", "note": "0208 tung2"}
-    ]);
+    elements.apiKey.value = localStorage.getItem("apiKey") || "";
 }
 
 // Bind event listeners
@@ -112,7 +80,7 @@ function bindEvents() {
                         elements.textCopyBtn.classList.remove('float-out');
                         elements.textCopyBtn.classList.add('float-in');
                     }, 300);
-                }, 2000);
+                }, 1000);
             })
             .catch(err => {
                 showToast('Fail to copy!', 'error');
@@ -140,22 +108,8 @@ function bindEvents() {
     elements.getAPIKeyBtn.addEventListener('click', showGetAPIKeyDialog);
     elements.getKeyBtn.addEventListener('click', getAPIKey);
     elements.eyeIconAPIKey.addEventListener('click', () => {
-        showConfirmAPIKeyDialog(elements.apiKey, elements.eyeIconAPIKey)
+        showViewKeyDialog(elements.apiKey, elements.eyeIconAPIKey)
     });
-}
-
-function getAPIKey() {
-    const email = document.getElementById('emailInput').value.trim();
-    const password = document.getElementById('passwordInput').value.trim();
-
-    if (!email || !password) {
-        showToast('Please enter both email and password', 'warning');
-        return;
-    }
-
-    closeGetAPIKeyDialog();
-    
-    elements.apiKey.value = password;
 }
 
 function copyIp() {
@@ -181,7 +135,7 @@ function copyIp() {
 
 function shuffleListIp() {
     let allLines = [];
-    const rawBlocks = elements.ipList.value.trim().split(/\n\s*\n/);
+    const rawBlocks = elements.ipList.value.split(/\n\s*\n/);
     if (rawBlocks.length === 2) {
         const block1 = rawBlocks[0].split('\n').map(ip => ip.trim()).filter(Boolean).map(ip => ({ ip, block: 1 }));
         const block2 = rawBlocks[1].split('\n').map(ip => ip.trim()).filter(Boolean).map(ip => ({ ip: '  ' + ip, block: 2 }));
@@ -206,6 +160,58 @@ function shuffleArray(array) {
     }
 }
 
+async function getAPIKey() {
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value.trim();
+
+    if (!email || !password) {
+        showToast('Please enter both email and password', 'warning');
+        return;
+    }
+
+    closeAPIKeyDialog();
+
+    showToast('Getting API Key...', 'loading');
+
+    try {
+        const response = await fetch('/get-api-key', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok && response.status === 200) {
+            const result = await response.json();
+            if (result.apiKey) {
+                elements.apiKey.value = result.apiKey;
+                localStorage.setItem("apiKey", result.apiKey);
+                setUsingAuth(true);
+                setAuthAccount(email, password);
+                changeToToast('Get API Key DONE!', 'success');
+            } else {
+                changeToToast('Failed to get API Key, try again!', 'error');
+                setUsingAuth(false);
+            }
+        } else {
+            setUsingAuth(false);
+            console.log(`❌ Error: ${response.status}`);
+            switch (response.status) {
+                case 401:
+                    changeToToast('Wrong email or password!', 'error');
+                    break;
+                case 500:
+                    changeToToast('Fail to get API Key, try again!', 'error');
+                    break;
+                default:
+                    changeToToast(`❌ Error: ${response.status}`, 'error');
+                    break;
+            }
+        }
+    } catch (err) {
+        console.error('Fetch error:', err);
+    }
+}
+
 // Feature: Get Servers by IPs
 async function getData() {
     showToast("Getting data...", 'loading');
@@ -226,7 +232,14 @@ async function getData() {
 
         if (response.ok && response.status === 200) {
             const result = await response.json();
-            setData(result.data || []); // delegate everything to table.js
+            const data = result.data;
+            if (data.length > 0) {
+                displayData(data);
+                if (!ipString) {
+                    setAllData(data);
+                    localStorage.setItem("allData", JSON.stringify(data));
+                }
+            }
             changeToToast('Get Data DONE!', 'success');
         } else {
             console.log(`❌ Error: ${response.status}`);
@@ -304,6 +317,10 @@ async function changeIp() {
                 successCount++;
             } else {
                 failCount++;
+                if (response.status === 401) {
+                    changeToToast('Wrong API Key!', 'error');
+                    return;
+                }
                 console.error(`❌ Failed to CHANGE IP for ${ip}:`, data.error);
                 row.classList.add('bg-error-cell');
                 if (rowCount === 1) {
@@ -408,6 +425,10 @@ async function reinstall() {
                 successCount++;
             } else {
                 failCount++;
+                if (response.status === 401) {
+                    changeToToast('Wrong API Key!', 'error');
+                    return;
+                }
                 console.error(`❌ Failed to REINSTALL for sid ${sid}:`, data.error);
                 row.classList.add('bg-error-cell');
                 if (rowCount === 1) {
@@ -505,6 +526,10 @@ async function pause() {
             else
                 changeToToast(`PAUSE completed: ${successIds.length} success, ${errorIds.length} failed`, 'warning');
         } else {
+            if (response.status === 401) {
+                changeToToast('Wrong API Key!', 'error');
+                return;
+            }
             changeToToast(`Fail to PAUSE`, 'error');
             console.error(`❌ Failed to PAUSE for sid ${sid}:`, data.error);
         }
@@ -566,6 +591,10 @@ async function reboot() {
                 changeToToast(`Reboot completed <br>
                     <span class="text-text-toast-success">${successIds.length} success</span>, <span class="text-text-toast-error">${errorIds.length} failed</span>`, 'warning');
         } else {
+            if (response.status === 401) {
+                changeToToast('Wrong API Key!', 'error');
+                return;
+            }
             changeToToast(`Failed to REBOOT: ${data.error}`, 'error');
             console.error(`❌ Failed to REBOOT:`, data.error);
         }
@@ -625,16 +654,21 @@ async function changeNote() {
             });
 
             const data = await response.json();
+
             if (response.ok && data.success) {
                 successCount++;
                 console.log(`✅ CHANGE NOTE for ${sid}`);
                 updateRowContent(row, newNote, 'changeNote');
             } else {
                 failCount++;
+                if (response.status === 401) {
+                    changeToToast('Wrong API Key!', 'error');
+                    return;
+                }
                 console.error(`❌ Failed to CHANGE NOTE for sid ${sid}:`, data.error);
                 row.classList.add('bg-error-cell');
                 if (rowCount === 1) {
-                    changeToToast(`Fail to CHANGE IP ${ip}`, 'error');
+                    changeToToast(`Fail to CHANGE NOTE for ${sid}`, 'error');
                     return;
                 };
                 showToast(`Failed to CHANGE NOTE for sid ${sid}`, 'error');

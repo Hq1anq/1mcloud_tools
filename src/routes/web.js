@@ -1,10 +1,15 @@
 import express from 'express';
 import { startProxyCheckStream, receiveProxies } from '../controllers/proxyChecker.js';
-import { getData, changeIp, reinstall, changeNote, pause, reboot } from '../controllers/proxyManager.js';
+import { getData, getAPIKey, changeIp, reinstall, changeNote, pause, reboot, checkPassword, getPasswordEn } from '../controllers/proxyManager.js';
 
 const router = express.Router();
 
 router.get('/proxy/check-stream', startProxyCheckStream);
+
+router.post('/get-api-key', getAPIKey);
+router.post('/check-password', checkPassword);
+router.post('/get-password-en', getPasswordEn);
+router.post('/getData', getData);
 router.post('/proxy/send-proxies', receiveProxies);
 
 router.post('/getData', getData);

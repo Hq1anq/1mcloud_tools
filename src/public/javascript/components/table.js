@@ -89,17 +89,35 @@ function bindEvents(page) {
         elements.tbody.addEventListener("click", handleTableTap);
     }
     elements.reloadBtn.addEventListener('click', showAllData);
+
+    window.addEventListener("beforeunload", () => {
+        try {
+            localStorage.setItem("allData", JSON.stringify(allData));
+        } catch (e) {
+            console.error("Failed to save allData before unload", e);
+        }
+    });
 }
 
 export function initTable(page) {
     bindEvents(page);
-    updateCounts();
     initFilters(page);
+    const allDataStr = localStorage.getItem("allData");
+    if (allDataStr) {
+        try {
+            allData = JSON.parse(allDataStr);
+            if (allData.length > 0) showEmptyState(false);
+        } catch (e) {
+            console.error('Failed to parse stored data', e);
+            allData = [];
+        }
+    }
+    updateCounts();
 }
 
-export function setData(data) {
+export function displayData(data) {
     clearTable();
-    allData = data.map(row => {
+    filteredData = data.map(row => {
         const reordered = {};
         order.forEach(key => {
             if (row.hasOwnProperty(key)) {
@@ -108,7 +126,6 @@ export function setData(data) {
         });
         return reordered;
     });
-    filteredData = [...allData];
     renderedCount = 0;
     renderChunk();
 }
@@ -196,7 +213,6 @@ export function getStatusChip(status) {
 
 export function clearTable() {
     elements.tbody.innerHTML = "";
-    allData = [];
     filteredData = [];
 }
 
@@ -417,4 +433,8 @@ export function addColumnClass(colIndex, className) {
 
 function showEmptyState(show) {
     elements.emptyState.style.display = show ? 'block' : 'none';
+}
+
+export function setAllData(data) {
+    allData = data;
 }

@@ -9,7 +9,6 @@ export async function getData(req, res) {
 
         const headers = {
             'accept': 'application/json, text/plain, */*',
-            'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
             'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
             'content-type': 'application/json',
             'origin': 'https://manage.1mcloud.vn',
@@ -68,7 +67,6 @@ export async function changeIp(req, res) {
 
     const headers = {
         'accept': 'application/json, text/plain, */*',
-        'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
         'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
         'content-type': 'application/json',
         'origin': 'https://manage.1mcloud.vn',
@@ -123,6 +121,8 @@ export async function changeIp(req, res) {
     }
 };
 
+const SECRETKEY = 'apoi1ơ6ashdáajo903rjf';
+
 export async function reinstall(req, res) {
     const { sid, custom_info, apiKey, type = "proxy_https" } = req.body;
 
@@ -164,7 +164,6 @@ export async function reinstall(req, res) {
 
     const headers = {
         'accept': 'application/json, text/plain, */*',
-        'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
         'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
         'content-type': 'application/json',
         'origin': 'https://manage.1mcloud.vn',
@@ -216,7 +215,6 @@ export async function pause(req, res) {
 
     const headers = {
         'accept': 'application/json, text/plain, */*',
-        'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
         'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
         'content-type': 'application/json',
         'origin': 'https://manage.1mcloud.vn',
@@ -263,7 +261,6 @@ export async function reboot(req, res) {
 
     const headers = {
         'accept': 'application/json, text/plain, */*',
-        'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
         'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
         'content-type': 'application/json',
         'origin': 'https://manage.1mcloud.vn',
@@ -280,7 +277,7 @@ export async function reboot(req, res) {
 
         if (!response.ok) {
             console.error(`❌ Failed to REBOOT for sids: ${sids}:`, response.status);
-            return res.status(response.status).json({ 
+            return res.status(response.status).json({
                 success: false, 
                 error: 'Request failed', 
                 sids 
@@ -303,6 +300,31 @@ export async function reboot(req, res) {
     }
 }
 
+export function checkPassword(req, res) {
+    const { password, passwordEn } = req.body;
+
+    if (!password || !passwordEn) {
+        return res.status(400).json({ error: 'Error' });
+    }
+
+    const decryptedPassword = xorEncryptDecrypt(passwordEn, SECRETKEY);
+    // Compare
+    const isValid = decryptedPassword === passwordEn;
+
+    res.json({ valid: isValid });
+}
+
+export function getPasswordEn(req, res) {
+    const { password } = req.body;
+
+    if (!password) {
+        return res.status(400).json({ error: 'Error' });
+    }
+
+    const encryptedPassword = xorEncryptDecrypt(password, SECRETKEY);
+    res.json({ passwordEn: encryptedPassword });
+}
+
 export async function changeNote(req, res) {
     const { sid, newNote, apiKey } = req.body;
     
@@ -310,7 +332,6 @@ export async function changeNote(req, res) {
 
     const headers = {
         'accept': 'application/json, text/plain, */*',
-        'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
         'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
         'content-type': 'application/json',
         'origin': 'https://manage.1mcloud.vn',
@@ -347,4 +368,61 @@ export async function changeNote(req, res) {
             sid
         });
     }
+}
+
+export async function getAPIKey(req, res) {
+    const url = "https://api.smartserver.vn/api/token"
+    try {
+        const { email, password } = req.body;
+        const headers = {
+            'accept': 'application/json, text/plain, */*',
+            'content-type': 'application/json',
+            'origin': 'https://manage.1mcloud.vn',
+            'referer': 'https://manage.1mcloud.vn/',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
+        };
+
+        const data = {
+            email: email,
+            password: password,
+            client_id: 'nNrWRrQrwGSj78HBSU05yxM9jW1wq6Br3SsFxRTN',
+            grant_type: 'password',
+        }
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            console.error('❌ Request failed:', response.status);
+            return res.status(response.status).json({
+                success: false,
+                error: 'getAPIKey Request failed'
+            });
+        }
+
+        const rawData = await response.json();
+        return res.json({
+            success: true,
+            apiKey: rawData.access_token
+        });
+    } catch (error) {
+        console.error('❌ Error:', error.message);
+        return res.status(500).json({
+            success: false,
+            error: 'Internal server error'
+        });
+    }
+}
+
+function xorEncryptDecrypt(input, secretKey) {
+    let output = "";
+    for (let i = 0; i < input.length; i++) {
+        // XOR each char code with the secret
+        const charCode = input.charCodeAt(i) ^ secretKey.charCodeAt(i % secretKey.length);
+        output += String.fromCharCode(charCode);
+    }
+    return output;
 }

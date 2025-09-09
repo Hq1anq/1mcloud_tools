@@ -81,13 +81,13 @@ export function setUsingAuth(value) {
 
 export async function setAuthAccount(email, password) {
     authAccount.email = email;
-    const res = await fetch('/get-password-en', {
+    const res = await fetch('/get-text-en', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password })
+        body: JSON.stringify({ text: password })
     });
     const data = await res.json();
-    authAccount.password = data.passwordEn;
+    authAccount.password = data.textEn;
     localStorage.setItem("authAccount", JSON.stringify(authAccount));
 }
 

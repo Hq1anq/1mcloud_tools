@@ -336,15 +336,15 @@ export function checkPassword(req, res) {
     res.json({ valid: isValid });
 }
 
-export function getPasswordEn(req, res) {
-    const { password } = req.body;
+export function getTextEn(req, res) {
+    const { text } = req.body;
 
-    if (!password) {
+    if (!text) {
         return res.status(400).json({ error: 'Error' });
     }
 
-    const encryptedPassword = xorEncryptDecrypt(password, SECRETKEY);
-    res.json({ passwordEn: encryptedPassword });
+    const encryptedPassword = xorEncryptDecrypt(text, SECRETKEY);
+    res.json({ textEn: encryptedPassword });
 }
 
 export async function changeNote(req, res) {

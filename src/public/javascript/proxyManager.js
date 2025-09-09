@@ -37,12 +37,24 @@ const elements = {
 }
 
 // Initialize
-function init() {
+async function init() {
     bindEvents();
     initTable('proxyManager');
 
     reorderHeader();
-    elements.apiKey.value = localStorage.getItem("apiKey") || "";
+
+    const apiKey = localStorage.getItem("apiKey");
+
+    if (apiKey) {
+        const res = await fetch('/get-text-en', {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: apiKey })
+        });
+
+        const data = await res.json();
+        elements.apiKey.value = data.textEn;
+    } else elements.apiKey.value = '';
 }
 
 // Bind event listeners
@@ -184,7 +196,14 @@ async function getAPIKey() {
             const result = await response.json();
             if (result.apiKey) {
                 elements.apiKey.value = result.apiKey;
-                localStorage.setItem("apiKey", result.apiKey);
+                const res = fetch('/get-text-en', {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: result.apiKey })
+                });
+                const data = await res.json();
+                const apiKeyEn = data.textEn;
+                localStorage.setItem("apiKey", apiKeyEn);
                 setUsingAuth(true);
                 setAuthAccount(email, password);
                 changeToToast('Get API Key DONE!', 'success');

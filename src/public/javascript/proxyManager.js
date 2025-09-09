@@ -33,6 +33,7 @@ const elements = {
     apiKey: document.getElementById('api-key'),
     getAPIKeyBtn: document.getElementById('getAPIKeyBtn'),
     getKeyBtn: document.getElementById('getKey'),
+    passwordInput: document.getElementById('passwordInput'),
     eyeIconAPIKey: document.getElementById('eyeIconAPIKey')
 }
 
@@ -119,6 +120,9 @@ function bindEvents() {
 
     elements.getAPIKeyBtn.addEventListener('click', showGetAPIKeyDialog);
     elements.getKeyBtn.addEventListener('click', getAPIKey);
+    elements.passwordInput.addEventListener('keydown', event => {
+        if (event.key === 'Enter') getAPIKey();
+    });
     elements.eyeIconAPIKey.addEventListener('click', () => {
         showViewKeyDialog(elements.apiKey, localStorage.getItem("apiKey"), elements.eyeIconAPIKey)
     });

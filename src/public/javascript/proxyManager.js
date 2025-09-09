@@ -30,6 +30,7 @@ const elements = {
     apiKey: document.getElementById('api-key'),
     getAPIKeyBtn: document.getElementById('getAPIKeyBtn'),
     getKeyBtn: document.getElementById('getKey'),
+    passwordInput: document.getElementById('passwordInput'),
     eyeIconAPIKey: document.getElementById('eyeIconAPIKey')
 }
 
@@ -76,6 +77,7 @@ function bindEvents() {
 
     elements.getAPIKeyBtn.addEventListener('click', showGetAPIKeyDialog);
     elements.getKeyBtn.addEventListener('click', getAPIKey);
+    elements.passwordInput.addEventListener('keydown', getAPIKey);
     elements.eyeIconAPIKey.addEventListener('click', () => {
         showViewKeyDialog(elements.apiKey, localStorage.getItem("apiKey"), elements.eyeIconAPIKey)
     });
@@ -147,13 +149,20 @@ async function getAPIKey() {
 
 // Feature: Get Servers by IPs
 async function getData() {
+    const apiKeyString = elements.apiKey.value.trim();
+    if (!apiKeyString) {
+        showToast('Please enter your API Key', 'warning');
+        return;
+    }
+
     showToast("Getting data...", 'loading');
+
     const ipString = elements.ipList.value
         .split('\n')
         .map(line => extractIP(line))
         .filter(ip => ip != 0)
         .join(',');
-    const apiKeyString = elements.apiKey.value.trim();
+
     const amountString = elements.amount.value.trim();
 
     try {
@@ -196,9 +205,14 @@ async function getData() {
 async function changeIp() {
     const selectedRows = getSelectedRows();
     const rowCount = selectedRows.length;
-
     if (rowCount === 0) {
         showToast('Select at least one row to CHANGE IP', 'info');
+        return;
+    }
+
+    const apiKeyString = elements.apiKey.value.trim();
+    if (!apiKeyString) {
+        showToast('Please enter your API Key', 'warning');
         return;
     }
 
@@ -210,7 +224,7 @@ async function changeIp() {
         showToast(`Changing IP...`, 'loading');
 
     const proxyLines = []; // collect proxies here
-    const apiKeyString = elements.apiKey.value.trim();
+
     const proxyType = elements.changeIpType.textContent.trim() === 'SOCKS5' ? 'proxy_sock_5' : 'proxy_https';
 
     let successCount = 0;
@@ -307,6 +321,12 @@ async function reinstall() {
         showToast('Select at least one row to REINSTALL', 'info');
         return;
     }
+    
+    const apiKeyString = elements.apiKey.value.trim();
+    if (!apiKeyString) {
+        showToast('Please enter your API Key', 'warning');
+        return;
+    }
 
     if (rowCount > 1)
         showToast(`Reinstalling 1/${rowCount}`, 'loading');
@@ -314,7 +334,6 @@ async function reinstall() {
         showToast(`Reinstalling...`, 'loading');
 
     const proxyLines = []; // collect proxies here
-    const apiKeyString = elements.apiKey.value.trim();
     const proxyType = elements.reinstallType.textContent.trim() === 'SOCKS5' ? 'proxy_sock_5' : 'proxy_https';
     const customInfo = elements.reinstallInput.value.trim();
 
@@ -413,12 +432,17 @@ async function pause() {
         return;
     }
 
+    const apiKeyString = elements.apiKey.value.trim();
+    if (!apiKeyString) {
+        showToast('Please enter your API Key', 'warning');
+        return;
+    }
+
     showToast("Pausing...", 'loading');
 
     const sids = selectedRows
         .map(row => row.cells[columnMap.sid].innerText.trim())
         .join(',');
-    const apiKeyString = elements.apiKey.value.trim();
 
     try {
         const response = await fetch('/proxy/pause', {
@@ -475,12 +499,17 @@ async function reboot() {
         return;
     }
 
+    const apiKeyString = elements.apiKey.value.trim();
+    if (!apiKeyString) {
+        showToast('Please enter your API Key', 'warning');
+        return;
+    }
+
     showToast("REBOOT...", 'loading');
 
     const sids = selectedRows
         .map(row => row.cells[columnMap.sid].innerText.trim())
         .join(',');
-    const apiKeyString = elements.apiKey.value.trim();
 
     try {
         const response = await fetch('/proxy/reboot', {
@@ -534,9 +563,6 @@ async function reboot() {
 }
 
 async function changeNote() {
-    const noteInput = elements.noteInput.value;
-    const apiKeyString = elements.apiKey.value.trim();
-
     const selectedRows = getSelectedRows();
     const rowCount = selectedRows.length;
     if (rowCount === 0) {
@@ -544,11 +570,18 @@ async function changeNote() {
         return;
     }
 
+    const apiKeyString = elements.apiKey.value.trim();
+    if (!apiKeyString) {
+        showToast('Please enter your API Key', 'warning');
+        return;
+    }
+    
     if (rowCount > 1)
         showToast(`Changing Note 1/${rowCount}`, 'loading');
     else
         showToast(`Changing Note...`, 'loading');
-
+    
+    const noteInput = elements.noteInput.value;
     let successCount = 0;
     let failCount = 0;
 

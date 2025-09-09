@@ -39,10 +39,21 @@ export function showGetAPIKeyDialog() {
 }
 
 export async function showViewKeyDialog(apiKey, apiKeyEn, eyeIconAPIKey) {
+    if (!apiKey) {
+        if (apiKey.type === "password") {
+            apiKey.type = "text";
+            eyeIconAPIKey.innerHTML = openEyePath;
+        } else {
+            apiKey.type = "password";
+            eyeIconAPIKey.innerHTML = closeEyePath;
+        }
+        return;
+    }
+
     const res = await fetch('/check-pair', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: apiKey, textEn: apiKeyEn })
+        body: JSON.stringify({ text: apiKey.value.trim(), textEn: apiKeyEn })
     });
 
     const data = await res.json();

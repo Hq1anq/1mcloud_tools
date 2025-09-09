@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
+import { raw } from 'mysql2';
 dotenv.config();
 
 export async function getData(req, res) {
@@ -300,16 +301,16 @@ export async function reboot(req, res) {
     }
 }
 
-export function checkPassword(req, res) {
-    const { password, passwordEn } = req.body;
+export function checkPair(req, res) {
+    const { text, textEn } = req.body;
 
-    if (!password || !passwordEn) {
+    if (!text || !textEn) {
         return res.status(400).json({ error: 'Error' });
     }
 
-    const decryptedPassword = xorEncryptDecrypt(passwordEn, SECRETKEY);
+    const textDe = xorEncryptDecrypt(textEn, SECRETKEY);
     // Compare
-    const isValid = decryptedPassword === passwordEn;
+    const isValid = textDe === text;
 
     res.json({ valid: isValid });
 }
@@ -321,8 +322,18 @@ export function getTextEn(req, res) {
         return res.status(400).json({ error: 'Error' });
     }
 
-    const encryptedPassword = xorEncryptDecrypt(text, SECRETKEY);
-    res.json({ textEn: encryptedPassword });
+    const encryptedText = xorEncryptDecrypt(text, SECRETKEY);
+    res.json({ textEn: encryptedText });
+}
+
+function xorEncryptDecrypt(input, secretKey) {
+    let output = "";
+    for (let i = 0; i < input.length; i++) {
+        // XOR each char code with the secret
+        const charCode = input.charCodeAt(i) ^ secretKey.charCodeAt(i % secretKey.length);
+        output += String.fromCharCode(charCode);
+    }
+    return output;
 }
 
 export async function changeNote(req, res) {
@@ -376,53 +387,45 @@ export async function getAPIKey(req, res) {
         const { email, password } = req.body;
         const headers = {
             'accept': 'application/json, text/plain, */*',
-            'content-type': 'application/json',
+            'content-type': 'application/x-www-form-urlencoded',
             'origin': 'https://manage.1mcloud.vn',
             'referer': 'https://manage.1mcloud.vn/',
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
         };
 
-        const data = {
+        const formData = new URLSearchParams({
             email: email,
             password: password,
             client_id: 'nNrWRrQrwGSj78HBSU05yxM9jW1wq6Br3SsFxRTN',
             grant_type: 'password',
-        }
+        });
 
         const response = await fetch(url, {
             method: 'POST',
             headers,
-            body: JSON.stringify(data),
+            body: formData.toString(),
         });
 
+        const rawData = await response.json();
+
         if (!response.ok) {
-            console.error('❌ Request failed:', response.status);
+            const errorText = rawData.error || 'Unknown error';
+            console.log('❌ Request failed:', response.status, errorText);
             return res.status(response.status).json({
                 success: false,
-                error: 'getAPIKey Request failed'
+                error: errorText || 'getAPIKey Request failed'
             });
         }
 
-        const rawData = await response.json();
         return res.json({
             success: true,
             apiKey: rawData.access_token
         });
     } catch (error) {
-        console.error('❌ Error:', error.message);
+        console.log('❌ Error:', error.message);
         return res.status(500).json({
             success: false,
             error: 'Internal server error'
         });
     }
-}
-
-function xorEncryptDecrypt(input, secretKey) {
-    let output = "";
-    for (let i = 0; i < input.length; i++) {
-        // XOR each char code with the secret
-        const charCode = input.charCodeAt(i) ^ secretKey.charCodeAt(i % secretKey.length);
-        output += String.fromCharCode(charCode);
-    }
-    return output;
 }

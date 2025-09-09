@@ -2,7 +2,7 @@ import { displayData, columnMap, reorderHeader, getSelectedRows, initTable, upda
 import { showToast, changeToToast } from './components/toaster.js';
 import { showCopyDialog } from './components/copyDialog.js';
 import { showChangeIpDialog, closeChangeIpDialog } from './components/ChangeIpDialog.js';
-import { showGetAPIKeyDialog, closeAPIKeyDialog, showViewKeyDialog, setUsingAuth, setAuthAccount } from './components/getAPIKey.js';
+import { showGetAPIKeyDialog, closeAPIKeyDialog, showViewKeyDialog, setAuthAccount } from './components/getAPIKey.js';
 // DOM elements
 const elements = {
     table: document.querySelector('table'),
@@ -77,7 +77,7 @@ function bindEvents() {
     elements.getAPIKeyBtn.addEventListener('click', showGetAPIKeyDialog);
     elements.getKeyBtn.addEventListener('click', getAPIKey);
     elements.eyeIconAPIKey.addEventListener('click', () => {
-        showViewKeyDialog(elements.apiKey, elements.eyeIconAPIKey)
+        showViewKeyDialog(elements.apiKey, localStorage.getItem("apiKey"), elements.eyeIconAPIKey)
     });
 }
 
@@ -122,39 +122,23 @@ async function getAPIKey() {
             body: JSON.stringify({ email, password })
         });
 
-        if (response.ok && response.status === 200) {
-            const result = await response.json();
-            if (result.apiKey) {
-                elements.apiKey.value = result.apiKey;
-                const res = fetch('/get-text-en', {
-                    method: 'POST',
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ text: result.apiKey })
-                });
-                const data = await res.json();
-                const apiKeyEn = data.textEn;
-                localStorage.setItem("apiKey", apiKeyEn);
-                setUsingAuth(true);
-                setAuthAccount(email, password);
-                changeToToast('Get API Key DONE!', 'success');
-            } else {
-                changeToToast('Failed to get API Key, try again!', 'error');
-                setUsingAuth(false);
-            }
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            elements.apiKey.value = result.apiKey;
+            const res = await fetch('/get-text-en', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ text: result.apiKey })
+            });
+            const data = await res.json();
+            const apiKeyEn = data.textEn;
+            localStorage.setItem("apiKey", apiKeyEn);
+            setAuthAccount(email, password);
+            changeToToast('Get API Key DONE!', 'success');
         } else {
-            setUsingAuth(false);
-            console.log(`❌ Error: ${response.status}`);
-            switch (response.status) {
-                case 401:
-                    changeToToast('Wrong email or password!', 'error');
-                    break;
-                case 500:
-                    changeToToast('Fail to get API Key, try again!', 'error');
-                    break;
-                default:
-                    changeToToast(`❌ Error: ${response.status}`, 'error');
-                    break;
-            }
+            console.log(`❌ Error ${response.status}: ${result.error}`);
+            changeToToast('Fail to get API Key', 'error');
         }
     } catch (err) {
         console.error('Fetch error:', err);

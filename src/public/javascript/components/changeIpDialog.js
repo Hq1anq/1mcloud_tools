@@ -2,7 +2,7 @@ import { getSelectedRows, columnMap } from '/javascript/components/table.js';
 import { showToast } from '/javascript/components/toaster.js';
 
 const elements = {
-    dialog : document.getElementById('ChangeIpDialog'),
+    dialog : document.getElementById('changeIpDialog'),
     selectedProxiesList : document.getElementById('selectedProxiesList'),
     typeProxyChanged: document.getElementById('typeProxyChanged'),
     selectedCountInDialog : document.getElementById('selectedCountInDialog'),

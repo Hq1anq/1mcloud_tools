@@ -1,4 +1,4 @@
-import { displayData, columnMap, reorderHeader, getSelectedRows, initTable, updateRowData, updateCounts, getStatusChip, setAllData } from './components/table.js';
+import { displaySorted, showAllData, columnMap, reorderHeader, getSelectedRows, initTable, updateRowData, updateCounts, getStatusChip, setAllData } from './components/table.js';
 import { showToast, changeToToast } from './components/toaster.js';
 import { showCopyDialog } from './components/copyDialog.js';
 import { showChangeIpDialog, closeChangeIpDialog } from './components/ChangeIpDialog.js';
@@ -177,13 +177,14 @@ async function getData() {
         if (response.ok && response.status === 200) {
             const result = await response.json();
             const data = result.data;
-            if (data.length > 0) {
-                displayData(data);
+            if (data.length > 0)
                 if (!ipString) {
                     setAllData(data);
+                    showAllData();
                     localStorage.setItem("allData", JSON.stringify(data));
+                } else {
+                    displaySorted(data);
                 }
-            }
             changeToToast('Get Data DONE!', 'success');
         } else {
             console.log(`❌ Error: ${response.status}`);

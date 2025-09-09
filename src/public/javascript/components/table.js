@@ -74,6 +74,8 @@ function reorderRowData(row, order) {
 let allData = [];
 let filteredData = [];
 let renderedCount = 0;
+let sortedData = []; // for display when getData with ips !== ''
+let isSorted = false; // for not filter allData
 const chunkSize = 50;
 
 function bindEvents(page) {
@@ -115,9 +117,9 @@ export function initTable(page) {
     updateCounts();
 }
 
-export function displayData(data) {
+export function displaySorted(data) {
     clearTable();
-    filteredData = data.map(row => {
+    sortedData = data.map(row => {
         const reordered = {};
         order.forEach(key => {
             if (row.hasOwnProperty(key)) {
@@ -126,7 +128,9 @@ export function displayData(data) {
         });
         return reordered;
     });
+    filteredData = [...sortedData];
     renderedCount = 0;
+    isSorted = true;
     renderChunk();
 }
 
@@ -379,9 +383,10 @@ function applyFilter(page) {
         .map(([_, inputBox]) => [_, inputBox.value])
         .filter(([_, value]) => value !== '');
 
+    const targetData = isSorted ? sortedData : allData;
     filteredData = activeFilters.length === 0
-        ? [...allData]  // no filters, keep all
-        : allData.filter(row => {
+        ? [...targetData]  // no filters, keep all
+        : targetData.filter(row => {
             return activeFilters.every(([colIndex, filterValue]) => {
                 const value = Object.values(row)[colIndex].toString();
                 return value?.includes(filterValue);
@@ -394,8 +399,9 @@ function applyFilter(page) {
     else filteredData.forEach(row => addRow(row));
 }
 
-function showAllData() {
+export function showAllData() {
     filteredData = [...allData];
+    isSorted = false;
     renderedCount = 0;
     elements.tbody.innerHTML = "";
     renderChunk();

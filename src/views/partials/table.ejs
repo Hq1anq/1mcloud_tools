@@ -68,59 +68,9 @@
 									</div>
 								</th>
 							<% }); %>
-
-							<% if (showActions) { %>
-								<th class="px-2 py-3 text-left font-medium tracking-wider uppercase sm:px-4">
-									Actions
-								</th>
-							<% } %>
 						</tr>
 					</thead>
-					<tbody id="tableBody" class="text-text-secondary">
-						<% if (data && data.length> 0) { %>
-							<% data.forEach(row=> { %>
-								<tr class="hover:bg-bg-hover cursor-pointer">
-									<td class="border-border border-b px-2 py-2 sm:px-4">
-										<label class="inline-flex items-center cursor-pointer group">
-											<!-- Hidden native checkbox -->
-											<input type="checkbox" class="sr-only" />
-
-											<!-- Custom box -->
-											<span class="w-5 h-5 text-text-secondary flex items-center justify-center checkbox-transition
-														rounded-md border border-border bg-checkbox
-														group-hover:border-border-checkbox-hover group-hover:brightness-125 relative overflow-visible">
-												<!-- Big check -->
-												<svg class="w-5 h-5 opacity-0 scale-0 checkbox-transition
-															group-has-[input:checked]:opacity-100 group-has-[input:checked]:scale-100 absolute"
-													viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-													<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-												</svg>
-											</span>
-										</label>
-									</td>
-
-									<% headers.forEach(h=> { %>
-										<td class="border-border border-b px-2 py-2 sm:px-4">
-											<%= row[h.toLowerCase()] %>
-										</td>
-									<% }); %>
-
-									<% if (showActions) { %>
-										<td class="border-border space-x-2 border-b px-2 py-2 sm:px-4">
-											<button class="rounded-lg bg-blue-600 px-4 py-1 hover:bg-blue-700"
-												onclick="editRow(this)">
-												Edit
-											</button>
-											<button class="rounded-lg bg-red-600 px-4 py-1 hover:bg-red-700"
-												onclick="deleteRow(this)">
-												Delete
-											</button>
-										</td>
-									<% } %>
-								</tr>
-							<% }); %>
-						<% } %>
-					</tbody>
+					<tbody id="tableBody" class="text-text-secondary"></tbody>
 				</table>
 			</div>
 			<!-- Empty State -->

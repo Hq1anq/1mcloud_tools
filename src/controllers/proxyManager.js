@@ -1,6 +1,5 @@
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
-import { raw } from 'mysql2';
 dotenv.config();
 
 export async function getData(req, res) {
@@ -10,7 +9,7 @@ export async function getData(req, res) {
 
         const headers = {
             'accept': 'application/json, text/plain, */*',
-            'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+            'authorization': `Bearer ${apiKey}`,
             'content-type': 'application/json',
             'origin': 'https://manage.1mcloud.vn',
             'referer': 'https://manage.1mcloud.vn/',
@@ -68,7 +67,7 @@ export async function changeIp(req, res) {
 
     const headers = {
         'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+        'authorization': `Bearer ${apiKey}`,
         'content-type': 'application/json',
         'origin': 'https://manage.1mcloud.vn',
         'referer': 'https://manage.1mcloud.vn/',
@@ -165,7 +164,7 @@ export async function reinstall(req, res) {
 
     const headers = {
         'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+        'authorization': `Bearer ${apiKey}`,
         'content-type': 'application/json',
         'origin': 'https://manage.1mcloud.vn',
         'referer': 'https://manage.1mcloud.vn/',
@@ -216,7 +215,7 @@ export async function pause(req, res) {
 
     const headers = {
         'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+        'authorization': `Bearer ${apiKey}`,
         'content-type': 'application/json',
         'origin': 'https://manage.1mcloud.vn',
         'referer': 'https://manage.1mcloud.vn/',
@@ -262,7 +261,7 @@ export async function reboot(req, res) {
 
     const headers = {
         'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+        'authorization': `Bearer ${apiKey}`,
         'content-type': 'application/json',
         'origin': 'https://manage.1mcloud.vn',
         'referer': 'https://manage.1mcloud.vn/',
@@ -343,7 +342,7 @@ export async function changeNote(req, res) {
 
     const headers = {
         'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+        'authorization': `Bearer ${apiKey}`,
         'content-type': 'application/json',
         'origin': 'https://manage.1mcloud.vn',
         'referer': 'https://manage.1mcloud.vn/',

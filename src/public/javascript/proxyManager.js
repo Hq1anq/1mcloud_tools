@@ -77,7 +77,9 @@ function bindEvents() {
 
     elements.getAPIKeyBtn.addEventListener('click', showGetAPIKeyDialog);
     elements.getKeyBtn.addEventListener('click', getAPIKey);
-    elements.passwordInput.addEventListener('keydown', getAPIKey);
+    elements.passwordInput.addEventListener('keydown', event => {
+        if (event.key === 'Enter') getAPIKey();
+    });
     elements.eyeIconAPIKey.addEventListener('click', () => {
         showViewKeyDialog(elements.apiKey, localStorage.getItem("apiKey"), elements.eyeIconAPIKey)
     });

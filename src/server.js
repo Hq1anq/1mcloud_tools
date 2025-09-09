@@ -6,7 +6,7 @@ import { configViewEngine } from './config/viewEngine.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 
 // config template engine
 configViewEngine(app);

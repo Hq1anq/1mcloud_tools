@@ -379,17 +379,17 @@ function initFilters(page) {
 }
 
 function applyFilter(page) {
-    const activeFilters = Object.entries(elements.filterInputs)
-        .map(([_, inputBox]) => [_, inputBox.value])
+    const activeFilters = Array.from(elements.filterInputs)
+        .map((inputBox, idx) => [order[idx], inputBox.value.trim()])
         .filter(([_, value]) => value !== '');
 
     const targetData = isSorted ? sortedData : allData;
     filteredData = activeFilters.length === 0
         ? [...targetData]  // no filters, keep all
         : targetData.filter(row => {
-            return activeFilters.every(([colIndex, filterValue]) => {
-                const value = Object.values(row)[colIndex].toString();
-                return value?.includes(filterValue);
+            return activeFilters.every(([colKey, keyword]) => {
+                const cellValue = String(row[colKey]);
+                return cellValue.includes(keyword);
             });
         });
 

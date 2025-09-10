@@ -1,6 +1,5 @@
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
-import { raw } from 'mysql2';
 dotenv.config();
 
 export async function getData(req, res) {

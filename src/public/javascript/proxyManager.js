@@ -1,7 +1,7 @@
 import { displaySorted, showAllData, columnMap, reorderHeader, getSelectedRows, initTable, updateRowData, updateCounts, getStatusChip, setAllData } from './components/table.js';
 import { showToast, changeToToast } from './components/toaster.js';
 import { showCopyDialog } from './components/copyDialog.js';
-import { showChangeIpDialog, closeChangeIpDialog } from './components/ChangeIpDialog.js';
+import { showChangeIpDialog, closeChangeIpDialog } from './components/changeIpDialog.js';
 import { showGetAPIKeyDialog, closeAPIKeyDialog, showViewKeyDialog, setAuthAccount } from './components/getAPIKey.js';
 // DOM elements
 const elements = {

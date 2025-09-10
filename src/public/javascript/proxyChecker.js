@@ -73,7 +73,7 @@ function insertTestData() {
     ];
 
     clearTable();
-    testData.forEach(data => addRow(data, true));
+    testData.forEach(data => addRow(data, true, true));
 }
 
 // Bind event listeners
@@ -106,6 +106,13 @@ async function checkProxies() {
     const proxies = parseProxyList(proxyText);
     const proxyType = elements.proxyType.textContent.trim();
 
+    // Send the proxies via POST
+    await fetch('/proxy/send-proxies', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ proxies })
+    });
+
     // Start the stream
     const eventSource = new EventSource(`/proxy/check-stream?type=${proxyType}`);
 
@@ -118,7 +125,7 @@ async function checkProxies() {
             eventSource.close();
             return;
         }
-        addRow(result, true);
+        addRow(result, true, true);
     };
 
     eventSource.onerror = (err) => {
@@ -126,13 +133,6 @@ async function checkProxies() {
         console.error('SSE error:', err);
         eventSource.close();
     };
-
-    // Send the proxies via POST
-    await fetch('/proxy/send-proxies', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ proxies })
-    });
 }
 
 function selectProxies(status='Active') {

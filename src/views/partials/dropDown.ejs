@@ -14,7 +14,7 @@
 
     <!-- Dropdown Menu -->
     <div id="<%= dropdownId %>-menu"
-        class="w-full opacity-0 scale-95 -translate-y-2 pointer-events-none absolute right-0 mt-1 border-0 rounded-lg shadow-lg overflow-hidden z-50 all-slow">
+        class="w-full top-full opacity-0 scale-95 -translate-y-3 absolute right-0 mt-1 border-0 rounded-lg shadow-lg overflow-hidden z-50 all-slow">
         <% dropdownOptions.forEach(option => { %>
             <div data-value="<%= option %>"
                 class="bg-dropdown px-3 py-2 hover:brightness-110 cursor-pointer text-text-secondary <%= option === defaultOption ? 'brightness-125 font-bold' : '' %>">
@@ -35,7 +35,7 @@
     let open = false;
 
     const showMenu = () => {
-        menu.classList.remove("opacity-0", "scale-95", "-translate-y-2", "pointer-events-none");
+        menu.classList.remove("opacity-0", "scale-95", "-translate-y-3");
         menu.classList.add("opacity-100", "scale-100", "translate-y-0");
         arrow.classList.add("rotate-180");
         open = true;
@@ -43,7 +43,7 @@
 
     const hideMenu = () => {
         menu.classList.remove("opacity-100", "scale-100", "translate-y-0");
-        menu.classList.add("opacity-0", "scale-95", "-translate-y-2", "pointer-events-none");
+        menu.classList.add("opacity-0", "scale-95", "-translate-y-3");
         arrow.classList.remove("rotate-180");
         open = false;
     };

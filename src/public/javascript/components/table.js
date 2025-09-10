@@ -150,7 +150,7 @@ export function addRows(data, includeActions = false) {
     updateCounts();
 }
 
-export function addRow(data, addData = false, includeActions = false) {
+export function addRow(data, addData = false, bigText = false, includeActions = false) {
     const tr = document.createElement('tr');
 
     tr.dataset.id = data.sid; // Unique key
@@ -178,12 +178,14 @@ export function addRow(data, addData = false, includeActions = false) {
         </td>
     `;
 
+    let textSize = bigText ? 'text-base sm:text-lg' : '';
+
     for (const [key, value] of Object.entries(data)) {
-        const alignment = (key === 'ip' || key === 'ip_port' || key === 'note') ? 'text-left' : 'text-center';
-        const content = key === 'status' ? getStatusChip(value) : value;
+        const alignment = (key === 'ip_port' || key === 'note') ? 'text-left' : 'text-center';
+        const content = key === 'status' ? getStatusChip(value, bigText) : value;
 
         rowHTML += `
-        <td class="px-2 sm:px-4 py-2 border-b border-border whitespace-nowrap ${alignment}">
+        <td class="${textSize} px-2 sm:px-4 py-2 border-b border-border whitespace-nowrap ${alignment}">
             ${content}
         </td>
         `;
@@ -208,21 +210,22 @@ export function addRow(data, addData = false, includeActions = false) {
     }
 }
 
-export function getStatusChip(status) {
-    const baseClasses = 'px-2 py-0.5 rounded-full text-xs font-semibold inline-block';
+export function getStatusChip(status, bigText = True) {
+    const baseClasses = 'px-3 py-1 rounded-full text-xs font-semibold inline-block';
+    let textSize = bigText ? 'text-base sm:text-lg' : '';
     switch (status) {
         case 'Running':
         case 'Active':
-            return `<span class="${baseClasses} bg-bg-success text-text-success">${status}</span>`;
+            return `<span class="${baseClasses} ${textSize} bg-bg-success text-text-success">${status}</span>`;
         case 'Paused':
         case 'Stopped':
-            return `<span class="${baseClasses} bg-bg-warning text-text-warning">${status}</span>`;
+            return `<span class="${baseClasses} ${textSize} bg-bg-warning text-text-warning">${status}</span>`;
         case 'Off':
         case 'Inactive':
-            return `<span class="${baseClasses} bg-bg-error text-text-error">${status}</span>`;
+            return `<span class="${baseClasses} ${textSize} bg-bg-error text-text-error">${status}</span>`;
         case 'Unknow':
         default:
-            return `<span class="${baseClasses} bg-bg-unknowed text-text-unknowed">${status}</span>`;
+            return `<span class="${baseClasses} ${textSize} bg-bg-unknowed text-text-unknowed">${status}</span>`;
     }
 }
 
@@ -406,8 +409,8 @@ function applyFilter(page) {
 
     renderedCount = 0;
     elements.tbody.innerHTML = "";
-    if (page !== 'proxyChecker') renderChunk();
-    else filteredData.forEach(row => addRow(row));
+    if (page === 'proxyManager') renderChunk();
+    else filteredData.forEach(row => addRow(row, false, true));
 }
 
 export function showAllData() {

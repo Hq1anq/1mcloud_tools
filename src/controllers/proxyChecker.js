@@ -33,8 +33,7 @@ export async function startProxyCheckStream(req, res) {
 
 async function checkWithType(proxy, type) {
     const test_url = 'https://api.ipify.org?format=json';
-    let agent;
-    let proxyUrl;
+    let agent, proxyUrl;
 
     if (type === 'SOCKS5') {
         proxyUrl = `socks5://${encodeURIComponent(proxy.username)}:${encodeURIComponent(proxy.password)}@${proxy.ip}:${proxy.port}`;
@@ -44,9 +43,16 @@ async function checkWithType(proxy, type) {
         agent = new HttpsProxyAgent(proxyUrl);
     }
 
-    const response = await fetch(test_url, { agent, timeout: 8000 });
-    if (!response.ok) throw new Error('Bad response');
-    return { ...proxy, type: type.toUpperCase(), status: 'Active' };
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), 8000);
+    
+    try {
+        const response = await fetch(test_url, { agent, signal: controller.signal });
+        if (!response.ok) throw new Error('Bad response');
+        return { ...proxy, type: type.toUpperCase(), status: 'Active' };
+    } finally {
+        clearTimeout(id);
+    }
 }
 
 export async function checkSingleProxy(proxy, type = 'AUTO DETECT') {

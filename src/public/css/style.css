@@ -943,8 +943,8 @@
   .pb-4 {
     padding-bottom: calc(var(--spacing) * 4);
   }
-  .pl-10 {
-    padding-left: calc(var(--spacing) * 10);
+  .pl-6 {
+    padding-left: calc(var(--spacing) * 6);
   }
   .text-center {
     text-align: center;
@@ -1340,6 +1340,11 @@
   .sm\:px-4 {
     @media (width >= 707px) {
       padding-inline: calc(var(--spacing) * 4);
+    }
+  }
+  .sm\:pl-10 {
+    @media (width >= 707px) {
+      padding-left: calc(var(--spacing) * 10);
     }
   }
   .sm\:text-2xl {

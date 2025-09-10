@@ -317,6 +317,10 @@
         @apply min-h-52 resize-none;
     }
 
+    button {
+        @apply cursor-pointer;
+    }
+
     h1 {
         @apply text-text-title text-xl;
     }

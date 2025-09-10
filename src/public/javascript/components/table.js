@@ -6,6 +6,7 @@ const elements = {
     totalCount: document.getElementById('totalCount'),
     selectedCount: document.getElementById('selectedCount'),
     reloadBtn: document.getElementById('reloadBtn'),
+    captureBtn: document.getElementById('captureBtn'),
     selectAllCheckbox: document.getElementById('selectAllCheckbox'),
     emptyState: document.getElementById('emptyState'),
 
@@ -90,28 +91,38 @@ function bindEvents(page) {
         // Desktop → only click
         elements.tbody.addEventListener("click", handleTableTap);
     }
+    
     elements.reloadBtn.addEventListener('click', showAllData);
-
-    window.addEventListener("beforeunload", () => {
-        try {
-            localStorage.setItem("allData", JSON.stringify(allData));
-        } catch (e) {
-            console.error("Failed to save allData before unload", e);
-        }
-    });
+    
+    if (page === 'proxyManager')
+        window.addEventListener("beforeunload", () => {
+            try {
+                localStorage.setItem("allData", JSON.stringify(allData));
+            } catch (e) {
+                console.error("Failed to save allData before unload", e);
+            }
+        });
 }
 
 export function initTable(page) {
     bindEvents(page);
     initFilters(page);
-    const allDataStr = localStorage.getItem("allData");
-    if (allDataStr) {
-        try {
-            allData = JSON.parse(allDataStr);
-            if (allData.length > 0) showEmptyState(false);
-        } catch (e) {
-            console.error('Failed to parse stored data', e);
-            allData = [];
+    if (page === 'proxyChecker') {
+        elements.reloadBtn.classList.add('hidden');
+        elements.captureBtn.classList.remove('hidden');
+    } else {
+        elements.reloadBtn.classList.remove('hidden');
+        elements.captureBtn.classList.add('hidden');
+
+        const allDataStr = localStorage.getItem("allData");
+        if (allDataStr) {
+            try {
+                allData = JSON.parse(allDataStr);
+                if (allData.length > 0) showEmptyState(false);
+            } catch (e) {
+                console.error('Failed to parse stored data', e);
+                allData = [];
+            }
         }
     }
     updateCounts();

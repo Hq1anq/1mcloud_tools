@@ -16,6 +16,9 @@ const elements = {
     copyFullProxyBtn: document.getElementById('copyFullProxyBtn'),
 
     tableBody: document.getElementById('tableBody'),
+
+    tableWrapper: document.getElementById('table-wrapper'),
+    captureBtn: document.getElementById('captureBtn')
 };
 
 // Initialize
@@ -34,6 +37,8 @@ function bindEvents() {
 
     elements.copyIpBtn.addEventListener('click', copySelectedIPs);
     elements.copyFullProxyBtn.addEventListener('click', copyFullProxies);
+
+    elements.captureBtn.addEventListener('click', captureProxyStatus);
 }
 
 // Check proxies
@@ -169,6 +174,108 @@ function parseProxyList(text) {
 
 function deleteProxies() {
     elements.proxyInput.value = '';
+}
+
+async function captureProxyStatus() {
+    const originContainer = document.getElementById('table-container')
+    const cloneContainer = originContainer.cloneNode(true);
+    const containerHeader = cloneContainer.querySelector('#container-header');
+    const rows = cloneContainer.querySelectorAll('tr');
+
+    cloneContainer.className = 'fixed bg-body p-3 z-[-10]';
+
+    // Remove filter, button
+    containerHeader.innerHTML = `
+        <div>
+            <h2 class="flex items-center text-lg font-bold sm:text-2xl">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                    class="mr-2 h-10 w-10 flex-shrink-0 fill-none stroke-current stroke-2 ">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M4 9L20 9M8 9V20M6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2843 20.782 18.908C21 18.4802 21 17.9201 21 16.8V7.2C21 6.0799 21 5.51984 20.782 5.09202C20.5903 4.71569 20.2843 4.40973 19.908 4.21799C19.4802 4 18.9201 4 17.8 4H6.2C5.0799 4 4.51984 4 4.09202 4.21799C3.71569 4.40973 3.40973 4.71569 3.21799 5.09202C3 5.51984 3 6.07989 3 7.2V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.07989 20 6.2 20Z" />
+                </svg>
+                <span class="mb-5">Proxy Status</span>
+            </h2>
+        </div>`;
+    
+    // Header rows
+    rows[0].innerHTML = `
+        <th class="px-6 pt-1 pb-5 text-lg font-bold uppercase">
+            ip
+        </th>
+        <th class="px-6 pt-1 pb-5 text-lg font-bold uppercase">
+            port
+        </th>
+        <th class="px-6 pt-1 pb-5 text-lg font-bold uppercase">
+            username
+        </th>
+        <th class="px-6 pt-1 pb-5 text-lg font-bold uppercase">
+            password
+        </th>
+        <th class="px-6 pt-1 pb-5 text-lg font-bold uppercase">
+            type
+        </th>
+        <th class="px-6 pt-1 pb-5 text-lg font-bold uppercase">
+            status
+        </th>
+    `;
+
+    for (let i = 1; i < rows.length; i++) {
+        rows[i].firstElementChild.remove(); // Remove first checkbox
+        for (let j = 2; j < 11; j += 2) {
+            rows[i].childNodes[j].className = 'text-lg bg-surface text-center border-border border-b px-6 py-1 pb-5';
+        }
+        rows[i].childNodes[12].classList.add('bg-surface');
+        rows[i].childNodes[12].firstElementChild.style.padding = '0 1rem 1rem';
+        rows[i].childNodes[12].firstElementChild.style.fontSize = '1.125rem';
+    }
+
+    document.body.appendChild(cloneContainer);
+    // Capture with html2canvas
+    const captured = await html2canvas(cloneContainer, { backgroundColor: null });
+
+    // standardize width (e.g. always 1080px wide)
+    const canvas = resizeCanvas(captured, 1080);
+
+    canvas.toBlob(async (blob) => {
+        try {
+            await navigator.clipboard.write([
+                new ClipboardItem({ "image/png": blob })
+            ]);
+
+            const url = URL.createObjectURL(blob);
+            const filename = "proxyChecker.png";
+            showToast(
+                `Captured proxyStatus<br>
+                Saved to clipboard<br>
+                <a href="${url}" download="${filename}"
+                    class="underline text-blue-600 sm:no-underline sm:hover:underline">
+                    Download
+                </a>`,
+                "success"
+            );
+
+            // optional cleanup: revoke object URL after some seconds
+            setTimeout(() => URL.revokeObjectURL(url), 10000);
+        } catch (err) {
+            showToast("Can't access Clipboard", 'error');
+        }
+    });
+
+    document.body.removeChild(cloneContainer);
+}
+
+function resizeCanvas(originalCanvas, targetWidth) {
+    const scale = targetWidth / originalCanvas.width;
+    const targetHeight = originalCanvas.height * scale;
+
+    const resizedCanvas = document.createElement("canvas");
+    resizedCanvas.width = targetWidth;
+    resizedCanvas.height = targetHeight;
+
+    const ctx = resizedCanvas.getContext("2d");
+    ctx.drawImage(originalCanvas, 0, 0, targetWidth, targetHeight);
+
+    return resizedCanvas;
 }
 
 init();

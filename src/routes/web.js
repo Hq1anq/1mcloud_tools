@@ -1,6 +1,6 @@
 import express from 'express';
 import { startProxyCheckStream, receiveProxies } from '../controllers/proxyChecker.js';
-import { getData, getAPIKey, changeIp, reinstall, changeNote, pause, reboot, checkPair, getTextEn } from '../controllers/proxyManager.js';
+import { getData, getAPIKey, changeIp, reinstall, changeNote, pause, reboot, refund, checkPair, getTextEn } from '../controllers/proxyManager.js';
 import { getHomePage, postCreateUser, getCreatePage, getUpdatePage } from '../controllers/home.js';
 
 const router = express.Router();
@@ -20,6 +20,7 @@ router.post('/proxy/send-proxies', receiveProxies);
 router.post('/proxy/change-note', changeNote);
 router.post('/proxy/pause', pause);
 router.post('/proxy/reboot', reboot);
+router.post('/proxy/refund', refund);
 router.post('/proxy/change-ip', changeIp);
 router.post('/proxy/reinstall', reinstall);
 

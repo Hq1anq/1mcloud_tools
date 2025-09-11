@@ -14,7 +14,7 @@ const elements = {
 }
 
 const desktopOrder = ['sid', 'ip_port', 'country', 'type', 'created', 'expired', 'ip_changed', 'status', 'note'];
-const mobileOrder  = ['ip_port', 'status', 'note', 'expired', 'country', 'type', 'created', 'ip_changed', 'sid'];
+const mobileOrder  = ['ip_port', 'status', 'expired', 'note', 'country', 'type', 'created', 'ip_changed', 'sid'];
 export let order;
 export let columnMap = { checkbox: 0 };
 
@@ -25,8 +25,8 @@ export function reorderHeader() {
         order = mobileOrder;
         headerCells[1].firstElementChild.querySelector('input').classList.remove('text-center');
         headerCells[1].firstElementChild.classList.add('items-start');
-        headerCells[3].firstElementChild.querySelector('input').classList.remove('text-center');
-        headerCells[3].firstElementChild.classList.add('items-start');
+        headerCells[4].firstElementChild.querySelector('input').classList.remove('text-center');
+        headerCells[4].firstElementChild.classList.add('items-start');
     } else {
         order = desktopOrder;
         headerCells[2].firstElementChild.querySelector('input').classList.remove('text-center');
@@ -227,6 +227,7 @@ export function getStatusChip(status, bigText = false) {
             return `<span class="${baseClasses} ${textSize} bg-bg-warning text-text-warning">${status}</span>`;
         case 'Off':
         case 'Inactive':
+        case 'Refunded':
             return `<span class="${baseClasses} ${textSize} bg-bg-error text-text-error">${status}</span>`;
         case 'Unknow':
         default:

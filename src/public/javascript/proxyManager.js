@@ -114,10 +114,13 @@ function bindEvents() {
         if (event.key === 'Enter') getData();
     });
     elements.getDataBtn.addEventListener('click', getData);
+    
     elements.changeNoteBtn.addEventListener('click', changeNote);
     elements.reinstallBtn.addEventListener('click', reinstall);
+
     elements.pauseBtn.addEventListener('click', pause);
     elements.rebootBtn.addEventListener('click', reboot);
+    elements.refundBtn.addEventListener('click', refund);
 
     elements.changeIpBtn.addEventListener('click', () => {
         const proxyType = elements.changeIpType.textContent.trim();
@@ -136,10 +139,6 @@ function bindEvents() {
     elements.eyeIconAPIKey.addEventListener('click', () => {
         showViewKeyDialog(elements.apiKey, localStorage.getItem("apiKey"), elements.eyeIconAPIKey)
     });
-
-    // elements.refundBtn.addEventListener('click', () => {
-    //     testToast();
-    // })
 }
 
 async function copyIp() {
@@ -642,6 +641,67 @@ async function reboot() {
     updateCounts();
 }
 
+async function refund() {
+    const selectedRows = getSelectedRows();
+    if (selectedRows.length === 0) {
+        showToast('Select at least one row to REFUND', 'info');
+        return;
+    }
+
+    showToast("Refunding...", 'loading');
+
+    const sids = selectedRows
+        .map(row => row.cells[columnMap.sid].innerText.trim())
+        .join(',');
+    const apiKeyString = elements.apiKey.value.trim();
+
+    try {
+        const response = await fetch('/proxy/refund', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sids: sids, apiKey: apiKeyString })
+        });
+
+        const data = await response.json();
+        if (response.ok && data.success) {
+            const successIds = data.result.success;
+            const errorIds = Object.keys(data.result.error);
+
+            selectedRows.forEach(row => {
+                const sid = row.cells[columnMap.sid].innerText.trim();
+                if (successIds.includes(Number(sid))) {
+                    updateRowContent(row, '', 'refund');
+                    row.classList.add('bg-success-cell');
+                } else if (errorIds.includes(sid)) {
+                    showToast(`Fail to REFUND sid ${sid}`, 'error');
+                    row.classList.add('bg-error-cell');
+                    console.error(`Failed to REFUND for sid ${sid}:`, data.result.error[sid]);
+                }
+            });
+
+            // Show appropriate toast message
+            if (errorIds.length === 0)
+                changeToToast(`REFUND completed ${successIds.length} success`, 'success');
+            else if (successIds.length === 0)
+                changeToToast(`REFUND failed for <span class="text-text-toast-error">${errorIds.length}</span> servers`, 'error');
+            else
+                changeToToast(`REFUND completed: ${successIds.length} success, ${errorIds.length} failed`, 'warning');
+        } else {
+            if (response.status === 401) {
+                changeToToast('Wrong API Key!', 'error');
+                return;
+            }
+            changeToToast(`Fail to REFUND`, 'error');
+            console.error(`Failed to REFUND for sid ${sid}:`, data.error);
+        }
+    } catch (err) {
+        changeToToast('Fail to REFUND', 'error');
+        console.error(`Error REFUND for sids ${sids}:`, err);
+    }
+
+    updateCounts();
+}
+
 async function changeNote() {
     const noteInput = elements.noteInput.value;
     const isReplace = elements.replaceCheckbox.checked;
@@ -746,6 +806,13 @@ function updateRowContent(row, text, action) {
     if (action === 'pause') {
         cells[columnMap.status].innerHTML = getStatusChip('Paused');
         updateRowData(id, { status: 'Paused' });
+        checkbox.checked = false;
+        row.classList.remove('selected-row');
+        return;
+    }
+    if (action === 'refund') {
+        cells[columnMap.status].innerHTML = getStatusChip('Refunded');
+        updateRowData(id, { status: 'Refunded' });
         checkbox.checked = false;
         row.classList.remove('selected-row');
         return;

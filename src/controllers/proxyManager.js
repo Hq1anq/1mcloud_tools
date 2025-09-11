@@ -322,6 +322,52 @@ export async function reboot(req, res) {
     }
 }
 
+export async function refund(req, res) {
+    const { sids, apiKey } = req.body;
+    
+    const url = "https://api.smartserver.vn/api/server/refund"
+
+    const headers = {
+        'accept': 'application/json, text/plain, */*',
+        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+        'content-type': 'application/json',
+        'origin': 'https://manage.1mcloud.vn',
+        'referer': 'https://manage.1mcloud.vn/',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ sid: sids })
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to REFUND for sids: ${sids}:`, response.status);
+            return res.status(response.status).json({ 
+                success: false, 
+                error: 'Request failed', 
+                sids 
+            });
+        }
+
+        const data = await response.json();
+        // Return the actual response data for better client-side handling
+        res.json({ 
+            success: true,
+            result: data.result
+        });
+    } catch (error) {
+        console.error(`Failed to REFUND for sid: ${sids}`, error.response?.data || error.message);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Internal server error', 
+            sids 
+        });
+    }
+}
+
 export function checkPair(req, res) {
     const { text, textEn } = req.body;
 

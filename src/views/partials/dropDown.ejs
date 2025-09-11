@@ -1,70 +1,72 @@
 <!-- Dropdown -->
 <div class="relative flex">
-    <!-- Trigger -->
-    <button id="<%= dropdownId %>-trigger"
-        class="w-full bg-dropdown border-0 rounded-r-lg px-3 py-2 text-nowrap text-text-secondary flex justify-between items-center focus:outline-none">
-        <span id="<%= dropdownId %>-selected"><%= defaultOption %></span>
-        <svg class="w-4 h-4 ml-2 all-slow"
-            id="<%= dropdownId %>-arrow"
-            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 9l-7 7-7-7"></path>
-        </svg>
-    </button>
+	<!-- Trigger -->
+	<button id="<%= dropdownId %>-trigger"
+		class="w-full bg-dropdown border-0 rounded-r-lg px-3 py-2 text-nowrap text-text-secondary flex justify-between items-center focus:outline-none">
+		<span id="<%= dropdownId %>-selected"><%= defaultOption %></span>
+		<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+			class="w-4 h-4 ml-2 all-slow" id="<%= dropdownId %>-arrow">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+				d="M19 9l-7 7-7-7">
+            </path>
+		</svg>
+	</button>
 
-    <!-- Dropdown Menu -->
-    <div id="<%= dropdownId %>-menu"
-        class="w-full top-full opacity-0 scale-95 -translate-y-3 absolute right-0 mt-1 border-0 rounded-lg shadow-lg overflow-hidden z-50 all-slow">
-        <% dropdownOptions.forEach(option => { %>
+	<!-- Dropdown Menu -->
+	<div id="<%= dropdownId %>-menu"
+		class="w-full top-full opacity-0 scale-95 -translate-y-3 pointer-events-none absolute right-0 mt-1 border-0 rounded-lg shadow-lg overflow-hidden z-50 all-slow">
+		<% dropdownOptions.forEach(option => { %>
             <div data-value="<%= option %>"
                 class="bg-dropdown px-3 py-2 hover:brightness-110 cursor-pointer text-text-secondary <%= option === defaultOption ? 'brightness-125 font-bold' : '' %>">
                 <%= option %>
             </div>
-        <% }) %>
-    </div>
+		<% }) %>
+	</div>
 </div>
 
 <!-- Inline Script -->
 <script>
-(() => {
-    const trigger = document.getElementById("<%= dropdownId %>-trigger");
-    const menu = document.getElementById("<%= dropdownId %>-menu");
-    const selected = document.getElementById("<%= dropdownId %>-selected");
-    const arrow = document.getElementById("<%= dropdownId %>-arrow");
+	(() => {
+		const trigger = document.getElementById("<%= dropdownId %>-trigger");
+		const menu = document.getElementById("<%= dropdownId %>-menu");
+		const selected = document.getElementById("<%= dropdownId %>-selected");
+		const arrow = document.getElementById("<%= dropdownId %>-arrow");
 
-    let open = false;
+		let open = false;
 
-    const showMenu = () => {
-        menu.classList.remove("opacity-0", "scale-95", "-translate-y-3");
-        menu.classList.add("opacity-100", "scale-100", "translate-y-0");
-        arrow.classList.add("rotate-180");
-        open = true;
-    };
+		const showMenu = () => {
+			menu.classList.remove("opacity-0", "scale-95", "-translate-y-3", "pointer-events-none");
+			menu.classList.add("opacity-100", "scale-100", "translate-y-0");
+			arrow.classList.add("rotate-180");
+			open = true;
+		};
 
-    const hideMenu = () => {
-        menu.classList.remove("opacity-100", "scale-100", "translate-y-0");
-        menu.classList.add("opacity-0", "scale-95", "-translate-y-3");
-        arrow.classList.remove("rotate-180");
-        open = false;
-    };
+		const hideMenu = () => {
+			menu.classList.remove("opacity-100", "scale-100", "translate-y-0");
+			menu.classList.add("opacity-0", "scale-95", "-translate-y-3", "pointer-events-none");
+			arrow.classList.remove("rotate-180");
+			open = false;
+		};
 
-    trigger.addEventListener("click", () => {
-        open ? hideMenu() : showMenu();
-    });
+		trigger.addEventListener("click", () => {
+			open ? hideMenu() : showMenu();
+		});
 
-    menu.querySelectorAll("[data-value]").forEach(optionEl => {
-        optionEl.addEventListener("click", () => {
-            selected.textContent = optionEl.dataset.value;
-            menu.querySelectorAll("[data-value]").forEach(opt => opt.classList.remove("brightness-125", "font-bold"));
-            optionEl.classList.add("brightness-125", "font-bold");
-            hideMenu();
-        });
-    });
+		menu.querySelectorAll("[data-value]").forEach((optionEl) => {
+			optionEl.addEventListener("click", () => {
+				selected.textContent = optionEl.dataset.value;
+				menu.querySelectorAll("[data-value]").forEach((opt) =>
+					opt.classList.remove("brightness-125", "font-bold"),
+				);
+				optionEl.classList.add("brightness-125", "font-bold");
+				hideMenu();
+			});
+		});
 
-    document.addEventListener("click", (e) => {
-        if (!trigger.contains(e.target) && !menu.contains(e.target)) {
-            hideMenu();
-        }
-    });
-})();
+		document.addEventListener("click", (e) => {
+			if (!trigger.contains(e.target) && !menu.contains(e.target)) {
+				hideMenu();
+			}
+		});
+	})();
 </script>

@@ -15,24 +15,24 @@
 					<!-- Extra slot -->
 					<div class="flex items-center gap-3 text-xs sm:gap-5 sm:text-base">
 						<div class="flex flex-col gap-1 sm:flex-row sm:gap-5">
-							<span class="text-text-primary text-right whitespace-nowrap">
+							<span class="text-right whitespace-nowrap">
 								Selected:
 								<span id="selectedCount">0</span> rows
 							</span>
-							<span class="text-text-primary text-right whitespace-nowrap">
+							<span class="text-right whitespace-nowrap">
 								Total:
 								<span id="totalCount">0</span> rows
 							</span>
 						</div>
 						<button id="reloadBtn"
-							class="bg-reload-btn text-text-secondary rounded-lg px-2 py-2 hover:brightness-[var(--highlight-brightness)]">
+							class="bg-bg-reboot rounded-lg px-2 py-2 hover:brightness-[var(--highlight-brightness)]">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
 								class="h-5 w-5 flex-shrink-0 fill-current sm:h-7 sm:w-7">
 								<path d="M544.1 256L552 256C565.3 256 576 245.3 576 232L576 88C576 78.3 570.2 69.5 561.2 65.8C552.2 62.1 541.9 64.2 535 71L483.3 122.8C439 86.1 382 64 320 64C191 64 84.3 159.4 66.6 283.5C64.1 301 76.2 317.2 93.7 319.7C111.2 322.2 127.4 310 129.9 292.6C143.2 199.5 223.3 128 320 128C364.4 128 405.2 143 437.7 168.3L391 215C384.1 221.9 382.1 232.2 385.8 241.2C389.5 250.2 398.3 256 408 256L544.1 256zM573.5 356.5C576 339 563.8 322.8 546.4 320.3C529 317.8 512.7 330 510.2 347.4C496.9 440.4 416.8 511.9 320.1 511.9C275.7 511.9 234.9 496.9 202.4 471.6L249 425C255.9 418.1 257.9 407.8 254.2 398.8C250.5 389.8 241.7 384 232 384L88 384C74.7 384 64 394.7 64 408L64 552C64 561.7 69.8 570.5 78.8 574.2C87.8 577.9 98.1 575.8 105 569L156.8 517.2C201 553.9 258 576 320 576C449 576 555.7 480.6 573.4 356.5z" />
 							</svg>
 						</button>
 						<button id="captureBtn"
-							class="bg-reload-btn text-text-secondary hidden rounded-lg px-2 py-2 hover:brightness-[var(--highlight-brightness)]">
+							class="bg-bg-reboot hidden rounded-lg px-2 py-2 hover:brightness-[var(--highlight-brightness)]">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
 								class="h-5 w-5 flex-shrink-0 fill-current sm:h-7 sm:w-7">
 								<path d="M384 320V192C384 174.326 369.674 160 352 160H316L309.812 143.562C306.312 134.188 297.375 128 287.375 128H224.625C214.625 128 205.625 134.188 202.125 143.562L196 160H160C142.326 160 128 174.326 128 192V320C128 337.672 142.326 352 160 352H352C369.674 352 384 337.672 384 320ZM256 304C229.5 304 208 282.5 208 256S229.5 208 256 208S304 229.5 304 256S282.5 304 256 304ZM144 432H48V336C48 327.162 40.836 320 32 320H16C7.164 320 0 327.162 0 336V448C0 465.672 14.326 480 32 480H144C152.836 480 160 472.836 160 464V448C160 439.162 152.836 432 144 432ZM16 192H32C40.836 192 48 184.836 48 176V80H144C152.836 80 160 72.836 160 64V48C160 39.162 152.836 32 144 32H32C14.326 32 0 46.326 0 64V176C0 184.836 7.164 192 16 192ZM480 32H368C359.164 32 352 39.162 352 48V64C352 72.836 359.164 80 368 80H464V176C464 184.836 471.164 192 480 192H496C504.836 192 512 184.836 512 176V64C512 46.326 497.674 32 480 32ZM496 320H480C471.164 320 464 327.162 464 336V432H368C359.164 432 352 439.162 352 448V464C352 472.836 359.164 480 368 480H480C497.674 480 512 465.672 512 448V336C512 327.162 504.836 320 496 320Z" />

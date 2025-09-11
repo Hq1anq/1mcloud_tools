@@ -67,7 +67,6 @@
     --color-toggle-theme: var(--bg-toggle-theme);
     --color-bg-hover: var(--bg-hover);
     --color-bg-selected: var(--bg-selected);
-    --color-reload-btn: var(--bg-reload-btn);
     --color-dialog: var(--bg-dialog);
     --color-dialog-thead: var(--bg-dialog-thead);
     --color-dialog-td: var(--bg-dialog-td);
@@ -862,9 +861,6 @@
   .bg-red-600 {
     background-color: var(--color-red-600);
   }
-  .bg-reload-btn {
-    background-color: var(--color-reload-btn);
-  }
   .bg-success-cell {
     background-color: var(--color-success-cell);
   }
@@ -1546,7 +1542,6 @@
   --bg-toggle-theme: var(--blue-400);
   --bg-hover: hsl(from var(--bg-surface) h s calc(l - 10));
   --bg-selected: hsl(from var(--bg-surface) h s calc(l - 20));
-  --bg-reload-btn: #FAC01A;
   --bg-dialog: var(--light-100);
   --bg-dialog-thead: var(--blue-500);
   --bg-dialog-td: var(--blue-200);
@@ -1607,7 +1602,6 @@
   --bg-toggle-theme: var(--dark-500);
   --bg-hover: hsl(from var(--bg-surface) h s calc(l + 5));
   --bg-selected: hsl(from var(--bg-surface) h s calc(l + 10));
-  --bg-reload-btn: var(--blue-500);
   --bg-dialog: var(--dark-700);
   --bg-dialog-thead: var(--dark-600);
   --bg-dialog-td: var(--dark-800);

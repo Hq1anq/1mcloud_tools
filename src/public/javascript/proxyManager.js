@@ -61,14 +61,15 @@ async function init() {
 // Bind event listeners
 function bindEvents() {
     elements.textCopyBtn.addEventListener('click', () => {
-        const textToCopy = elements.ipList.value
+        const listIp = elements.ipList.value
             .split('\n')
             .map(ip => ip.trim())
             .filter(ip => ip.length > 0)
-            .join('\n');
+        const numIp = listIp.length;
+        const textToCopy = listIp.join('\n');
         navigator.clipboard.writeText(textToCopy)
             .then(() => {
-                showToast('Copied clipboard!', 'success');
+                showToast(`Copied <span class='text-text-toast-success'>${numIp}</span> IP to clipboard!`, 'success');
 
                 // Save original content
                 const originalHTML = elements.textCopyBtn.innerHTML;

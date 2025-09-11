@@ -84,13 +84,14 @@ function bindEvents(page) {
     elements.tbody.addEventListener('change', handleRowCheckboxChange);
     elements.tbody.addEventListener('click', handleRowClick);
     elements.selectAllCheckbox.addEventListener('change', handleSelectAll);
-    if ('ontouchstart' in window) {
-        // Mobile → only touch
-        elements.tbody.addEventListener("touchend", handleTableTap);
-    } else {
-        // Desktop → only click
-        elements.tbody.addEventListener("click", handleTableTap);
-    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText)
+        if ('ontouchstart' in window)
+            // Mobile → only touch
+            elements.tbody.addEventListener("touchend", handleTableTap);
+        else
+            // Desktop → only click
+            elements.tbody.addEventListener("click", handleTableTap);
     
     elements.reloadBtn.addEventListener('click', showAllData);
     
@@ -99,7 +100,7 @@ function bindEvents(page) {
             try {
                 localStorage.setItem("allData", JSON.stringify(allData));
             } catch (e) {
-                console.error("Failed to save allData before unload", e);
+                console.error('Failed to save allData before unload', e);
             }
         });
 }
@@ -120,7 +121,7 @@ export function initTable(page) {
                 allData = JSON.parse(allDataStr);
                 if (allData.length > 0) showEmptyState(false);
             } catch (e) {
-                console.error('Failed to parse stored data', e);
+                console.log('❌ Failed to parse stored data', e);
                 allData = [];
             }
         }
@@ -355,7 +356,8 @@ function handleTableTap(e) {
             navigator.clipboard.writeText(text).then(() => {
                 showToast(`Copied: ${text}`, 'info');
             }).catch(err => {
-                console.error('Clipboard copy failed', err);
+                console.log('❌ Failed to copy table cell', err);
+                showToast('Failed to copy table cell', 'error');
             });
         }
     }

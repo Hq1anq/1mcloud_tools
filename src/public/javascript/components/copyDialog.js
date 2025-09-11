@@ -28,12 +28,12 @@ export function showCopyDialog(title, textToCopy) {
 
 let appearTimeout, disappearTimeout;
 
-elements.dialogCopyBtn.addEventListener("click", () => {
+elements.dialogCopyBtn.addEventListener("click", async () => {
     elements.dialogCopyBtn.disabled = true;
 
-    navigator.clipboard
-        .writeText(elements.dialogText.value)
-        .then(() => {
+    if (navigator.clipboard && navigator.clipboard.writeText)
+        try{
+            await navigator.clipboard.writeText(elements.dialogText.value);
             showToast("Copied clipboard!", "success");
 
             // Smooth transition by adding a class
@@ -55,11 +55,17 @@ elements.dialogCopyBtn.addEventListener("click", () => {
                     elements.dialogCopyBtn.disabled = false;
                 }, 300);
             }, 1000);
-        })
-        .catch((err) => {
+        } catch (err) {
+            console.log('❌ Failed to copy:', err);
             showToast("Fail to copy!", "error");
-            console.error("Failed to copy:", err);
-        });
+        }
+    else {
+        console.log('❌ Failed to access clipboard');
+        showToast(`
+            Fail to copy!{br}
+            <span class="text-text-toast-error">Can't access clipboard</span>
+        `, "error");
+    }
 });
 
 elements.closeBtn.addEventListener("click", () => {

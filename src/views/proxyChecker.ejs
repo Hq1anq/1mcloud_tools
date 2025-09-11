@@ -131,7 +131,6 @@
         <%- include('partials/table', {
             tableTitle: 'Proxy Status',
             headers: ['ip', 'port', 'username', 'password', 'type', 'status'],
-            data: [],
             emptyMessage: `
                 <svg id="proxy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
                     class="fill-text-muted mx-auto h-12 w-12 flex-shrink-0 md:h-16 md:w-16">
@@ -145,8 +144,7 @@
                     No proxies to check <br />
                     Enter your proxies and click "Check Now"
                 </p>
-            `,
-            showActions: false,
+            `
         }) %>
     </div>
     

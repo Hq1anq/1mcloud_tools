@@ -150,12 +150,7 @@ export function displaySorted(data) {
     showEmptyState(sortedData.length === 0);
 }
 
-export function addRows(data, includeActions = false) {
-    data.forEach(row => addRow(row, includeActions));
-    updateCounts();
-}
-
-export function addRow(data, addData = false, bigText = false, includeActions = false) {
+export function addRow(data, addData = false, bigText = false) {
     const tr = document.createElement('tr');
 
     tr.dataset.id = data.sid; // Unique key
@@ -192,15 +187,6 @@ export function addRow(data, addData = false, bigText = false, includeActions = 
         rowHTML += `
         <td class="${textSize} px-2 sm:px-4 py-2 border-b border-border whitespace-nowrap ${alignment}">
             ${content}
-        </td>
-        `;
-    }
-
-    if (includeActions) {
-        rowHTML += `
-        <td class="px-2 sm:px-4 py-2 border-b border-border space-x-2">
-            <button class="bg-blue-600 py-1 px-2 sm:px-4 rounded-lg hover:bg-blue-700" onclick="editRow(this)">Edit</button>
-            <button class="bg-red-600 py-1 px-2 sm:px-4 rounded-lg hover:bg-red-700" onclick="deleteRow(this)">Delete</button>
         </td>
         `;
     }

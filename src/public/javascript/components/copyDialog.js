@@ -29,11 +29,10 @@ export function showCopyDialog(title, textToCopy) {
 let appearTimeout, disappearTimeout;
 
 elements.dialogCopyBtn.addEventListener("click", async () => {
-    elements.dialogCopyBtn.disabled = true;
-
     if (navigator.clipboard && navigator.clipboard.writeText)
         try{
             await navigator.clipboard.writeText(elements.dialogText.value);
+            elements.dialogCopyBtn.disabled = true;
             showToast("Copied clipboard!", "success");
 
             // Smooth transition by adding a class
@@ -62,7 +61,7 @@ elements.dialogCopyBtn.addEventListener("click", async () => {
     else {
         console.log('❌ Failed to access clipboard');
         showToast(`
-            Fail to copy!{br}
+            Fail to copy!<br>
             <span class="text-text-toast-error">Can't access clipboard</span>
         `, "error");
     }

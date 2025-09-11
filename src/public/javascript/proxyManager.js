@@ -31,7 +31,7 @@ const elements = {
     getAPIKeyBtn: document.getElementById('getAPIKeyBtn'),
     getKeyBtn: document.getElementById('getKey'),
     passwordInput: document.getElementById('passwordInput'),
-    eyeIconAPIKey: document.getElementById('eyeIconAPIKey')
+    eyeIconAPIKey: document.getElementById('eyeIconAPIKey'),
 }
 
 // Initialize

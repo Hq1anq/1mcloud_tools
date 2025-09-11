@@ -54,14 +54,6 @@ export function showToast(message, type = "success") {
     toaster.appendChild(toast);
 }
 
-export function testToast() {
-    showToast("SUCCESS", "success");
-    showToast("ERROR", "error");
-    showToast("WARNING", "warning");
-    showToast("INFO", "info");
-    showToast("LOADING", "loading");
-}
-
 function createToast(message, type) {
     const toast = document.createElement("div");
     toast.className = "group float-in flex items-center bg-toast text-text-toast cursor-pointer w-full max-w-xs p-4 rounded-lg shadow-sm";

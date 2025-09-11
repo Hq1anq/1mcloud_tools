@@ -33,7 +33,7 @@ export async function getData(req, res) {
         });
 
         if (!response.ok || response.status !== 200) {
-            console.error('❌ Request failed:', response.status);
+            console.error('Request failed:', response.status);
             return res.status(response.status).json({ error: 'getData Request failed' });;
         }
 
@@ -55,7 +55,7 @@ export async function getData(req, res) {
         return res.json({ data });
 
     } catch (err) {
-        console.error('❌ Error:', err.message);
+        console.error('Error:', err.message);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
@@ -114,7 +114,7 @@ export async function changeIp(req, res) {
         });
 
         if (!response.ok) {
-            console.error(`❌ Failed to CHANGE IP for ${ip}:`, response.status);
+            console.error(`Failed to CHANGE IP for ${ip}:`, response.status);
             return res.status(response.status).json({ 
                 success: false,
                 error: 'CHANGE IP request failed',
@@ -134,7 +134,7 @@ export async function changeIp(req, res) {
             type: type
         });
     } catch (error) {
-        console.error(`❌ Failed to CHANGE IP for ${ip}`, error.response?.data || error.message);
+        console.error(`Failed to CHANGE IP for ${ip}`, error.response?.data || error.message);
         return res.status(500).json({ 
             success: false,
             error: 'Internal server error',
@@ -201,7 +201,7 @@ export async function reinstall(req, res) {
         });
 
         if (!response.ok) {
-            console.error(`❌ Failed to REINSTALL for sid ${sid}:`, response.status);
+            console.error(`Failed to REINSTALL for sid ${sid}:`, response.status);
             return res.status(response.status).json({ 
                 success: false,
                 error: 'REINSTALL request failed',
@@ -221,7 +221,7 @@ export async function reinstall(req, res) {
             type: type
         });
     } catch (error) {
-        console.error(`❌ Failed to REINSTALL for sid: ${sid}`, error.response?.data || error.message);
+        console.error(`Failed to REINSTALL for sid: ${sid}`, error.response?.data || error.message);
         res.status(500).json({
             success: false,
             error: 'Internal server error',
@@ -252,7 +252,7 @@ export async function pause(req, res) {
         });
 
         if (!response.ok) {
-            console.error(`❌ Failed to PAUSE for sids: ${sids}:`, response.status);
+            console.error(`Failed to PAUSE for sids: ${sids}:`, response.status);
             return res.status(response.status).json({ 
                 success: false, 
                 error: 'Request failed', 
@@ -267,7 +267,7 @@ export async function pause(req, res) {
             result: data.result
         });
     } catch (error) {
-        console.error(`❌ Failed to PAUSE for sid: ${sids}`, error.response?.data || error.message);
+        console.error(`Failed to PAUSE for sid: ${sids}`, error.response?.data || error.message);
         res.status(500).json({ 
             success: false, 
             error: 'Internal server error', 
@@ -298,7 +298,7 @@ export async function reboot(req, res) {
         });
 
         if (!response.ok) {
-            console.error(`❌ Failed to REBOOT for sids: ${sids}:`, response.status);
+            console.error(`Failed to REBOOT for sids: ${sids}:`, response.status);
             return res.status(response.status).json({
                 success: false, 
                 error: 'Request failed', 
@@ -313,7 +313,7 @@ export async function reboot(req, res) {
             result: data.result
         });
     } catch (error) {
-        console.error(`❌ Failed to REBOOT for sid: ${sids}`, error.response?.data || error.message);
+        console.error(`Failed to REBOOT for sid: ${sids}`, error.response?.data || error.message);
         res.status(500).json({ 
             success: false, 
             error: 'Internal server error', 
@@ -393,7 +393,7 @@ export async function changeNote(req, res) {
         const rawData = await response.json();
         res.json({ success: rawData.result === 'success' });
     } catch (error) {
-        console.error(`❌ Failed to CHANGE NOTE for sid: ${sid}`, error.response?.data || error.message);
+        console.error(`Failed to CHANGE NOTE for sid: ${sid}`, error.response?.data || error.message);
         res.status(500).json({ 
             success: false, 
             error: 'Internal server error', 

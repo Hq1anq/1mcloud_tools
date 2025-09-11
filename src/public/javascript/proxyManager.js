@@ -60,15 +60,16 @@ async function init() {
 
 // Bind event listeners
 function bindEvents() {
-    elements.textCopyBtn.addEventListener('click', () => {
+    elements.textCopyBtn.addEventListener('click', async () => {
         const listIp = elements.ipList.value
             .split('\n')
             .map(ip => ip.trim())
             .filter(ip => ip.length > 0)
         const numIp = listIp.length;
         const textToCopy = listIp.join('\n');
-        navigator.clipboard.writeText(textToCopy)
-            .then(() => {
+        if (navigator.clipboard && navigator.clipboard.writeText)
+            try {
+                await navigator.clipboard.writeText(textToCopy);
                 showToast(`Copied <span class='text-text-toast-success'>${numIp}</span> IP to clipboard!`, 'success');
 
                 // Save original content
@@ -95,11 +96,14 @@ function bindEvents() {
                         elements.textCopyBtn.classList.add('float-in');
                     }, 300);
                 }, 1000);
-            })
-            .catch(err => {
-                showToast('Fail to copy!', 'error');
-                console.error('Failed to copy:', err);
-            });
+            } catch (err) {
+                console.log('❌ Failed to copy:', err);
+                showCopyDialog('List IP', textToCopy);
+            }
+        else {
+            console.log('❌ Failed to access clipboard');
+            showCopyDialog('List IP', textToCopy);
+        }
     })
 
     elements.copyIpBtn.addEventListener('click', copyIp);
@@ -129,7 +133,7 @@ function bindEvents() {
     });
 }
 
-function copyIp() {
+async function copyIp() {
     const selectedRows = getSelectedRows();
     if (selectedRows.length === 0) {
         showToast('No IP to copy', 'warning');
@@ -140,14 +144,18 @@ function copyIp() {
         .filter(Boolean) // remove null/undefined
         .join('\n'); // multi-line string
 
-    navigator.clipboard.writeText(ipList)
-        .then(() => {
+    if (navigator.clipboard && navigator.clipboard.writeText)
+        try {
+            await navigator.clipboard.writeText(ipList);
             showToast('Copied IP list to clipboard!', 'success');
-        })
-        .catch(err => {
-            console.error('Failed to copy:', err);
+        } catch (err) {
+            console.log('❌ Failed to copy:', err);
             showCopyDialog('List IP', ipList);
-        });
+        }
+    else {
+        console.log('❌ Failed to access clipboard');
+        showCopyDialog('List IP', ipList);
+    }
 }
 
 function shuffleListIp() {
@@ -330,7 +338,7 @@ async function changeIp() {
                     changeToToast('Wrong API Key!', 'error');
                     return;
                 }
-                console.error(`❌ Failed to CHANGE IP for ${ip}:`, data.error);
+                console.error(`Failed to CHANGE IP for ${ip}:`, data.error);
                 row.classList.add('bg-error-cell');
                 if (rowCount === 1) {
                     changeToToast(`Fail to CHANGE IP ${ip}`, 'error');
@@ -340,7 +348,7 @@ async function changeIp() {
             }
         } catch (err) {
             failCount++;
-            console.error(`❌ Error CHANGE IP for ${ip}:`, err);
+            console.error(`Error CHANGE IP for ${ip}:`, err);
             row.classList.add('bg-error-cell');
             if (rowCount === 1) {
                 changeToToast(`Fail to CHANGE IP ${ip}`, 'error');
@@ -371,11 +379,16 @@ async function changeIp() {
     if (proxyLines.length > 0) {
         await delay(1000);
         const textToCopy = proxyLines.join('\n');
-        try {
-            await navigator.clipboard.writeText(textToCopy);
-            showToast('Proxy list copied to clipboard!', 'success');
-        } catch (err) {
-            console.error('❌ Failed to copy to clipboard:', err);
+        if (navigator.clipboard && navigator.clipboard.writeText)
+            try {
+                await navigator.clipboard.writeText(textToCopy);
+                showToast('Proxy list copied to clipboard!', 'success');
+            } catch (err) {
+                console.log('❌ Failed to copy to clipboard:', err);
+                showCopyDialog('Ip changed', textToCopy);
+            }
+        else {
+            console.log('❌ Failed to access clipboard');
             showCopyDialog('Ip changed', textToCopy);
         }
     }
@@ -438,7 +451,7 @@ async function reinstall() {
                     changeToToast('Wrong API Key!', 'error');
                     return;
                 }
-                console.error(`❌ Failed to REINSTALL for sid ${sid}:`, data.error);
+                console.error(`Failed to REINSTALL for sid ${sid}:`, data.error);
                 row.classList.add('bg-error-cell');
                 if (rowCount === 1) {
                     changeToToast(`Fail to REINSTALL sid ${sid}`, 'error');
@@ -448,7 +461,7 @@ async function reinstall() {
             }
         } catch (err) {
             failCount++;
-            console.error(`❌ Error REINSTALL for sid ${sid}:`, err);
+            console.error(`Error REINSTALL for sid ${sid}:`, err);
             row.classList.add('bg-error-cell');
             if (rowCount === 1) {
                 changeToToast(`Fail to REINSTALL sid ${sid}`, 'error');
@@ -478,11 +491,16 @@ async function reinstall() {
     if (proxyLines.length > 0) {
         await delay(1000);
         const textToCopy = proxyLines.join('\n');
-        try {
-            await navigator.clipboard.writeText(textToCopy);
-            showToast('Proxy list copied to clipboard!', 'success');
-        } catch (err) {
-            console.log('❌ Failed to copy to clipboard:', err);
+        if (navigator.clipboard && navigator.clipboard.writeText)
+            try {
+                await navigator.clipboard.writeText(textToCopy);
+                showToast('Proxy list copied to clipboard!', 'success');
+            } catch (err) {
+                console.log('❌ Failed to copy to clipboard:', err);
+                showCopyDialog('Ip Reinstalled', textToCopy);
+            }
+        else {
+            console.log('❌ Failed to access clipboard');
             showCopyDialog('Ip Reinstalled', textToCopy);
         }
     }
@@ -523,7 +541,7 @@ async function pause() {
                 } else if (errorIds.includes(sid)) {
                     showToast(`Fail to PAUSE sid ${sid}`, 'error');
                     row.classList.add('bg-error-cell');
-                    console.error(`❌ Failed to PAUSE for sid ${sid}:`, data.result.error[sid]);
+                    console.error(`Failed to PAUSE for sid ${sid}:`, data.result.error[sid]);
                 }
             });
 
@@ -540,11 +558,11 @@ async function pause() {
                 return;
             }
             changeToToast(`Fail to PAUSE`, 'error');
-            console.error(`❌ Failed to PAUSE for sid ${sid}:`, data.error);
+            console.error(`Failed to PAUSE for sid ${sid}:`, data.error);
         }
     } catch (err) {
         changeToToast('Fail to PAUSE', 'error');
-        console.error(`❌ Error PAUSE for sids ${sids}:`, err);
+        console.error(`Error PAUSE for sids ${sids}:`, err);
     }
 
     updateCounts();
@@ -586,7 +604,7 @@ async function reboot() {
                 } else if (errorIds.includes(sid)) {
                     showToast(`Fail to REBOOT sid: ${sid}`, 'error');
                     row.classList.add('bg-error-cell');
-                    console.error(`❌ Failed to REBOOT for sid ${sid}:`, data.result.error[sid]);
+                    console.error(`Failed to REBOOT for sid ${sid}:`, data.result.error[sid]);
                 }
             });
 
@@ -605,11 +623,11 @@ async function reboot() {
                 return;
             }
             changeToToast(`Failed to REBOOT: ${data.error}`, 'error');
-            console.error(`❌ Failed to REBOOT:`, data.error);
+            console.error(`Failed to REBOOT:`, data.error);
         }
     } catch (err) {
         changeToToast('Fail to REBOOT', 'error');
-        console.error(`❌ Error REBOOT for sids ${sids}:`, err);
+        console.error(`Error REBOOT for sids ${sids}:`, err);
     }
 
     updateCounts();
@@ -674,7 +692,7 @@ async function changeNote() {
                     changeToToast('Wrong API Key!', 'error');
                     return;
                 }
-                console.error(`❌ Failed to CHANGE NOTE for sid ${sid}:`, data.error);
+                console.error(`Failed to CHANGE NOTE for sid ${sid}:`, data.error);
                 row.classList.add('bg-error-cell');
                 if (rowCount === 1) {
                     changeToToast(`Fail to CHANGE NOTE for ${sid}`, 'error');
@@ -684,7 +702,7 @@ async function changeNote() {
             }
         } catch (err) {
             failCount++;
-            console.error(`❌ Error CHANGE NOTE for sid ${sid}:`, err);
+            console.error(`Error CHANGE NOTE for sid ${sid}:`, err);
             row.classList.add('bg-error-cell');
             if (rowCount === 1) {
                 changeToToast(`Fail to CHANGE NOTE for sid ${sid}`, 'error');

@@ -149,7 +149,7 @@ function selectProxies(status='Active') {
     }
 }
 
-function copySelectedIPs() {
+async function copySelectedIPs() {
     const selectedRows = getSelectedRows();
 
     if (selectedRows.length === 0) {
@@ -160,15 +160,21 @@ function copySelectedIPs() {
     const ips = selectedRows
         .map(row => row.cells[1].textContent.trim());
     const ipsText = ips.join('\n');
-    navigator.clipboard.writeText(ipsText)
-        .then(() => showToast(`Copied ${ips.length} IPs to clipboard`, 'success'))
-        .catch(err => {
-            console.error('Failed to copy:', err);
+    if (navigator.clipboard && navigator.clipboard.writeText)
+        try {
+            await navigator.clipboard.writeText(ipsText);
+            showToast(`Copied ${ips.length} IPs to clipboard`, 'success');
+        } catch (err) {
+            console.log('❌ Failed to copy:', err);
             showCopyDialog('List IP', ipsText);
-        });
+        }
+    else {
+        console.log('❌ Failed to access clipboard');
+        showCopyDialog('List IP', ipsText);
+    }
 }
 
-function copyFullProxies() {
+async function copyFullProxies() {
     const selectedRows = getSelectedRows();
 
     if (selectedRows.length === 0) {
@@ -185,12 +191,19 @@ function copyFullProxies() {
             return `${ip}:${port}:${username}:${password}`;
         });
     const proxiesText = proxies.join('\n');
-    navigator.clipboard.writeText(proxiesText)
-        .then(() => showToast(`Copied ${proxies.length} proxies to clipboard`, 'success'))
-        .catch(err => {
-            console.error('Failed to copy:', err);
+
+    if (navigator.clipboard && navigator.clipboard.writeText)
+        try {
+            await navigator.clipboard.writeText(proxiesText);
+            showToast(`Copied ${proxies.length} proxies to clipboard`, 'success');
+        } catch (err) {
+            console.log('❌ Failed to copy:', err);
             showCopyDialog('List Porxy', proxiesText);
-        });
+        }
+    else {
+        console.log('❌ Failed to access clipboard');
+        showCopyDialog('List Porxy', proxiesText);
+    }
 }
 
 // Parse proxy list from text
@@ -290,34 +303,45 @@ async function captureProxyStatus() {
     canvas.toBlob(async (blob) => {
         const url = URL.createObjectURL(blob);
         const filename = "proxyChecker.png";
-        try {
-            await navigator.clipboard.write([
-                new ClipboardItem({ "image/png": blob })
-            ]);
 
-            showToast(
-                `Captured proxyStatus<br>
-                Saved to clipboard<br>
-                <a href="${url}" download="${filename}"
-                    class="underline text-blue-600 sm:no-underline sm:hover:underline">
-                    Download
-                </a>`,
-                "success"
-            );
+        if (navigator.clipboard && navigator.clipboard.write)
+            try {
+                await navigator.clipboard.write([
+                    new ClipboardItem({ "image/png": blob })
+                ]);
 
-            // optional cleanup: revoke object URL after some seconds
-            setTimeout(() => URL.revokeObjectURL(url), 10000);
-        } catch (err) {
-            // 2. If clipboard fails → fallback: auto download
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = filename;
-            a.click();
-            URL.revokeObjectURL(url);
+                showToast(
+                    `Captured proxyStatus<br>
+                    Saved to clipboard<br>
+                    <a href="${url}" download="${filename}"
+                        class="underline text-blue-600 sm:no-underline sm:hover:underline">
+                        Download
+                    </a>`,
+                    "success"
+                );
+
+                // optional cleanup: revoke object URL after some seconds
+                setTimeout(() => URL.revokeObjectURL(url), 10000);
+            } catch (err) {
+                // 2. If clipboard fails → fallback: auto download
+                console.log('❌ Failed to copy image:', err);
+                downloadFile(url, filename);
+            }
+        else {
+            console.log('❌ Failed to access clipboard');
+            downloadFile(url, filename);
         }
     });
 
     document.body.removeChild(cloneContainer);
+}
+
+function downloadFile(url, filename) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
 }
 
 function resizeCanvas(originalCanvas, targetWidth) {

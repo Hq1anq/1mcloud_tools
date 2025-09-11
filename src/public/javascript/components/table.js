@@ -119,7 +119,10 @@ export function initTable(page) {
         if (allDataStr) {
             try {
                 allData = JSON.parse(allDataStr);
-                if (allData.length > 0) showEmptyState(false);
+                if (allData.length > 0) {
+                    showEmptyState(true);
+                    elements.emptyState.querySelector('p').innerHTML = 'Click Reload button to restore data from previous session';
+                }
             } catch (e) {
                 console.log('❌ Failed to parse stored data', e);
                 allData = [];
@@ -144,6 +147,7 @@ export function displaySorted(data) {
     renderedCount = 0;
     isSorted = true;
     renderChunk();
+    showEmptyState(sortedData.length === 0);
 }
 
 export function addRows(data, includeActions = false) {
@@ -261,7 +265,6 @@ export function updateCounts() {
     elements.totalCount.textContent = filteredData.length;
     elements.selectedCount.textContent = selected.length;
 
-    showEmptyState(allData.length === 0);
 
     if (checkboxes.length > 0) {
         elements.selectAllCheckbox.checked = selected.length === checkboxes.length;
@@ -428,28 +431,7 @@ export function showAllData() {
 function handleScroll(page) {
     const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
     if (nearBottom && renderedCount < filteredData.length) {
-        if (page !== 'proxyChecker') renderChunk();
-    }
-}
-
-export function addColumnClass(colIndex, className) {
-    if (!elements.table) return;
-
-    // Modify header cell
-    const headerCell = elements.table.tHead?.rows[0]?.cells[colIndex];
-    if (headerCell) {
-        headerCell.classList.add(...className.split(' '));
-    }
-
-    // Modify all body cells in the same column
-    const rows = elements.table.tBodies[0]?.rows;
-    if (!rows) return;
-
-    for (const row of rows) {
-        const cell = row.cells[colIndex];
-        if (cell) {
-        cell.classList.add(...className.split(' '));
-        }
+        if (page === 'proxyManager') renderChunk();
     }
 }
 

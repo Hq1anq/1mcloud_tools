@@ -57,7 +57,6 @@ async function init() {
 
 // Bind event listeners
 function bindEvents() {
-    // elements.deleteBtn.addEventListener('click', deleteProxies);
     elements.copyIpBtn.addEventListener('click', copyIp);
     elements.deleteBtn.addEventListener('click', deleteIP);
     elements.amount.addEventListener('keydown', event => {

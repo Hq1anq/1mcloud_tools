@@ -239,13 +239,13 @@ async function captureProxyStatus() {
     const canvas = resizeCanvas(captured, 1080);
 
     canvas.toBlob(async (blob) => {
+        const url = URL.createObjectURL(blob);
+        const filename = "proxyChecker.png";
         try {
             await navigator.clipboard.write([
                 new ClipboardItem({ "image/png": blob })
             ]);
 
-            const url = URL.createObjectURL(blob);
-            const filename = "proxyChecker.png";
             showToast(
                 `Captured proxyStatus<br>
                 Saved to clipboard<br>
@@ -259,7 +259,12 @@ async function captureProxyStatus() {
             // optional cleanup: revoke object URL after some seconds
             setTimeout(() => URL.revokeObjectURL(url), 10000);
         } catch (err) {
-            showToast("Can't access Clipboard", 'error');
+            // 2. If clipboard fails → fallback: auto download
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
         }
     });
 

@@ -80,7 +80,8 @@
 						</tr>
 					</thead>
 					<tbody id="tableBody" class="text-text-secondary">
-						<% if (data && data.length> 0) { %> <% data.forEach(row=> { %>
+						<% if (data && data.length> 0) { %>
+							<% data.forEach(row=> { %>
 								<tr class="hover:bg-bg-hover cursor-pointer">
 									<td class="border-border border-b px-2 py-2 sm:px-4">
 										<label class="group inline-flex cursor-pointer items-center">
@@ -105,7 +106,8 @@
 										<td class="border-border border-b px-2 py-2 sm:px-4">
 											<%= row[h.toLowerCase()] %>
 										</td>
-										<% }); %>
+									<% }); %>
+									
 									<% if (showActions) { %>
 										<td class="border-border space-x-2 border-b px-2 py-2 sm:px-4">
 											<button class="rounded-lg bg-blue-600 px-4 py-1 hover:bg-blue-700"
@@ -119,15 +121,16 @@
 										</td>
 									<% } %>
 								</tr>
-								<% }); %>
-									<% } %>
+							<% }); %>
+						<% } %>
 					</tbody>
 				</table>
 			</div>
 			<!-- Empty State -->
 			<div id="emptyState" class="py-12 text-center">
-				<% if (typeof emptyMessage !=='undefined' ) { %> <%- emptyMessage %>
-						<% } %>
+				<% if (typeof emptyMessage !=='undefined' ) { %>
+					<%- emptyMessage %>
+				<% } %>
 			</div>
 		</div>
 	</div>

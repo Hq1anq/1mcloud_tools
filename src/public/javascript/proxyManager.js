@@ -1,5 +1,5 @@
 import { displaySorted, showAllData, columnMap, reorderHeader, getSelectedRows, initTable, updateRowData, updateCounts, getStatusChip, setAllData } from './components/table.js';
-import { showToast, changeToToast } from './components/toaster.js';
+import { showToast, changeToToast, testToast } from './components/toaster.js';
 import { showCopyDialog } from './components/copyDialog.js';
 import { showChangeIpDialog, closeChangeIpDialog } from './components/changeIpDialog.js';
 import { showGetAPIKeyDialog, closeAPIKeyDialog, showViewKeyDialog, setAuthAccount, handleViewKey } from './components/getAPIKey.js';
@@ -34,7 +34,9 @@ const elements = {
     getAPIKeyBtn: document.getElementById('getAPIKeyBtn'),
     getKeyBtn: document.getElementById('getKey'),
     passwordInput: document.getElementById('passwordInput'),
-    eyeIconAPIKey: document.getElementById('eyeIconAPIKey')
+    eyeIconAPIKey: document.getElementById('eyeIconAPIKey'),
+
+    refundBtn: document.getElementById('refundBtn')
 }
 
 // Initialize
@@ -134,6 +136,10 @@ function bindEvents() {
     elements.eyeIconAPIKey.addEventListener('click', () => {
         showViewKeyDialog(elements.apiKey, localStorage.getItem("apiKey"), elements.eyeIconAPIKey)
     });
+
+    // elements.refundBtn.addEventListener('click', () => {
+    //     testToast();
+    // })
 }
 
 async function copyIp() {

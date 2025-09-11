@@ -39,7 +39,7 @@ export function showGetAPIKeyDialog() {
 }
 
 export async function showViewKeyDialog(apiKey, apiKeyEn, eyeIconAPIKey) {
-    if (!apiKey) {
+    if (!apiKey || apiKey.type === "text") {
         if (apiKey.type === "password") {
             apiKey.type = "text";
             eyeIconAPIKey.innerHTML = openEyePath;
@@ -113,7 +113,7 @@ export async function handleViewKey() {
     const password = elements.passwordInput.value;
     const passwordEn = authAccount.password;
     if (!password) {
-        alert("Please enter your password to view the API key.");
+        showToast(`Enter your <span class="text-text-toast-success">password</span> to view the <span class="text-text-toast-success">API key</span>`, "info");
         return;
     } else {
         const res = await fetch('/check-pair', {

@@ -109,10 +109,10 @@
     --bg-dropdown: #FADA7A;
     --bg-checkbox: #F5F0CD;
 
-    --bg-toast: var(--blue-400);
-    --text-toast: #151da4;
-    --text-toast-success: #0B6623;
-    --text-toast-error: #B00020;
+    --bg-toast: var(--blue-700);
+    --text-toast: #fff;
+    --text-toast-success: #0DE749;
+    --text-toast-error: #F17489;
 
     --bg-navbar: var(--light-100);
     --bg-navbar-menu: var(--light-200);
@@ -150,14 +150,14 @@
     --success-cell: #00c95066;    /* green-500/40 */
     --error-cell: #fb2c3666;      /* red-500/40 */
 
-    --bg-success: #22C55E;
-    --text-success: #DFFFEF;
-    --bg-error: #F87171;
-    --text-error: #FFE7E7;
-    --bg-warning: #F59E0B;
-    --text-warning: #FFF6E0;
-    --bg-info: #0B64F4;
-    --text-info: #E5F4FF;
+    --bg-success: #64a338;
+    --text-success: #dff0d4;
+    --bg-error: #e03b24;
+    --text-error: #f9d8d3;
+    --bg-warning: #e18504;
+    --text-warning: #feecd3;
+    --bg-info: #4B251C;
+    --text-info: #e7ecf4;
     --bg-unknowed: #A2C7CC;
     --text-unknowed: #374151;
 

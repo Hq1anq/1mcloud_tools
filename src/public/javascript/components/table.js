@@ -121,7 +121,7 @@ export function initTable(page) {
                 allData = JSON.parse(allDataStr);
                 if (allData.length > 0) {
                     showEmptyState(true);
-                    elements.emptyState.querySelector('p').innerHTML = 'Click Reload button to restore data from previous session';
+                    elements.emptyState.querySelector('p').innerHTML = 'Click <span class="text-text-toast-success">Reload button</span> to <span class="text-text-toast-success">restore data</span> from previous session';
                 }
             } catch (e) {
                 console.log('❌ Failed to parse stored data', e);

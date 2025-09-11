@@ -105,19 +105,11 @@ export async function setAuthAccount(email, password) {
     localStorage.setItem("authAccount", JSON.stringify(authAccount));
 }
 
-elements.eyeIcon.addEventListener("click", () => {
-    if (elements.passwordInput.type === "password") {
-        elements.passwordInput.type = "text";
-        elements.eyeIcon.innerHTML = openEyePath;
-    }
-    else {
-        elements.passwordInput.type = "password";
-        elements.eyeIcon.innerHTML = closeEyePath;
-    }
-});
+elements.eyeIcon.addEventListener("click", handleViewPassword);
 elements.cancelChangeIp.addEventListener("click", closeAPIKeyDialog);
+elements.viewKeyBtn.addEventListener("click", handleViewKey);
 
-elements.viewKeyBtn.addEventListener("click", async () => {
+export async function handleViewKey() {
     const password = elements.passwordInput.value;
     const passwordEn = authAccount.password;
     if (!password) {
@@ -142,4 +134,15 @@ elements.viewKeyBtn.addEventListener("click", async () => {
             closeAPIKeyDialog();
         }
     }
-});
+}
+
+function handleViewPassword() {
+    if (elements.passwordInput.type === "password") {
+        elements.passwordInput.type = "text";
+        elements.eyeIcon.innerHTML = openEyePath;
+    }
+    else {
+        elements.passwordInput.type = "password";
+        elements.eyeIcon.innerHTML = closeEyePath;
+    }
+}

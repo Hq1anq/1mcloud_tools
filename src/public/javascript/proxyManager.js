@@ -2,7 +2,7 @@ import { displaySorted, showAllData, columnMap, reorderHeader, getSelectedRows, 
 import { showToast, changeToToast } from './components/toaster.js';
 import { showCopyDialog } from './components/copyDialog.js';
 import { showChangeIpDialog, closeChangeIpDialog } from './components/changeIpDialog.js';
-import { showGetAPIKeyDialog, closeAPIKeyDialog, showViewKeyDialog, setAuthAccount } from './components/getAPIKey.js';
+import { showGetAPIKeyDialog, closeAPIKeyDialog, showViewKeyDialog, setAuthAccount, handleViewKey } from './components/getAPIKey.js';
 // DOM elements
 const elements = {
     table: document.querySelector('table'),
@@ -77,7 +77,10 @@ function bindEvents() {
     elements.getAPIKeyBtn.addEventListener('click', showGetAPIKeyDialog);
     elements.getKeyBtn.addEventListener('click', getAPIKey);
     elements.passwordInput.addEventListener('keydown', event => {
-        if (event.key === 'Enter') getAPIKey();
+        if (event.key === 'Enter')
+            if (elements.getKeyBtn.classList.contains('hidden'))
+                handleViewKey();
+            else getAPIKey();
     });
     elements.eyeIconAPIKey.addEventListener('click', () => {
         showViewKeyDialog(elements.apiKey, localStorage.getItem("apiKey"), elements.eyeIconAPIKey)

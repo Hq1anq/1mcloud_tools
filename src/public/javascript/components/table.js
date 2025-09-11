@@ -210,7 +210,7 @@ export function addRow(data, addData = false, bigText = false, includeActions = 
     }
 }
 
-export function getStatusChip(status, bigText = True) {
+export function getStatusChip(status, bigText = false) {
     const baseClasses = 'px-3 py-1 rounded-full text-xs font-semibold inline-block';
     let textSize = bigText ? 'text-base sm:text-lg' : '';
     switch (status) {

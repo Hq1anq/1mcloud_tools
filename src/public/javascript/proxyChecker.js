@@ -200,18 +200,16 @@ function parseProxyList(text) {
     return lines.map(line => {
         let ip, port, username, password;
 
-        if (line.includes('@')) {
+        if (hasAtLeast3Colons(line)) {
+            // Format: ip:port or ip:port:username:password
+            const parts = line.split(':');
+            [ip, port, username, password] = parts;
+        } else {
             // Format: username:password@ip:port
             const [authPart, addressPart] = line.split('@');
             [username, password] = authPart.split(':');
             [ip, port] = addressPart.split(':');
             return { ip, port, username, password };
-        } else {
-            // Format: ip:port or ip:port:username:password
-            const parts = line.split(':');
-            if (parts.length >= 4) {
-                [ip, port, username, password] = parts;
-            }
         }
 
         if (ip && port) {
@@ -219,6 +217,10 @@ function parseProxyList(text) {
         }
         return null;
     }).filter(proxy => proxy !== null);
+
+    function hasAtLeast3Colons(str) {
+        return str.split(':').length - 1 >= 3;
+    }
 }
 
 function deleteProxies() {

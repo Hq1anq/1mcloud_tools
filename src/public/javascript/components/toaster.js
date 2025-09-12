@@ -80,7 +80,7 @@ function createToast(message, type) {
         setTimeout(() => {
             toast.classList.add("float-out");
             setTimeout(() => toast.remove(), 300);
-        }, 5000);
+        }, 3000);
     }
 
     return toast;
@@ -96,7 +96,7 @@ function contentDiv(message, type) {
     `;
 }
 
-export function changeToToast(message, type = "info", noTransition = false) {
+export function changeToToast(message, searchKey = "...", type = "info", noTransition = false) {
     if (!toaster) return;
 
     let loadingToast = null;
@@ -105,7 +105,7 @@ export function changeToToast(message, type = "info", noTransition = false) {
         const toast = toaster.children[i];
         const messageDiv = toast.querySelector("#toast-message");
         if (messageDiv)
-            if (messageDiv.textContent.includes("...") || messageDiv.textContent.includes("/")) {
+            if (messageDiv.textContent.includes(searchKey) || messageDiv.textContent.includes("/")) {
                 loadingToast = toast;
                 break;
             }
@@ -113,7 +113,7 @@ export function changeToToast(message, type = "info", noTransition = false) {
 
     if (!loadingToast) {
         // No loading toast found, create new one
-        toaster.appendChild(createToast(message, type));
+        showToast(message, type);
         return;
     }
 
@@ -144,5 +144,5 @@ export function changeToToast(message, type = "info", noTransition = false) {
     loadingToast.dismissTimer = setTimeout(() => {
         loadingToast.classList.add("float-out");
         setTimeout(() => loadingToast.remove(), 300);
-    }, 5000);
+    }, 3000);
 }

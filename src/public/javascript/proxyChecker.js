@@ -241,12 +241,12 @@ function deleteProxies() {
 }
 
 async function captureProxyStatus() {
-    const originContainer = document.getElementById('table-container')
+    const originContainer = document.getElementById('table-container');
     const cloneContainer = originContainer.cloneNode(true);
     const containerHeader = cloneContainer.querySelector('#container-header');
     const rows = cloneContainer.querySelectorAll('tr');
 
-    cloneContainer.className = 'fixed bg-body p-3 z-[-10]';
+    cloneContainer.className = 'fixed bg-body p-3 z-[-10] rounded-xl';
 
     // Remove filter, button
     containerHeader.innerHTML = `
@@ -294,6 +294,24 @@ async function captureProxyStatus() {
     }
 
     document.body.appendChild(cloneContainer);
+
+    // === Animation: Flash effect ===
+    const flash = document.createElement("div");
+    flash.className = "flash";
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 500);
+
+    // === Animation: Pulse effect on table-container ===
+    const originRect = originContainer.getBoundingClientRect();
+    originContainer.classList.add("opacity-90");
+    originContainer.style.width = "76%";
+
+    setTimeout(() => {
+        originContainer.classList.remove("opacity-90");
+        originContainer.style.width = "";
+    }, 500);
+
+
     // Capture with html2canvas
     const captured = await html2canvas(cloneContainer, { backgroundColor: null });
 
@@ -304,21 +322,68 @@ async function captureProxyStatus() {
         const url = URL.createObjectURL(blob);
         const filename = "proxyChecker.png";
 
+        // === Animation: Show thumbnail preview of the real captured canvas ===
+        const toaster = document.getElementById("toaster");
+        const toasterRect = toaster.getBoundingClientRect();
+        // Calculate final thumbnail size
+
+        const thumb = document.createElement("div");
+        thumb.className = 'fixed overflow-hidden z-9999 opacity-50 flex justify-center'
+        thumb.style.top = originRect.top - 11 + "px";
+        thumb.style.right = (window.innerWidth - originRect.right - 14) + "px";
+        thumb.style.width = originRect.width + 12 + "px";
+        thumb.style.transition = "all 0.7s cubic-bezier(0.25, 0.25, 0.25, 1)";
+        thumb.innerHTML = `<img src="${url}">`;
+
+        toaster.appendChild(thumb);
+
+        // Force reflow to make sure transition applies
+        thumb.getBoundingClientRect();
+
+        requestAnimationFrame(() => {
+            thumb.style.top = toasterRect.top + "px";
+            thumb.style.right = (window.innerWidth - toasterRect.right - 8) + "px";
+            thumb.style.width = 20 + "rem";
+            thumb.style.opacity = "0.95";
+        });
+
+        // After transition ends → move inside toaster
+        setTimeout(() => {
+            thumb.style.position = "static"; // reset styles for flex layout inside toaster
+            thumb.style.top = "";
+            thumb.style.right = "";
+            thumb.style.transition = "";
+            
+            // Convert into toast-like item
+            thumb.classList.add(
+                "flex", "items-center", "cursor-pointer"
+            );
+
+            // Attach click to open full image
+            thumb.addEventListener("click", () => window.open(url, "_blank"));
+
+            showToast(
+                `Captured proxyStatus<br>
+                Saved to clipboard<br>
+                <a href="${url}" download="${filename}"
+                    class="underline text-blue-300 sm:no-underline sm:hover:underline">
+                    Download
+                </a>`,
+                "success"
+            );
+
+            // Auto-hide after 10s like a toast
+            setTimeout(() => {
+                thumb.classList.add("float-out");
+                setTimeout(() => thumb.remove(), 300);
+            }, 5000);
+        }, 700); // slightly more than transition duration
+
         if (navigator.clipboard && navigator.clipboard.write)
             try {
                 await navigator.clipboard.write([
                     new ClipboardItem({ "image/png": blob })
                 ]);
-
-                showToast(
-                    `Captured proxyStatus<br>
-                    Saved to clipboard<br>
-                    <a href="${url}" download="${filename}"
-                        class="underline text-blue-600 sm:no-underline sm:hover:underline">
-                        Download
-                    </a>`,
-                    "success"
-                );
 
                 // optional cleanup: revoke object URL after some seconds
                 setTimeout(() => URL.revokeObjectURL(url), 10000);

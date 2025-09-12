@@ -148,12 +148,14 @@
             showActions: false,
         }) %>
 
-        <%- include('partials/toaster') %>
-
-        <%- include('partials/copyDialog') %>
-
-        <%- include('partials/footer') %>
     </div>
+
+    <div id="toaster" class="fixed top-4 right-4 z-51 space-y-3 flex flex-col items-end select-none"></div>
+
+    <%- include('partials/copyDialog') %>
+
+    <%- include('partials/footer') %>
+
     <script type="module" src="javascript/proxyChecker.js"></script>
 </body>
 </html>

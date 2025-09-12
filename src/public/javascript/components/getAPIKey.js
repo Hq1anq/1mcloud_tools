@@ -32,7 +32,7 @@ export function showGetAPIKeyDialog() {
     elements.title.innerText = 'Authenticate to Get API Key';
 
     elements.emailInput.classList.remove('cursor-not-allowed');
-    if (authAccount.email)
+    if (authAccount?.email)
         elements.emailInput.value = authAccount.email;
     elements.emailDiv.classList.remove('opacity-50');
     elements.emailInput.disabled = false;

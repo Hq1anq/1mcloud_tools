@@ -1,5 +1,6 @@
 mysql.yml
 loginRequest.yaml
+src/public/css/style.css
 
 # Node.js
 node_modules/

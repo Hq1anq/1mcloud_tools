@@ -1,255 +1,280 @@
-import { addRow, updateCounts, initTable, clearTable, getSelectedRows } from '/javascript/components/table.js';
-import { showToast, changeToToast } from '/javascript/components/toaster.js';
-import { showCopyDialog } from '/javascript/components/copyDialog.js';
+import {
+	addRow,
+	updateCounts,
+	initTable,
+	clearTable,
+	getSelectedRows,
+} from "/javascript/components/table.js";
+import { showToast, changeToToast } from "/javascript/components/toaster.js";
+import { showCopyDialog } from "/javascript/components/copyDialog.js";
 // DOM elements
 const elements = {
-    proxyInput: document.getElementById('proxyInput'),
-    deleteBtn: document.getElementById('deleteBtn'),
+	proxyInput: document.getElementById("proxyInput"),
+	deleteBtn: document.getElementById("deleteBtn"),
 
-    proxyType: document.getElementById('proxyTypeSelect-trigger'),
-    checkProxiesBtn: document.getElementById('checkProxiesBtn'),
+	proxyType: document.getElementById("proxyTypeSelect-trigger"),
+	checkProxiesBtn: document.getElementById("checkProxiesBtn"),
 
-    selectActiveBtn: document.getElementById('selectActiveBtn'),
-    selectErrorBtn: document.getElementById('selectErrorBtn'),
+	selectActiveBtn: document.getElementById("selectActiveBtn"),
+	selectErrorBtn: document.getElementById("selectErrorBtn"),
 
-    copyIpBtn: document.getElementById('copyIpBtn'),
-    copyFullProxyBtn: document.getElementById('copyFullProxyBtn'),
+	copyIpBtn: document.getElementById("copyIpBtn"),
+	copyFullProxyBtn: document.getElementById("copyFullProxyBtn"),
 
-    tableBody: document.getElementById('tableBody'),
+	tableBody: document.getElementById("tableBody"),
 
-    tableWrapper: document.getElementById('table-wrapper'),
-    captureBtn: document.getElementById('captureBtn')
+	tableWrapper: document.getElementById("table-wrapper"),
+	captureBtn: document.getElementById("captureBtn"),
 };
 
 // Initialize
 function init() {
-    bindEvents();
-    initTable('proxyChecker');
-    insertTestData();
+	bindEvents();
+	initTable("proxyChecker");
+	insertTestData();
 }
 
 function insertTestData() {
-    const testData = [
-        {
-            ip: '192.168.1.1',
-            port: '8080',
-            username: 'user1',
-            password: 'pass1',
-            type: 'HTTPS',
-            status: 'Active'
-        },
-        {
-            ip: '192.168.1.2',
-            port: '3128',
-            username: 'user2',
-            password: 'pass2',
-            type: 'SOCKS5',
-            status: 'Inactive'
-        },
-        {
-            ip: '192.168.1.3',
-            port: '80',
-            username: 'user3',
-            password: 'pass3',
-            type: 'HTTPS',
-            status: 'Active'
-        },
-        {
-            ip: '192.168.1.4',
-            port: '1080',
-            username: 'user4',
-            password: 'pass4',
-            type: 'SOCKS5',
-            status: 'Inactive'
-        },
-        {
-            ip: '192.168.1.5',
-            port: '8888',
-            username: 'user5',
-            password: 'pass5',
-            type: 'HTTPS',
-            status: 'Active'
-        }
-    ];
+	const testData = [
+		{
+			ip: "192.168.1.1",
+			port: "8080",
+			username: "user1",
+			password: "pass1",
+			type: "HTTPS",
+			status: "Active",
+		},
+		{
+			ip: "192.168.1.2",
+			port: "3128",
+			username: "user2",
+			password: "pass2",
+			type: "SOCKS5",
+			status: "Inactive",
+		},
+		{
+			ip: "192.168.1.3",
+			port: "80",
+			username: "user3",
+			password: "pass3",
+			type: "HTTPS",
+			status: "Active",
+		},
+		{
+			ip: "192.168.1.4",
+			port: "1080",
+			username: "user4",
+			password: "pass4",
+			type: "SOCKS5",
+			status: "Inactive",
+		},
+		{
+			ip: "192.168.1.5",
+			port: "8888",
+			username: "user5",
+			password: "pass5",
+			type: "HTTPS",
+			status: "Active",
+		},
+	];
 
-    clearTable();
-    testData.forEach(data => addRow(data, true, true));
+	clearTable();
+	testData.forEach((data) => addRow(data, true, true));
 }
 
 // Bind event listeners
 function bindEvents() {
-    elements.deleteBtn.addEventListener('click', deleteProxies);
-    elements.checkProxiesBtn.addEventListener('click', checkProxies);
+	elements.deleteBtn.addEventListener("click", deleteProxies);
+	elements.checkProxiesBtn.addEventListener("click", checkProxies);
 
-    elements.selectActiveBtn.addEventListener('click', selectProxies.bind(null, 'Active'));
-    elements.selectErrorBtn.addEventListener('click', selectProxies.bind(null, 'Inactive'));
+	elements.selectActiveBtn.addEventListener(
+		"click",
+		selectProxies.bind(null, "Active"),
+	);
+	elements.selectErrorBtn.addEventListener(
+		"click",
+		selectProxies.bind(null, "Inactive"),
+	);
 
-    elements.copyIpBtn.addEventListener('click', copySelectedIPs);
-    elements.copyFullProxyBtn.addEventListener('click', copyFullProxies);
+	elements.copyIpBtn.addEventListener("click", copySelectedIPs);
+	elements.copyFullProxyBtn.addEventListener("click", copyFullProxies);
 
-    elements.captureBtn.addEventListener('click', captureProxyStatus);
+	elements.captureBtn.addEventListener("click", captureProxyStatus);
 }
 
 // Check proxies
 async function checkProxies() {
-    clearTable();
-    const proxyText = elements.proxyInput.value.trim();
-    
-    if (!proxyText) {
-        showToast('Enter at least one proxy', 'warning');
-        return;
-    }
+	clearTable();
+	const proxyText = elements.proxyInput.value.trim();
 
-    showToast('Checking proxies...', 'loading');
+	if (!proxyText) {
+		showToast("Enter at least one proxy", "warning");
+		return;
+	}
 
-    // Parse proxy list
-    const proxies = parseProxyList(proxyText);
-    const proxyType = elements.proxyType.textContent.trim();
+	showToast("Checking proxies...", "loading");
 
-    // Send the proxies via POST
-    await fetch('/proxy/send-proxies', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ proxies })
-    });
+	// Parse proxy list
+	const proxies = parseProxyList(proxyText);
+	const proxyType = elements.proxyType.textContent.trim();
 
-    // Start the stream
-    const eventSource = new EventSource(`/proxy/check-stream?type=${proxyType}`);
+	// Send the proxies via POST
+	await fetch("/proxy/send-proxies", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ proxies }),
+	});
 
-    eventSource.onmessage = (event) => {
-        const result = JSON.parse(event.data);
-        if (result.done) {
-            updateCounts();
-            changeToToast('Check proxies DONE', 'success');
-            console.log("✅ All proxies checked. Closing SSE.");
-            eventSource.close();
-            return;
-        }
-        addRow(result, true, true);
-    };
+	// Start the stream
+	const eventSource = new EventSource(
+		`/proxy/check-stream?type=${proxyType}`,
+	);
 
-    eventSource.onerror = (err) => {
-        showToast('Check proxies error', 'error');
-        console.error('SSE error:', err);
-        eventSource.close();
-    };
+	eventSource.onmessage = (event) => {
+		const result = JSON.parse(event.data);
+		if (result.done) {
+			updateCounts();
+			changeToToast("Check proxies DONE", "Checking", "success");
+			console.log("✅ All proxies checked. Closing SSE.");
+			eventSource.close();
+			return;
+		}
+		addRow(result, true, true);
+	};
+
+	eventSource.onerror = (err) => {
+		showToast("Check proxies error", "error");
+		console.error("SSE error:", err);
+		eventSource.close();
+	};
 }
 
-function selectProxies(status='Active') {
-    const rows = elements.tableBody.rows;
-    for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const statusCell = row.cells[6]; // Status is at index 6
-        const checkbox = row.cells[0].querySelector('input');
-        if (statusCell && checkbox) {
-            const statusText = statusCell.textContent.trim();
-            checkbox.checked = (statusText === status);
-            checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-        }
-    }
+function selectProxies(status = "Active") {
+	const rows = elements.tableBody.rows;
+	for (let i = 0; i < rows.length; i++) {
+		const row = rows[i];
+		const statusCell = row.cells[6]; // Status is at index 6
+		const checkbox = row.cells[0].querySelector("input");
+		if (statusCell && checkbox) {
+			const statusText = statusCell.textContent.trim();
+			checkbox.checked = statusText === status;
+			checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+		}
+	}
 }
 
 async function copySelectedIPs() {
-    const selectedRows = getSelectedRows();
+	const selectedRows = getSelectedRows();
 
-    if (selectedRows.length === 0) {
-        showToast('Select at least 1 proxy to COPY', 'info');
-        return;
-    }
+	if (selectedRows.length === 0) {
+		showToast("Select at least 1 proxy to COPY", "info");
+		return;
+	}
 
-    const ips = selectedRows
-        .map(row => row.cells[1].textContent.trim());
-    const ipsText = ips.join('\n');
-    if (navigator.clipboard && navigator.clipboard.writeText)
-        try {
-            await navigator.clipboard.writeText(ipsText);
-            showToast(`Copied ${ips.length} IPs to clipboard`, 'success');
-        } catch (err) {
-            console.log('❌ Failed to copy:', err);
-            showCopyDialog('List IP', ipsText);
-        }
-    else {
-        console.log('❌ Failed to access clipboard');
-        showCopyDialog('List IP', ipsText);
-    }
+	const ips = selectedRows.map((row) => row.cells[1].textContent.trim());
+	const ipsText = ips.join("\n");
+	if (navigator.clipboard && navigator.clipboard.writeText)
+		try {
+			await navigator.clipboard.writeText(ipsText);
+			showToast(`Copied ${ips.length} IPs to clipboard`, "success");
+		} catch (err) {
+			console.log("❌ Failed to copy:", err);
+			showCopyDialog("List IP", ipsText);
+		}
+	else {
+		console.log("❌ Failed to access clipboard");
+		showCopyDialog("List IP", ipsText);
+	}
 }
 
 async function copyFullProxies() {
-    const selectedRows = getSelectedRows();
+	const selectedRows = getSelectedRows();
 
-    if (selectedRows.length === 0) {
-        showToast('Select at least 1 proxy to COPY', 'info');
-        return;
-    }
+	if (selectedRows.length === 0) {
+		showToast("Select at least 1 proxy to COPY", "info");
+		return;
+	}
 
-    const proxies = selectedRows
-        .map(row => {
-            const ip = row.cells[1].textContent.trim();
-            const port = row.cells[2].textContent.trim();
-            const username = row.cells[3].textContent.trim();
-            const password = row.cells[4].textContent.trim();
-            return `${ip}:${port}:${username}:${password}`;
-        });
-    const proxiesText = proxies.join('\n');
+	const proxies = selectedRows.map((row) => {
+		const ip = row.cells[1].textContent.trim();
+		const port = row.cells[2].textContent.trim();
+		const username = row.cells[3].textContent.trim();
+		const password = row.cells[4].textContent.trim();
+		return `${ip}:${port}:${username}:${password}`;
+	});
+	const proxiesText = proxies.join("\n");
 
-    if (navigator.clipboard && navigator.clipboard.writeText)
-        try {
-            await navigator.clipboard.writeText(proxiesText);
-            showToast(`Copied ${proxies.length} proxies to clipboard`, 'success');
-        } catch (err) {
-            console.log('❌ Failed to copy:', err);
-            showCopyDialog('List Porxy', proxiesText);
-        }
-    else {
-        console.log('❌ Failed to access clipboard');
-        showCopyDialog('List Porxy', proxiesText);
-    }
+	if (navigator.clipboard && navigator.clipboard.writeText)
+		try {
+			await navigator.clipboard.writeText(proxiesText);
+			showToast(
+				`Copied ${proxies.length} proxies to clipboard`,
+				"success",
+			);
+		} catch (err) {
+			console.log("❌ Failed to copy:", err);
+			showCopyDialog("List Porxy", proxiesText);
+		}
+	else {
+		console.log("❌ Failed to access clipboard");
+		showCopyDialog("List Porxy", proxiesText);
+	}
 }
 
 // Parse proxy list from text
 function parseProxyList(text) {
-    const lines = text.split('\n').filter(line => line.trim()).filter(Boolean);;
+	const lines = text
+		.split("\n")
+		.filter((line) => line.trim())
+		.filter(Boolean);
 
-    return lines.map(line => {
-        let ip, port, username, password;
+	return lines
+		.map((line) => {
+			let ip, port, username, password;
 
-        if (hasAtLeast3Colons(line)) {
-            // Format: ip:port or ip:port:username:password
-            const parts = line.split(':');
-            [ip, port, username, password] = parts;
-        } else {
-            // Format: username:password@ip:port
-            const [authPart, addressPart] = line.split('@');
-            [username, password] = authPart.split(':');
-            [ip, port] = addressPart.split(':');
-            return { ip, port, username, password };
-        }
+			if (hasAtLeast3Colons(line)) {
+				// Format: ip:port or ip:port:username:password
+				const parts = line.split(":");
+				[ip, port, username, password] = parts;
+			} else {
+				// Format: username:password@ip:port
+				const [authPart, addressPart] = line.split("@");
+				[username, password] = authPart.split(":");
+				[ip, port] = addressPart.split(":");
+				return { ip, port, username, password };
+			}
 
-        if (ip && port) {
-            return { ip: ip, port: port, username: username || null, password: password || null };
-        }
-        return null;
-    }).filter(proxy => proxy !== null);
+			if (ip && port) {
+				return {
+					ip: ip,
+					port: port,
+					username: username || null,
+					password: password || null,
+				};
+			}
+			return null;
+		})
+		.filter((proxy) => proxy !== null);
 
-    function hasAtLeast3Colons(str) {
-        return str.split(':').length - 1 >= 3;
-    }
+	function hasAtLeast3Colons(str) {
+		return str.split(":").length - 1 >= 3;
+	}
 }
 
 function deleteProxies() {
-    elements.proxyInput.value = '';
+	elements.proxyInput.value = "";
 }
 
 async function captureProxyStatus() {
-    const originContainer = document.getElementById('table-container');
-    const cloneContainer = originContainer.cloneNode(true);
-    const containerHeader = cloneContainer.querySelector('#container-header');
-    const rows = cloneContainer.querySelectorAll('tr');
+	const originContainer = document.getElementById("table-container");
+	const cloneContainer = originContainer.cloneNode(true);
+	const containerHeader = cloneContainer.querySelector("#container-header");
+	const rows = cloneContainer.querySelectorAll("tr");
 
-    cloneContainer.className = 'fixed bg-body p-3 z-[-10] rounded-xl';
+	cloneContainer.className = "fixed bg-body p-3 z-[-10] rounded-xl";
 
-    // Remove filter, button
-    containerHeader.innerHTML = `
+	// Remove filter, button
+	containerHeader.innerHTML = `
         <div>
             <h2 class="flex items-center text-lg font-bold sm:text-2xl">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -260,9 +285,9 @@ async function captureProxyStatus() {
                 <span class="mb-5">Proxy Status</span>
             </h2>
         </div>`;
-    
-    // Header rows
-    rows[0].innerHTML = `
+
+	// Header rows
+	rows[0].innerHTML = `
         <th class="px-6 pt-1 pb-5 text-lg font-bold uppercase">
             ip
         </th>
@@ -283,144 +308,146 @@ async function captureProxyStatus() {
         </th>
     `;
 
-    for (let i = 1; i < rows.length; i++) {
-        rows[i].firstElementChild.remove(); // Remove first checkbox
-        for (let j = 2; j < 11; j += 2) {
-            rows[i].childNodes[j].className = 'text-lg bg-surface text-center border-border border-b px-6 py-1 pb-5';
-        }
-        rows[i].childNodes[12].classList.add('bg-surface');
-        rows[i].childNodes[12].firstElementChild.style.padding = '0 1rem 1rem';
-        rows[i].childNodes[12].firstElementChild.style.fontSize = '1.125rem';
-    }
+	for (let i = 1; i < rows.length; i++) {
+		rows[i].firstElementChild.remove(); // Remove first checkbox
+		for (let j = 2; j < 11; j += 2) {
+			rows[i].childNodes[j].className =
+				"text-lg bg-surface text-center border-border border-b px-6 py-1 pb-5";
+		}
+		rows[i].childNodes[12].classList.add("bg-surface");
+		rows[i].childNodes[12].firstElementChild.style.padding = "0 1rem 1rem";
+		rows[i].childNodes[12].firstElementChild.style.fontSize = "1.125rem";
+	}
 
-    document.body.appendChild(cloneContainer);
+	document.body.appendChild(cloneContainer);
 
-    // === Animation: Flash effect ===
-    const flash = document.createElement("div");
-    flash.className = "flash";
-    document.body.appendChild(flash);
-    setTimeout(() => flash.remove(), 500);
+	// === Animation: Flash effect ===
+	const flash = document.createElement("div");
+	flash.className = "flash";
+	document.body.appendChild(flash);
+	setTimeout(() => flash.remove(), 500);
 
-    // === Animation: Pulse effect on table-container ===
-    const originRect = originContainer.getBoundingClientRect();
-    originContainer.classList.add("opacity-90");
-    originContainer.style.width = "76%";
+	// === Animation: Pulse effect on table-container ===
+	const originRect = originContainer.getBoundingClientRect();
+	originContainer.classList.add("opacity-90");
+	originContainer.style.width = "76%";
 
-    setTimeout(() => {
-        originContainer.classList.remove("opacity-90");
-        originContainer.style.width = "";
-    }, 500);
+	setTimeout(() => {
+		originContainer.classList.remove("opacity-90");
+		originContainer.style.width = "";
+	}, 500);
 
+	// Capture with html2canvas
+	const captured = await html2canvas(cloneContainer, {
+		backgroundColor: null,
+	});
 
-    // Capture with html2canvas
-    const captured = await html2canvas(cloneContainer, { backgroundColor: null });
+	// standardize width (e.g. always 1080px wide)
+	const canvas = resizeCanvas(captured, 1080);
 
-    // standardize width (e.g. always 1080px wide)
-    const canvas = resizeCanvas(captured, 1080);
+	canvas.toBlob(async (blob) => {
+		const url = URL.createObjectURL(blob);
+		const filename = "proxyChecker.png";
 
-    canvas.toBlob(async (blob) => {
-        const url = URL.createObjectURL(blob);
-        const filename = "proxyChecker.png";
+		// === Animation: Show thumbnail preview of the real captured canvas ===
+		const toaster = document.getElementById("toaster");
+		const toasterRect = toaster.getBoundingClientRect();
+		// Calculate final thumbnail size
 
-        // === Animation: Show thumbnail preview of the real captured canvas ===
-        const toaster = document.getElementById("toaster");
-        const toasterRect = toaster.getBoundingClientRect();
-        // Calculate final thumbnail size
+		const thumb = document.createElement("div");
+		thumb.className =
+			"fixed overflow-hidden z-9999 opacity-50 flex justify-center";
+		thumb.style.top = originRect.top - 11 + "px";
+		thumb.style.right = window.innerWidth - originRect.right - 14 + "px";
+		thumb.style.width = originRect.width + 12 + "px";
+		thumb.style.transition = "all 0.7s cubic-bezier(0.25, 0.25, 0.25, 1)";
+		thumb.innerHTML = `<img src="${url}">`;
 
-        const thumb = document.createElement("div");
-        thumb.className = 'fixed overflow-hidden z-9999 opacity-50 flex justify-center'
-        thumb.style.top = originRect.top - 11 + "px";
-        thumb.style.right = (window.innerWidth - originRect.right - 14) + "px";
-        thumb.style.width = originRect.width + 12 + "px";
-        thumb.style.transition = "all 0.7s cubic-bezier(0.25, 0.25, 0.25, 1)";
-        thumb.innerHTML = `<img src="${url}">`;
+		toaster.appendChild(thumb);
 
-        toaster.appendChild(thumb);
+		// Force reflow to make sure transition applies
+		thumb.getBoundingClientRect();
 
-        // Force reflow to make sure transition applies
-        thumb.getBoundingClientRect();
+		requestAnimationFrame(() => {
+			thumb.style.top = toasterRect.top + "px";
+			thumb.style.right =
+				window.innerWidth - toasterRect.right - 8 + "px";
+			thumb.style.width = 20 + "rem";
+			thumb.style.opacity = "0.95";
+		});
 
-        requestAnimationFrame(() => {
-            thumb.style.top = toasterRect.top + "px";
-            thumb.style.right = (window.innerWidth - toasterRect.right - 8) + "px";
-            thumb.style.width = 20 + "rem";
-            thumb.style.opacity = "0.95";
-        });
+		// After transition ends → move inside toaster
+		setTimeout(() => {
+			thumb.style.position = "static"; // reset styles for flex layout inside toaster
+			thumb.style.top = "";
+			thumb.style.right = "";
+			thumb.style.transition = "";
 
-        // After transition ends → move inside toaster
-        setTimeout(() => {
-            thumb.style.position = "static"; // reset styles for flex layout inside toaster
-            thumb.style.top = "";
-            thumb.style.right = "";
-            thumb.style.transition = "";
-            
-            // Convert into toast-like item
-            thumb.classList.add(
-                "flex", "items-center", "cursor-pointer"
-            );
+			// Convert into toast-like item
+			thumb.classList.add("flex", "items-center", "cursor-pointer");
 
-            // Attach click to open full image
-            thumb.addEventListener("click", () => window.open(url, "_blank"));
+			// Attach click to open full image
+			thumb.addEventListener("click", () => window.open(url, "_blank"));
 
-            showToast(
-                `Captured proxyStatus<br>
+			showToast(
+				`Captured proxyStatus<br>
                 Saved to clipboard<br>
                 <a href="${url}" download="${filename}"
                     class="underline text-blue-300 sm:no-underline sm:hover:underline">
                     Download
                 </a>`,
-                "success"
-            );
+				"success",
+			);
 
-            // Auto-hide after 10s like a toast
-            setTimeout(() => {
-                thumb.classList.add("float-out");
-                setTimeout(() => thumb.remove(), 300);
-            }, 5000);
-        }, 700); // slightly more than transition duration
+			// Auto-hide after 10s like a toast
+			setTimeout(() => {
+				thumb.classList.add("float-out");
+				setTimeout(() => thumb.remove(), 300);
+			}, 3000);
+		}, 700);
 
-        if (navigator.clipboard && navigator.clipboard.write)
-            try {
-                await navigator.clipboard.write([
-                    new ClipboardItem({ "image/png": blob })
-                ]);
+		if (navigator.clipboard && navigator.clipboard.write)
+			try {
+				await navigator.clipboard.write([
+					new ClipboardItem({ "image/png": blob }),
+				]);
 
-                // optional cleanup: revoke object URL after some seconds
-                setTimeout(() => URL.revokeObjectURL(url), 10000);
-            } catch (err) {
-                // 2. If clipboard fails → fallback: auto download
-                console.log('❌ Failed to copy image:', err);
-                downloadFile(url, filename);
-            }
-        else {
-            console.log('❌ Failed to access clipboard');
-            downloadFile(url, filename);
-        }
-    });
+				// optional cleanup: revoke object URL after some seconds
+				setTimeout(() => URL.revokeObjectURL(url), 10000);
+			} catch (err) {
+				// 2. If clipboard fails → fallback: auto download
+				console.log("❌ Failed to copy image:", err);
+				downloadFile(url, filename);
+			}
+		else {
+			console.log("❌ Failed to access clipboard");
+			downloadFile(url, filename);
+		}
+	});
 
-    document.body.removeChild(cloneContainer);
+	document.body.removeChild(cloneContainer);
 }
 
 function downloadFile(url, filename) {
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
+	const a = document.createElement("a");
+	a.href = url;
+	a.download = filename;
+	a.click();
+	URL.revokeObjectURL(url);
 }
 
 function resizeCanvas(originalCanvas, targetWidth) {
-    const scale = targetWidth / originalCanvas.width;
-    const targetHeight = originalCanvas.height * scale;
+	const scale = targetWidth / originalCanvas.width;
+	const targetHeight = originalCanvas.height * scale;
 
-    const resizedCanvas = document.createElement("canvas");
-    resizedCanvas.width = targetWidth;
-    resizedCanvas.height = targetHeight;
+	const resizedCanvas = document.createElement("canvas");
+	resizedCanvas.width = targetWidth;
+	resizedCanvas.height = targetHeight;
 
-    const ctx = resizedCanvas.getContext("2d");
-    ctx.drawImage(originalCanvas, 0, 0, targetWidth, targetHeight);
+	const ctx = resizedCanvas.getContext("2d");
+	ctx.drawImage(originalCanvas, 0, 0, targetWidth, targetHeight);
 
-    return resizedCanvas;
+	return resizedCanvas;
 }
 
 init();

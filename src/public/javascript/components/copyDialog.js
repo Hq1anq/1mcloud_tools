@@ -1,6 +1,7 @@
 import { showToast } from "/javascript/components/toaster.js";
 
 const elements = {
+    container: document.getElementById("copyContainer"),
     dialog: document.getElementById("copyDialog"),
     dialogTitle: document.getElementById("dialogTitle"),
     dialogText: document.getElementById("dialogText"),
@@ -23,7 +24,12 @@ const copiedPath = `
 export function showCopyDialog(title, textToCopy) {
     elements.dialogTitle.innerHTML = title;
     elements.dialogText.value = textToCopy;
-    elements.dialog.classList.remove("hidden");
+    // Show dialog
+    elements.container.classList.remove("hidden");
+    setTimeout(() => {
+        elements.dialog.classList.remove("scale-90", "opacity-0");
+        elements.dialog.classList.add("scale-100", "opacity-100");
+    }, 10);
 }
 
 let appearTimeout, disappearTimeout;
@@ -75,5 +81,11 @@ elements.closeBtn.addEventListener("click", () => {
     elements.dialogCopyBtn.innerHTML = copyPath;
     elements.dialogCopyBtn.classList.remove("float-in", "float-out");
     elements.dialogText.value = "";
-    elements.dialog.classList.add("hidden");
+
+    elements.dialog.classList.remove("scale-100", "opacity-100");
+    elements.dialog.classList.add("scale-90", "opacity-0");
+    setTimeout(() => {
+        elements.container.classList.add("hidden");
+        elements.selectedProxiesList.innerHTML = "";
+    }, 300);
 });

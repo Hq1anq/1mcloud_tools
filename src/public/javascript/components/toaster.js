@@ -113,7 +113,7 @@ export function changeToToast(message, searchKey = "...", type = "info", noTrans
         const toast = toaster.children[i];
         const messageDiv = toast.querySelector("#toast-message");
         if (messageDiv)
-            if (messageDiv.textContent.includes(searchKey) || messageDiv.textContent.includes("/")) {
+            if (messageDiv.textContent.includes(searchKey)) {
                 loadingToast = toast;
                 break;
             }

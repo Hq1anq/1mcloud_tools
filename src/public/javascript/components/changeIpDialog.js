@@ -2,6 +2,7 @@ import { getSelectedRows, columnMap } from '/javascript/components/table.js';
 import { showToast } from '/javascript/components/toaster.js';
 
 const elements = {
+    container: document.getElementById('changeIpContainer'),
     dialog : document.getElementById('changeIpDialog'),
     selectedProxiesList : document.getElementById('selectedProxiesList'),
     typeProxyChanged: document.getElementById('typeProxyChanged'),
@@ -39,14 +40,20 @@ export function showChangeIpDialog(proxyType) {
     elements.typeProxyChanged.innerText = proxyType;
 
     // Show dialog
-    elements.dialog.classList.remove("hidden");
-    elements.dialog.classList.add("flex");
+    elements.container.classList.remove("hidden");
+    setTimeout(() => {
+        elements.dialog.classList.remove("scale-90", "opacity-0");
+        elements.dialog.classList.add("scale-100", "opacity-100");
+    }, 10);
 
     elements.cancelChangeIp.addEventListener("click", closeChangeIpDialog);
 };
 
 export function closeChangeIpDialog() {
-    elements.dialog.classList.add("hidden");
-    elements.dialog.classList.remove("flex");
-    elements.selectedProxiesList.innerHTML = "";
+    elements.dialog.classList.remove("scale-100", "opacity-100");
+    elements.dialog.classList.add("scale-90", "opacity-0");
+    setTimeout(() => {
+        elements.container.classList.add("hidden");
+        elements.selectedProxiesList.innerHTML = "";
+    }, 300);
 }

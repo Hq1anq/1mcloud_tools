@@ -10,12 +10,16 @@ import {
 	getStatusChip,
 	setAllData,
 } from "./components/table.js";
-import { showToast, changeToToast, testToast } from "./components/toaster.js";
+import { showToast, changeToToast } from "./components/toaster.js";
 import { showCopyDialog } from "./components/copyDialog.js";
 import {
 	showChangeIpDialog,
 	closeChangeIpDialog,
 } from "./components/changeIpDialog.js";
+import {
+	showRenewDialog,
+	closeRenewDialog
+} from "./components/renewDialog.js";
 import {
 	showGetAPIKeyDialog,
 	closeAPIKeyDialog,
@@ -23,6 +27,7 @@ import {
 	setAuthAccount,
 	handleViewKey,
 } from "./components/getAPIKey.js";
+import { str2date, date2str } from "./components/table.js";
 // DOM elements
 const elements = {
 	table: document.querySelector("table"),
@@ -57,6 +62,8 @@ const elements = {
 	eyeIconAPIKey: document.getElementById("eyeIconAPIKey"),
 
 	refundBtn: document.getElementById("refundBtn"),
+	renewBtn: document.getElementById("renewBtn"),
+	confirmRenew: document.getElementById("confirmRenew")
 };
 
 // Initialize
@@ -149,6 +156,9 @@ function bindEvents() {
 		showChangeIpDialog(proxyType);
 	});
 	elements.confirmChangeIp.addEventListener("click", changeIp);
+
+	elements.renewBtn.addEventListener("click", showRenewDialog);
+	elements.confirmRenew.addEventListener("click", renew);
 
 	elements.getAPIKeyBtn.addEventListener("click", showGetAPIKeyDialog);
 	elements.getKeyBtn.addEventListener("click", getAPIKey);
@@ -772,7 +782,6 @@ async function refund() {
 				const ip = row.cells[columnMap.ip_port].textContent.split(":")[0].trim();
 				if (successIPs.includes(ip)) {
 					updateRowContent(row, "", "refund");
-					row.classList.add("bg-success-cell");
 				} else if (errorIPs.includes(ip)) {
 					showToast(`Fail to REFUND ${ip}`, "error");
 					row.classList.add("bg-error-cell");
@@ -813,6 +822,83 @@ async function refund() {
 	} catch (err) {
 		changeToToast("Fail to REFUND", "REFUND...", "error");
 		console.error(`Error REFUND for sids ${sids}:`, err);
+	}
+
+	updateCounts();
+}
+
+async function renew() {
+	const selectedRows = getSelectedRows();
+	if (selectedRows.length === 0) {
+		showToast("Select at least one row to RENEW", "info");
+		return;
+	}
+
+	closeRenewDialog();
+
+	showToast("RENEW...", "loading");
+
+	const sids = selectedRows
+		.map((row) => row.cells[columnMap.sid].innerText.trim())
+		.join(",");
+	const apiKeyString = elements.apiKey.value.trim();
+
+	try {
+		const response = await fetch("/proxy/renew", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ sids: sids, month: 1, apiKey: apiKeyString }),
+		});
+
+		const data = await response.json();
+		if (response.ok && data.success) {
+			const successIPs = Object.keys(data.result.success);
+			const errorIPs = Object.keys(data.result.error);
+
+			selectedRows.forEach((row) => {
+				const ip = row.cells[columnMap.ip_port].textContent.split(":")[0].trim();
+				if (successIPs.includes(ip)) {
+					updateRowContent(row, "", "renew");
+				} else if (errorIPs.includes(ip)) {
+					showToast(`Fail to REFUND ${ip}`, "error");
+					row.classList.add("bg-error-cell");
+					console.error(
+						`Failed to REFUND ${ip}:`,
+						data.result.error[ip],
+					);
+				}
+			});
+
+			// Show appropriate toast message
+			if (errorIPs.length === 0)
+				changeToToast(
+					`RENEW completed ${successIPs.length} success`,
+                    "RENEW...",
+					"success",
+				);
+			else if (successIPs.length === 0)
+				changeToToast(
+					`RENEW failed for <span class="text-text-toast-error">${errorIPs.length}</span> servers`,
+                    "RENEW...",
+					"error",
+				);
+			else
+				changeToToast(
+					`RENEW completed: ${successIPs.length} success, ${errorIPs.length} failed`,
+					"RENEW...",
+                    "warning",
+				);
+		} else {
+			if (response.status === 401) {
+				changeToToast("Wrong API Key!", "RENEW...", "error");
+				return;
+			}
+			changeToToast(`Fail to RENEW`, "RENEW...", "error");
+			console.error(`Failed to RENEW for sids ${sids}:`, data.error);
+		}
+	} catch (err) {
+		changeToToast("Fail to RENEW", "RENEW...", "error");
+		console.error(`Error RENEW for sids ${sids}:`, err);
 	}
 
 	updateCounts();
@@ -953,6 +1039,17 @@ function updateRowContent(row, text, action) {
 		updateRowData(id, { status: "Refunded" });
 		checkbox.checked = false;
 		row.classList.remove("selected-row");
+		return;
+	}
+	if (action === "renew") {
+		const date = str2date(cells[columnMap.expired].innerHTML);
+		date.setDate(date.getDate() + 30);
+		const newExpired = date2str(date);
+		cells[columnMap.expired].innerHTML = newExpired;
+		updateRowData(id, {
+			expired: newExpired,
+			status: "Running"
+		});
 		return;
 	}
 	if (action === "reboot") {

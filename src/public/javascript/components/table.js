@@ -421,6 +421,7 @@ function applyFilter(page) {
     elements.tbody.innerHTML = "";
     if (page === 'proxyManager') renderChunk();
     else filteredData.forEach(row => addRow(row, false, true));
+    showEmptyState(filteredData.length === 0);
 }
 
 export function showAllData() {
@@ -446,4 +447,17 @@ function showEmptyState(show) {
 
 export function setAllData(data) {
     allData = data;
+}
+
+export function str2date(str) {
+    const [d, m, y] = str.split("-");
+    return new Date(y, m - 1, d);
+}
+
+export function date2str(date) {
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const yyyy = date.getFullYear();
+
+    return `${dd}-${mm}-${yyyy}`;
 }

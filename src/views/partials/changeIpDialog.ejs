@@ -1,12 +1,12 @@
 <div id="changeIpContainer" class="text-text-secondary fixed content-center inset-0 z-50 hidden bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
-	<div id="changeIpDialog" class="all-slow scale-90 opacity-0 border-border bg-dialog relative mx-auto flex w-[80%] max-w-3xl flex-col rounded-xl border p-6 pr-4 pb-4 shadow-[0_0_25px_rgba(0,0,0,0.5)] select-none">
+	<div id="changeIpDialog" class="all-fast scale-90 opacity-0 border-border bg-dialog relative mx-auto flex w-[80%] max-w-3xl flex-col rounded-xl border p-6 pr-4 pb-4 shadow-[0_0_25px_rgba(0,0,0,0.5)] select-none">
 		<h2 id="dialogTitle" class="text-text-title mb-4 text-xl font-bold">
 			Confirm Copy IPs
 		</h2>
 		<div class="mb-4">
 			<p class="mb-2">
 				You are about to CHANGE IP
-				<span id="selectedCountInDialog" class="font-semibold">0</span> servers
+				<span id="selectedCountChangeIp" class="font-semibold">0</span> servers
 				(<span id="typeProxyChanged" class="font-semibold">HTTPS</span>):
 			</p>
 			<div class="bg-dialog-td scroll-container overflow-x-auto rounded-lg">
@@ -38,7 +38,7 @@
 								</th>
 							</tr>
 						</thead>
-						<tbody id="selectedProxiesList">
+						<tbody id="selectedProxiesChangeIP">
 							<!-- Selected proxies will be inserted here -->
 						</tbody>
 					</table>

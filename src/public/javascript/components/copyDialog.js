@@ -86,6 +86,5 @@ elements.closeBtn.addEventListener("click", () => {
     elements.dialog.classList.add("scale-90", "opacity-0");
     setTimeout(() => {
         elements.container.classList.add("hidden");
-        elements.selectedProxiesList.innerHTML = "";
     }, 300);
 });

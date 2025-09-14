@@ -526,7 +526,6 @@ async function pause() {
 				const sid = row.cells[columnMap.sid].innerText.trim();
 				if (successIds.includes(Number(sid))) {
 					updateRowContent(row, "", "pause");
-					row.classList.add("bg-success-cell");
 				} else if (errorIds.includes(sid)) {
 					showToast(`Fail to PAUSE sid ${sid}`, "error");
 					row.classList.add("bg-error-cell");
@@ -604,7 +603,6 @@ async function reboot() {
 				const sid = row.cells[columnMap.sid].innerText.trim();
 				if (successIds.includes(Number(sid))) {
 					updateRowContent(row, "", "reboot");
-					row.classList.add("bg-success-cell");
 				} else if (errorIds.includes(sid)) {
 					showToast(`Fail to REBOOT sid: ${sid}`, "error");
 					row.classList.add("bg-error-cell");

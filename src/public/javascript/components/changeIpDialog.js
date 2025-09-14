@@ -4,9 +4,9 @@ import { showToast } from '/javascript/components/toaster.js';
 const elements = {
     container: document.getElementById('changeIpContainer'),
     dialog : document.getElementById('changeIpDialog'),
-    selectedProxiesList : document.getElementById('selectedProxiesList'),
+    selectedProxiesChangeIP : document.getElementById('selectedProxiesChangeIP'),
     typeProxyChanged: document.getElementById('typeProxyChanged'),
-    selectedCountInDialog : document.getElementById('selectedCountInDialog'),
+    selectedCountChangeIp : document.getElementById('selectedCountChangeIp'),
     cancelChangeIp : document.getElementById('cancelChangeIp')
 }
 
@@ -27,16 +27,16 @@ export function showChangeIpDialog(proxyType) {
 
         indexes.forEach(i => {
             const td = row.cells[i].cloneNode(true); // clone existing cell
-            if (i === 4) td.innerText = td.innerText.split('Proxy')[0].trim();
+            if (i === columnMap.type) td.innerText = td.innerText.split('Proxy')[0].trim();
             td.classList.remove('hidden');
             tr.appendChild(td);
         });
 
-        elements.selectedProxiesList.appendChild(tr);
+        elements.selectedProxiesChangeIP.appendChild(tr);
     });
 
     // Update count
-    elements.selectedCountInDialog.innerText = selectedRows.length;
+    elements.selectedCountChangeIp.innerText = selectedRows.length;
     elements.typeProxyChanged.innerText = proxyType;
 
     // Show dialog
@@ -54,6 +54,6 @@ export function closeChangeIpDialog() {
     elements.dialog.classList.add("scale-90", "opacity-0");
     setTimeout(() => {
         elements.container.classList.add("hidden");
-        elements.selectedProxiesList.innerHTML = "";
+        elements.selectedProxiesChangeIP.innerHTML = "";
     }, 300);
 }

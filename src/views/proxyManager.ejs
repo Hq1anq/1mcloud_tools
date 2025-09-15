@@ -156,9 +156,9 @@
 								</div>
 							</div>
 							<!-- Simple Action Buttons (bottom) -->
-							<div class="grid grid-cols-4 gap-2 sm:gap-3">
+							<div class="flex flex-wrap gap-2 sm:gap-3">
 								<button id="copyIpBtn"
-									class="bg-bg-copyIp flex items-center justify-center rounded-lg px-3 py-2 font-medium text-nowrap transition-colors duration-200 hover:brightness-[var(--highlight-brightness)]">
+									class="flex-1 bg-bg-copyIp flex items-center justify-center rounded-lg px-3 py-2 font-medium text-nowrap transition-colors duration-200 hover:brightness-[var(--highlight-brightness)]">
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
 										class="fill-current mr-1 h-5 w-5 flex-shrink-0 sm:mr-2 sm:h-7 sm:w-7">
 										<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z"/>
@@ -166,7 +166,7 @@
 									Copy IP
 								</button>
 								<button id="rebootBtn"
-									class="bg-bg-reboot flex items-center justify-center rounded-lg px-3 py-2 font-medium hover:brightness-[var(--highlight-brightness)]">
+									class="flex-1 bg-bg-reboot flex items-center justify-center rounded-lg px-3 py-2 font-medium hover:brightness-[var(--highlight-brightness)]">
 									<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
 										class="fill-current mr-1 h-[18px] w-[18px] flex-shrink-0 sm:mr-2 sm:h-6 sm:w-6">
@@ -175,7 +175,7 @@
 									Reboot
 								</button>
 								<button id="pauseBtn"
-									class="bg-bg-pause flex items-center justify-center rounded-lg px-3 py-2 font-medium hover:brightness-[var(--highlight-brightness)]">
+									class="flex-1 bg-bg-pause flex items-center justify-center rounded-lg px-3 py-2 font-medium hover:brightness-[var(--highlight-brightness)]">
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
 										class="fill-current mr-1 h-5 w-5 flex-shrink-0 sm:mr-2 sm:h-6 sm:w-6">
 										<path d="M176 96C149.5 96 128 117.5 128 144L128 496C128 522.5 149.5 544 176 544L240 544C266.5 544 288 522.5 288 496L288 144C288 117.5 266.5 96 240 96L176 96zM400 96C373.5 96 352 117.5 352 144L352 496C352 522.5 373.5 544 400 544L464 544C490.5 544 512 522.5 512 496L512 144C512 117.5 490.5 96 464 96L400 96z"/>
@@ -183,12 +183,20 @@
 									Pause
 								</button>
 								<button id="refundBtn"
-									class="bg-bg-refund flex items-center justify-center rounded-lg px-3 py-2 font-medium transition-colors duration-200 hover:brightness-[var(--highlight-brightness)]">
+									class="flex-1 bg-bg-refund flex items-center justify-center rounded-lg px-3 py-2 font-medium transition-colors duration-200 hover:brightness-[var(--highlight-brightness)]">
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
 										class="fill-current mr-1 h-5 w-5 flex-shrink-0 sm:mr-2 sm:h-6 sm:w-6">
 										<path d="M88 256L232 256C241.7 256 250.5 250.2 254.2 241.2C257.9 232.2 255.9 221.9 249 215L202.3 168.3C277.6 109.7 386.6 115 455.8 184.2C530.8 259.2 530.8 380.7 455.8 455.7C380.8 530.7 259.3 530.7 184.3 455.7C174.1 445.5 165.3 434.4 157.9 422.7C148.4 407.8 128.6 403.4 113.7 412.9C98.8 422.4 94.4 442.2 103.9 457.1C113.7 472.7 125.4 487.5 139 501C239 601 401 601 501 501C601 401 601 239 501 139C406.8 44.7 257.3 39.3 156.7 122.8L105 71C98.1 64.2 87.8 62.1 78.8 65.8C69.8 69.5 64 78.3 64 88L64 232C64 245.3 74.7 256 88 256z"/>
 									</svg>
 									Refund
+								</button>
+								<button id="renewBtn"
+									class="flex-1 bg-bg-renew flex items-center justify-center rounded-lg px-3 py-2 font-medium transition-colors duration-200 hover:brightness-[var(--highlight-brightness)]">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
+										class="fill-current mr-1 h-5 w-5 flex-shrink-0 sm:mr-2 sm:h-6 sm:w-6">
+										<path d="M160 96C124.7 96 96 124.7 96 160L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 160C544 124.7 515.3 96 480 96L160 96zM296 408L296 344L232 344C218.7 344 208 333.3 208 320C208 306.7 218.7 296 232 296L296 296L296 232C296 218.7 306.7 208 320 208C333.3 208 344 218.7 344 232L344 296L408 296C421.3 296 432 306.7 432 320C432 333.3 421.3 344 408 344L344 344L344 408C344 421.3 333.3 432 320 432C306.7 432 296 421.3 296 408z"/>
+									</svg>
+									Renew
 								</button>
 							</div>
 							<div class="flex">

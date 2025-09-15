@@ -765,40 +765,40 @@ async function refund() {
 
 		const data = await response.json();
 		if (response.ok && data.success) {
-			const successIds = data.result.success;
-			const errorIds = Object.keys(data.result.error);
+			const successIPs = Object.keys(data.result.success);
+			const errorIPs = Object.keys(data.result.error);
 
 			selectedRows.forEach((row) => {
-				const sid = row.cells[columnMap.sid].innerText.trim();
-				if (successIds.includes(Number(sid))) {
+				const ip = row.cells[columnMap.ip_port].textContent.split(":")[0].trim();
+				if (successIPs.includes(ip)) {
 					updateRowContent(row, "", "refund");
 					row.classList.add("bg-success-cell");
-				} else if (errorIds.includes(sid)) {
-					showToast(`Fail to REFUND sid ${sid}`, "error");
+				} else if (errorIPs.includes(ip)) {
+					showToast(`Fail to REFUND ${ip}`, "error");
 					row.classList.add("bg-error-cell");
 					console.error(
-						`Failed to REFUND for sid ${sid}:`,
-						data.result.error[sid],
+						`Failed to REFUND ${ip}:`,
+						data.result.error[ip],
 					);
 				}
 			});
 
 			// Show appropriate toast message
-			if (errorIds.length === 0)
+			if (errorIPs.length === 0)
 				changeToToast(
-					`REFUND completed ${successIds.length} success`,
+					`REFUND completed ${successIPs.length} success`,
                     "REFUND...",
 					"success",
 				);
-			else if (successIds.length === 0)
+			else if (successIPs.length === 0)
 				changeToToast(
-					`REFUND failed for <span class="text-text-toast-error">${errorIds.length}</span> servers`,
+					`REFUND failed for <span class="text-text-toast-error">${errorIPs.length}</span> servers`,
                     "REFUND...",
 					"error",
 				);
 			else
 				changeToToast(
-					`REFUND completed: ${successIds.length} success, ${errorIds.length} failed`,
+					`REFUND completed: ${successIPs.length} success, ${errorIPs.length} failed`,
 					"REFUND...",
                     "warning",
 				);
@@ -808,7 +808,7 @@ async function refund() {
 				return;
 			}
 			changeToToast(`Fail to REFUND`, "REFUND...", "error");
-			console.error(`Failed to REFUND for sid ${sid}:`, data.error);
+			console.error(`Failed to REFUND for sids ${sids}:`, data.error);
 		}
 	} catch (err) {
 		changeToToast("Fail to REFUND", "REFUND...", "error");

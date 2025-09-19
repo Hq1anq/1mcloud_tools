@@ -11,7 +11,8 @@ import {
     refund,
     renew,
     checkPair,
-    getTextEn
+    getTextEn,
+    buyProxy, buyCalc
 } from '../controllers/proxyManager.js';
 import { getHomePage, postCreateUser, getCreatePage, getUpdatePage } from '../controllers/home.js';
 
@@ -36,5 +37,7 @@ router.post('/proxy/refund', refund);
 router.post('/proxy/renew', renew);
 router.post('/proxy/change-ip', changeIp);
 router.post('/proxy/reinstall', reinstall);
+router.post('/proxy/buy-proxy', buyProxy);
+router.post('/proxy/buy-calc', buyCalc);
 
 export default router;

@@ -60,6 +60,149 @@ export async function getData(req, res) {
     }
 };
 
+export async function buyProxy(req, res) {
+    const { quantity, note, rangeIp = "Ngẫu nhiên", nation, apiKey, type = 'proxy_https' } = req.body;
+
+    const url = 'https://api.smartserver.vn/api/server/create';
+
+    const headers = {
+        'accept': 'application/json, text/plain, */*',
+        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+        'content-type': 'application/json',
+        'origin': 'https://manage.1mcloud.vn',
+        'referer': 'https://manage.1mcloud.vn/',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+                plan_id: 0,
+                duration: 1,
+                auto_renew: false,
+                quantity: quantity,
+                os_id: 1,
+                random_password: true,
+                random_remote_port: true,
+                install_chrome: false,
+                install_firefox: false,
+                note: note,
+                range_ip: rangeIp,
+                nation: nation,
+                provider: "Ngẫu nhiên",
+                proxy_type: type,
+                is_proxy: true
+            }),
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to BUY PROXY:`, response.status);
+            return res.status(response.status).json({ 
+                success: false,
+                error: 'BUY PROXY request failed'
+            });
+        }
+
+        const json = await response.json();
+        const servers = json.servers || [];
+        const serverType = type === "proxy_https"
+            ? "HTTPS Proxy"
+			: "SOCKS5 Proxy";
+            
+        const today = new Date();
+        const expiredDate = new Date(today);
+        expiredDate.setDate(today.getDate() + 30);
+
+        // Format dates as DD-MM-YYYY
+        const formatDate = (date) => {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
+        };
+
+        const tableData = servers.map(server => ({
+            sid: server.id,
+            ip_port: `${server.ip}:${server.remote_port}`,
+            country: nation,
+            type: serverType,
+            created: formatDate(today),
+            expired: formatDate(expiredDate),
+            ip_changed: 0,
+            status: "Running",
+            note: note
+        }));
+
+        const proxyInfo = servers.map(
+            server => `${server.ip}:${server.remote_port}:${server.username}:${server.password}`
+        );
+
+        return res.json({
+            success: true,
+            data: tableData,
+            info: proxyInfo
+        });
+    } catch (error) {
+        console.error('Failed to BUY PROXY', error.response?.data || error.message);
+        return res.status(500).json({ 
+            success: false,
+            error: 'Internal server error'
+        });
+    }
+};
+
+export async function buyCalc(req, res) {
+    const { quantity, nation, apiKey } = req.body;
+
+    const url = 'https://api.smartserver.vn/api/server/create/calculate';
+
+    const headers = {
+        'accept': 'application/json, text/plain, */*',
+        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
+        'content-type': 'application/json',
+        'origin': 'https://manage.1mcloud.vn',
+        'referer': 'https://manage.1mcloud.vn/',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+                plan_id: 0,
+                nation: nation,
+                quantity: quantity,
+                duration: 1,
+                is_proxy: true
+            }),
+        });
+
+        if (!response.ok) {
+            console.error(`Failed to CALC BUY:`, response.status);
+            return res.status(response.status).json({ 
+                success: false,
+                error: 'CALC BUY request failed'
+            });
+        }
+
+        const data = await response.json();
+
+        return res.json({
+            success: true,
+            info: data
+        });
+    } catch (error) {
+        console.error('Failed to CALC BUY', error.response?.data || error.message);
+        return res.status(500).json({ 
+            success: false,
+            error: 'Internal server error'
+        });
+    }
+}
+
 export async function changeIp(req, res) {
     const { ip, custom_info, apiKey, type = 'proxy_https' } = req.body;
 

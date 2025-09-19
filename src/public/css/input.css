@@ -71,7 +71,9 @@
     --color-bg-renew: var(--bg-renew);
     --color-bg-getAPIKey: var(--bg-getAPIKey);
 
-    --breakpoint-sm: 707px;
+    --breakpoint-sm: 749px;
+    --breakpoint-md: 883px;
+    --breakpoint-lg: 1040px;
 }
 
 /* Theme Variables */

@@ -501,6 +501,10 @@ export function setAllData(data) {
     allData = data;
 }
 
+export function addData(extraData) {
+    allData.push(...extraData);
+}
+
 export function str2date(str) {
     const [d, m, y] = str.split("-");
     return new Date(y, m - 1, d);

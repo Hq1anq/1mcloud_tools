@@ -10,7 +10,8 @@ import {
     reboot,
     renew,
     checkPair,
-    getTextEn
+    getTextEn,
+    buyProxy, buyCalc
 } from '../controllers/proxyManager.js';
 
 const router = express.Router();
@@ -30,5 +31,7 @@ router.post('/proxy/reboot', reboot);
 router.post('/proxy/renew', renew);
 router.post('/proxy/change-ip', changeIp);
 router.post('/proxy/reinstall', reinstall);
+router.post('/proxy/buy-proxy', buyProxy);
+router.post('/proxy/buy-calc', buyCalc);
 
 export default router;

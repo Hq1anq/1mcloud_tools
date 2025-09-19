@@ -1,6 +1,7 @@
 import {
 	displaySorted,
 	showAllData,
+	addData,
 	columnMap,
 	reorderHeader,
 	getSelectedRows,
@@ -9,17 +10,13 @@ import {
 	updateCounts,
 	getStatusChip,
 	setAllData,
+	str2date, date2str
 } from "./components/table.js";
 import { showToast, changeToToast } from "./components/toaster.js";
 import { showCopyDialog } from "./components/copyDialog.js";
-import {
-	showChangeIpDialog,
-	closeChangeIpDialog,
-} from "./components/changeIpDialog.js";
-import {
-	showRenewDialog,
-	closeRenewDialog
-} from "./components/renewDialog.js";
+import { showChangeIpDialog, closeChangeIpDialog } from "./components/changeIpDialog.js";
+import { showBuyDialog, closeBuyDialog } from "./components/buyProxy.js";
+import { showRenewDialog, closeRenewDialog } from "./components/renewDialog.js";
 import {
 	showGetAPIKeyDialog,
 	closeAPIKeyDialog,
@@ -27,7 +24,6 @@ import {
 	setAuthAccount,
 	handleViewKey,
 } from "./components/getAPIKey.js";
-import { str2date, date2str } from "./components/table.js";
 // DOM elements
 const elements = {
 	table: document.querySelector("table"),
@@ -47,6 +43,13 @@ const elements = {
     changeIpType: document.getElementById("changeIpType-trigger"),
     changeIpBtn: document.getElementById("changeIpBtn"),
     confirmChangeIp : document.getElementById("confirmChangeIp"),
+
+	buyQuantity: document.getElementById("buyQuantity"),
+	buyNote: document.getElementById("buyNote"),
+	buyNation: document.getElementById("buyNation-trigger"),
+	buyType: document.getElementById("buyType-trigger"),
+	buyBtn: document.getElementById("buyBtn"),
+	confirmBuy: document.getElementById("confirmBuy"),
 
 	copyIpBtn: document.getElementById("copyIpBtn"),
 	pauseBtn: document.getElementById("pauseBtn"),
@@ -123,6 +126,9 @@ function bindEvents() {
 			elements.eyeIconAPIKey,
 		);
 	});
+
+	elements.buyBtn.addEventListener("click", showBuyDialog);
+	elements.confirmBuy.addEventListener("click", buyProxy);
 }
 
 async function copyIp() {
@@ -245,6 +251,82 @@ async function getData() {
 		}
 	} catch (err) {
 		console.error("Fetch error:", err);
+	}
+}
+
+async function buyProxy() {
+	closeBuyDialog();
+	
+	showToast("Buying proxies...", "loading");
+	
+	const apiKeyString = elements.apiKey.value.trim();
+	const quantityString = elements.buyQuantity.value.trim();
+	const nationCode = elements.buyNation.textContent.trim()
+		.match(/\((.*)\)/)[1];
+	const proxyType =
+		elements.buyType.textContent.trim() === "SOCKS5"
+			? "proxy_sock_5"
+			: "proxy_https";
+	const buyNote = elements.buyNote.value;
+	let proxyInfo = [];
+
+	try {
+		const response = await fetch("/proxy/buy-proxy", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				quantity: +quantityString,
+				note: buyNote,
+				rangeIp: "Ngẫu nhiên",
+				nation: nationCode,
+				apiKey: apiKeyString,
+				type: proxyType
+			}),
+		});
+
+		if (response.ok && response.status === 200) {
+			const result = await response.json();
+			const data = result.data;
+			if (data.length > 0) {
+				proxyInfo = result.info;
+				addData(data);
+				showAllData();
+			}
+			changeToToast(`Created <span class="text-text-toast-success">${data.length}</span> proxies`, "Buying proxies", "success");
+		} else {
+			console.log(`❌ Error: ${response.status}`);
+			switch (response.status) {
+				case 401:
+					changeToToast("Wrong API KEY!", "Getting data", "error");
+					break;
+				case 500:
+					changeToToast("Fail to created proxy, try again!", "Getting data", "error");
+					break;
+				default:
+					changeToToast(`❌ Error: ${response.status}`, "Getting data", "error");
+					break;
+			}
+		}
+	} catch (err) {
+		console.error("Buy proxy, fetch error:", err);
+	}
+
+	// ✅ Copy to clipboard if there are any successful proxies
+	if (proxyInfo.length > 0) {
+		await delay(1000);
+		const textToCopy = proxyInfo.join("\n");
+		if (navigator.clipboard && navigator.clipboard.writeText)
+			try {
+				await navigator.clipboard.writeText(textToCopy);
+				showToast("Proxy list copied to clipboard!", "success");
+			} catch (err) {
+				console.log("❌ Failed to copy to clipboard:", err);
+				showCopyDialog("Proxy information", textToCopy);
+			}
+		else {
+			console.log("❌ Failed to access clipboard");
+			showCopyDialog("Proxy information", textToCopy);
+		}
 	}
 }
 

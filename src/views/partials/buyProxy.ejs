@@ -1,0 +1,102 @@
+<div id="buyContainer" class="fixed inset-0 hidden z-50 content-center bg-[rgba(0,0,0,0.5)] backdrop-blur-sm">
+	<div id="buyDialog" class="all-slow text-text-secondary scale-90 opacity-0 border-border bg-dialog relative mx-auto flex w-[90%] max-w-4xl flex-col rounded-xl border p-6 pr-4 pb-4 shadow-[0_0_25px_rgba(0,0,0,0.5)] select-none">
+		<!-- Title -->
+		<h2 class="text-text-title mb-4 text-xl font-bold">Buy Proxy</h2>
+		<!-- Responsive Layout -->
+		<div class="flex flex-col md:flex-row md:space-x-6">
+			<!-- Left: Quantity + Note -->
+			<div class="flex-1 mb-4 md:mb-0 flex flex-col">
+				<!-- Quantity -->
+				<div class="mb-4">
+					<label for="buyQuantity" class="block mb-1 text-text-secondary font-medium"
+						>Amount</label>
+					<input id="buyQuantity" type="number" min="1" value="1" required />
+				</div>
+
+				<!-- Note -->
+				<div class="flex-1 flex flex-col">
+					<label for="buyNote" class="block mb-1 text-text-secondary font-medium"
+						>Note (optional)</label>
+					<textarea id="buyNote" placeholder="Enter additional notes..." class="min-h-auto h-9 sm:min-h-52"></textarea>
+				</div>
+			</div>
+
+			<!-- Right: Type + Nationality + Summary -->
+			<div class="flex-1 flex flex-col">
+				<!-- National Dropdown -->
+				<div class="mb-4">
+					<label for="buyNation" class="block mb-1 text-text-secondary font-medium"
+						>Nationality</label>
+					<%- include('./dropDown', {
+						dropdownId: 'buyNation',
+						dropdownOptions: [
+							'Việt Nam(VN)',
+							'Singapore(SG)',
+							'Mỹ(US)',
+							'Canada(CA)',
+							'Úc(AU)',
+							'Ðức(DE)',
+							'Anh(UK)',
+							'Pháp(FR)',
+							'Nhật Bản(JP)',
+							'Hồng Kông(HK)'
+						],
+						defaultOption: 'Việt Nam(VN)',
+						borderStyle: 'rounded-lg'
+					}) %>
+				</div>
+
+				<!-- Type Dropdown -->
+				<div class="mb-4">
+					<label for="buyType" class="block mb-1 text-text-secondary font-medium">
+						Type</label>
+					<%- include('./dropDown', {
+						dropdownId: 'buyType',
+						dropdownOptions: ['HTTPS', 'SOCKS5' ],
+						defaultOption: 'HTTPS',
+						borderStyle: 'rounded-lg'
+					}) %>
+				</div>
+
+				<!-- Order Summary -->
+				<div class="flex-1 flex flex-col">
+					<h3 class="mb-2 text-text-secondary font-medium">
+						Order Summary
+					</h3>
+					<table class="w-full bg-dialog-td table-auto border-collapse overflow-hidden">
+						<tbody class="text-sm md:text-base">
+							<tr class="hover:bg-bg-hover border-b border-border">
+								<td class="px-2 py-2">Original Price</td>
+								<td id="summaryOriginalPrice" class="px-2 py-2 font-semibold text-right">
+									0,00 VNĐ
+								</td>
+							</tr>
+							<tr class="hover:bg-bg-hover border-b border-border">
+								<td class="px-2 py-2">Discount</td>
+								<td id="summaryDiscount" class="px-2 py-2 font-semibold text-right">
+									-0,00 VNĐ
+								</td>
+							</tr>
+							<tr class="hover:bg-bg-hover">
+								<td class="px-2 py-2">Total to Pay</td>
+								<td id="summaryMustPay" class="text-text-title px-2 py-2 font-bold text-right">
+									0,00 VNĐ
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<!-- Actions -->
+		<div class="flex justify-end space-x-3 mt-4">
+			<button id="cancelBuy" class="rounded-xl bg-gray-500 px-4 py-2 text-white hover:bg-gray-600">
+				Cancel
+			</button>
+			<button id="confirmBuy" class="rounded-xl bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+				Pay
+			</button>
+		</div>
+	</div>
+</div>

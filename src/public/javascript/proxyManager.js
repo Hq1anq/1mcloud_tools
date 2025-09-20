@@ -15,6 +15,7 @@ import {
 import { showToast, changeToToast } from "./components/toaster.js";
 import { showCopyDialog } from "./components/copyDialog.js";
 import { showChangeIpDialog, closeChangeIpDialog } from "./components/changeIpDialog.js";
+import { showRefundDialog, closeRefundDialog } from "./components/refundDialog.js";
 import { showBuyDialog, closeBuyDialog } from "./components/buyProxy.js";
 import { showRenewDialog, closeRenewDialog } from "./components/renewDialog.js";
 import {
@@ -65,6 +66,7 @@ const elements = {
 	eyeIconAPIKey: document.getElementById("eyeIconAPIKey"),
 
 	refundBtn: document.getElementById("refundBtn"),
+	confirmRefund: document.getElementById("confirmRefund"),
 	renewBtn: document.getElementById("renewBtn"),
 	confirmRenew: document.getElementById("confirmRenew")
 };
@@ -152,13 +154,15 @@ function bindEvents() {
 
 	elements.pauseBtn.addEventListener("click", pause);
 	elements.rebootBtn.addEventListener("click", reboot);
-	elements.refundBtn.addEventListener("click", refund);
 
 	elements.changeIpBtn.addEventListener("click", () => {
 		const proxyType = elements.changeIpType.textContent.trim();
 		showChangeIpDialog(proxyType);
 	});
 	elements.confirmChangeIp.addEventListener("click", changeIp);
+
+	elements.refundBtn.addEventListener("click", showRefundDialog);
+	elements.confirmRefund.addEventListener("click", refund);
 
 	elements.renewBtn.addEventListener("click", showRenewDialog);
 	elements.confirmRenew.addEventListener("click", renew);
@@ -373,7 +377,7 @@ async function buyProxy() {
 
 		if (response.ok && response.status === 200) {
 			const result = await response.json();
-			data = result.data;
+			const data = result.data;
 			if (data.length > 0) {
 				proxyInfo = result.info;
 				addData(data);
@@ -840,6 +844,8 @@ async function refund() {
 		showToast("Select at least one row to REFUND", "info");
 		return;
 	}
+
+	closeRefundDialog();
 
 	showToast("REFUND...", "loading");
 

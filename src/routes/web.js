@@ -8,7 +8,7 @@ import {
     changeNote,
     pause,
     reboot,
-    refund,
+    refund, refundCalc,
     renew,
     checkPair,
     getTextEn,
@@ -34,6 +34,7 @@ router.post('/proxy/change-note', changeNote);
 router.post('/proxy/pause', pause);
 router.post('/proxy/reboot', reboot);
 router.post('/proxy/refund', refund);
+router.post('/proxy/refund-calc', refundCalc);
 router.post('/proxy/renew', renew);
 router.post('/proxy/change-ip', changeIp);
 router.post('/proxy/reinstall', reinstall);

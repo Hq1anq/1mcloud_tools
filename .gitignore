@@ -1,5 +1,6 @@
 mysql.yml
 loginRequest.yaml
+vpsRequest.yml
 src/public/css/style.css
 
 # Node.js

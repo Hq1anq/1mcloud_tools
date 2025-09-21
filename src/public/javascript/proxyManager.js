@@ -3,7 +3,6 @@ import {
 	showAllData,
 	addData,
 	columnMap,
-	reorderHeader,
 	getSelectedRows,
 	initTable,
 	updateRowData,
@@ -75,8 +74,6 @@ const elements = {
 async function init() {
 	bindEvents();
 	initTable("proxyManager");
-
-	reorderHeader();
 
 	const apiKey = localStorage.getItem("apiKey");
 

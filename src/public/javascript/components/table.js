@@ -16,26 +16,21 @@ const mobileOrder  = ['ip_port', 'status', 'note', 'expired', 'country', 'type',
 export let order;
 export let columnMap = { checkbox: 0 };
 
-export function reorderHeader() {
-    const headerCells = elements.table.tHead.rows[0].cells;
-
-    if (isMobile()) {
-        order = mobileOrder;
-        headerCells[1].firstElementChild.querySelector('input').classList.remove('text-center');
-        headerCells[1].firstElementChild.classList.add('items-start');
-        headerCells[3].firstElementChild.querySelector('input').classList.remove('text-center');
-        headerCells[3].firstElementChild.classList.add('items-start');
-    } else {
-        order = desktopOrder;
-        headerCells[2].firstElementChild.querySelector('input').classList.remove('text-center');
-        headerCells[2].firstElementChild.classList.add('items-start');
-        headerCells[9].firstElementChild.querySelector('input').classList.remove('text-center');
-        headerCells[9].firstElementChild.classList.add('items-start');
-    }
+function setupOrder() {
+    order = isMobile() ? mobileOrder : desktopOrder;
 
     order.forEach((col, idx) => {
         columnMap[col] = idx + 1; // +1 because 0 is reserved for checkbox
     });
+}
+
+function reorderHeader() {
+    const headerCells = elements.table.tHead.rows[0].cells;
+
+    headerCells[columnMap.ip_port].firstElementChild.querySelector('input').classList.remove('text-center');
+    headerCells[columnMap.ip_port].firstElementChild.classList.add('items-start');
+    headerCells[columnMap.note].firstElementChild.querySelector('input').classList.remove('text-center');
+    headerCells[columnMap.note].firstElementChild.classList.add('items-start');
 
     order.forEach((col, idx) => {
         const headerCell = headerCells[idx + 1]; // +1 because first <th> is checkbox
@@ -105,11 +100,13 @@ function bindEvents(page) {
 
 export function initTable(page) {
     bindEvents(page);
-    initFilters(page);
     if (page === 'proxyChecker') {
         elements.reloadBtn.classList.add('hidden');
         elements.captureBtn.classList.remove('hidden');
     } else {
+        setupOrder();
+        initFilters();
+        reorderHeader();
         elements.reloadBtn.classList.remove('hidden');
         elements.captureBtn.classList.add('hidden');
 
@@ -372,52 +369,50 @@ function handleRowCheckboxChange(e) {
 }
 
 // Initialize filter inputs
-function initFilters(page) {
-    if (page === "proxyManager") {
-        const filterGroup = `
-            <div class="relative">
-                <!-- Operator icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" data-operator="contain" viewBox="0 0 640 640"
-                    class="bg-border-input rounded-full p-0.5 filter-operator absolute top-[-2px] right-[-6px] cursor-pointer fill-text-primary hover:brightness-[var(--highlight-brightness)] w-4 h-4">
-                    <path d="M136,128h216c105.9,0,192,86.1,192,192s-86.1,192-192,192H136c-22.1,0-40-17.9-40-40s17.9-40,40-40h216c61.8,0,112-50.2,112-112s-50.2-112-112-112H136c-22.1,0-40-17.9-40-40S113.9,128,136,128z"/>
-                </svg>
-                <input type="text" placeholder="Filter"
-                    class="filter-input bg-dropdown mt-1 px-2 py-1 text-center" />
-            </div>`
-        elements.table.querySelectorAll('th').forEach((headerCell, idx) => {
-            if (idx > 0) headerCell.firstElementChild.innerHTML += filterGroup;
-        })
-        elements.filterInputs = document.querySelectorAll('.filter-input'),
-        elements.filterOperator = document.querySelectorAll(".filter-operator")
+function initFilters() {
+    const filterGroup = `
+        <div class="relative">
+            <!-- Operator icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" data-operator="contain" viewBox="0 0 640 640"
+                class="bg-border-input rounded-full p-0.5 filter-operator absolute top-[-2px] right-[-6px] cursor-pointer fill-text-primary hover:brightness-[var(--highlight-brightness)] w-4 h-4">
+                <path d="M136,128h216c105.9,0,192,86.1,192,192s-86.1,192-192,192H136c-22.1,0-40-17.9-40-40s17.9-40,40-40h216c61.8,0,112-50.2,112-112s-50.2-112-112-112H136c-22.1,0-40-17.9-40-40S113.9,128,136,128z"/>
+            </svg>
+            <input type="text" placeholder="Filter"
+                class="filter-input bg-dropdown mt-1 px-2 py-1 text-center" />
+        </div>`
+    elements.table.querySelectorAll('th').forEach((headerCell, idx) => {
+        if (idx > 0) headerCell.firstElementChild.innerHTML += filterGroup;
+    })
+    elements.filterInputs = document.querySelectorAll('.filter-input'),
+    elements.filterOperator = document.querySelectorAll(".filter-operator")
 
-        elements.filterInputs.forEach(input => {
-            // Run filter when ENTER is pressed
-            input.addEventListener('keydown', event => {
-                if (event.key === 'Enter') {
-                    applyFilter();
-                }
-            });
-    
-            input.addEventListener('blur', applyFilter); // When loss focus on textbox (for mobile)
+    elements.filterInputs.forEach(input => {
+        // Run filter when ENTER is pressed
+        input.addEventListener('keydown', event => {
+            if (event.key === 'Enter') {
+                applyFilter();
+            }
         });
 
-        const operatorCycle = ["greater-equal", "equal", "less-equal", "contain"];
-        const operatorIcons = {
-            "greater-equal": `<path d="M117.9 158.4C101.1 152.8 92.1 134.6 97.7 117.9C103.3 101.2 121.4 92.1 138.1 97.6L522.1 225.6C535.2 230 544 242.2 544 256C544 269.8 535.2 282 522.1 286.4L138.1 414.4C121.3 420 103.2 410.9 97.6 394.2C92 377.5 101.1 359.3 117.8 353.7L410.8 256L117.9 158.4zM512 480C529.7 480 544 494.3 544 512C544 529.7 529.7 544 512 544L128 544C110.3 544 96 529.7 96 512C96 494.3 110.3 480 128 480L512 480z"/>`,
-            "equal": `<path d="M128 192C110.3 192 96 206.3 96 224C96 241.7 110.3 256 128 256L512 256C529.7 256 544 241.7 544 224C544 206.3 529.7 192 512 192L128 192zM128 384C110.3 384 96 398.3 96 416C96 433.7 110.3 448 128 448L512 448C529.7 448 544 433.7 544 416C544 398.3 529.7 384 512 384L128 384z"/>`,
-            "less-equal": `<path d="M522.1 158.4C538.9 152.8 547.9 134.7 542.3 117.9C536.7 101.1 518.6 92.1 501.8 97.7L117.8 225.7C104.8 230 96 242.2 96 256C96 269.8 104.8 282 117.9 286.4L501.9 414.4C518.7 420 536.8 410.9 542.4 394.2C548 377.5 538.9 359.3 522.2 353.7L229.2 256L522.1 158.4zM128 480C110.3 480 96 494.3 96 512C96 529.7 110.3 544 128 544L512 544C529.7 544 544 529.7 544 512C544 494.3 529.7 480 512 480L128 480z"/>`,
-            "contain": `<path d="M136,128h216c105.9,0,192,86.1,192,192s-86.1,192-192,192H136c-22.1,0-40-17.9-40-40s17.9-40,40-40h216c61.8,0,112-50.2,112-112s-50.2-112-112-112H136c-22.1,0-40-17.9-40-40S113.9,128,136,128z"/>`,
-        };
+        input.addEventListener('blur', applyFilter); // When loss focus on textbox (for mobile)
+    });
 
-        document.querySelectorAll(".filter-operator").forEach(el => {
-            el.addEventListener("click", () => {
-                let current = el.dataset.operator;
-                let next = operatorCycle[(operatorCycle.indexOf(current) + 1) % operatorCycle.length];
-                el.dataset.operator = next;
-                el.innerHTML = operatorIcons[next];
-            });
+    const operatorCycle = ["greater-equal", "equal", "less-equal", "contain"];
+    const operatorIcons = {
+        "greater-equal": `<path d="M117.9 158.4C101.1 152.8 92.1 134.6 97.7 117.9C103.3 101.2 121.4 92.1 138.1 97.6L522.1 225.6C535.2 230 544 242.2 544 256C544 269.8 535.2 282 522.1 286.4L138.1 414.4C121.3 420 103.2 410.9 97.6 394.2C92 377.5 101.1 359.3 117.8 353.7L410.8 256L117.9 158.4zM512 480C529.7 480 544 494.3 544 512C544 529.7 529.7 544 512 544L128 544C110.3 544 96 529.7 96 512C96 494.3 110.3 480 128 480L512 480z"/>`,
+        "equal": `<path d="M128 192C110.3 192 96 206.3 96 224C96 241.7 110.3 256 128 256L512 256C529.7 256 544 241.7 544 224C544 206.3 529.7 192 512 192L128 192zM128 384C110.3 384 96 398.3 96 416C96 433.7 110.3 448 128 448L512 448C529.7 448 544 433.7 544 416C544 398.3 529.7 384 512 384L128 384z"/>`,
+        "less-equal": `<path d="M522.1 158.4C538.9 152.8 547.9 134.7 542.3 117.9C536.7 101.1 518.6 92.1 501.8 97.7L117.8 225.7C104.8 230 96 242.2 96 256C96 269.8 104.8 282 117.9 286.4L501.9 414.4C518.7 420 536.8 410.9 542.4 394.2C548 377.5 538.9 359.3 522.2 353.7L229.2 256L522.1 158.4zM128 480C110.3 480 96 494.3 96 512C96 529.7 110.3 544 128 544L512 544C529.7 544 544 529.7 544 512C544 494.3 529.7 480 512 480L128 480z"/>`,
+        "contain": `<path d="M136,128h216c105.9,0,192,86.1,192,192s-86.1,192-192,192H136c-22.1,0-40-17.9-40-40s17.9-40,40-40h216c61.8,0,112-50.2,112-112s-50.2-112-112-112H136c-22.1,0-40-17.9-40-40S113.9,128,136,128z"/>`,
+    };
+
+    document.querySelectorAll(".filter-operator").forEach(el => {
+        el.addEventListener("click", () => {
+            let current = el.dataset.operator;
+            let next = operatorCycle[(operatorCycle.indexOf(current) + 1) % operatorCycle.length];
+            el.dataset.operator = next;
+            el.innerHTML = operatorIcons[next];
         });
-    }
+    });
 }
 
 function applyFilter() {
@@ -438,7 +433,54 @@ function applyFilter() {
         : targetData.filter(row => {
             return activeFilters.every(f => {
                 const cellValue = String(row[f.colKey]);
-                const filterVal = f.value;
+                let filterVal = f.value;
+
+                if (['created', 'expired'].includes(f.colKey)) {
+                    const today = new Date();
+                    const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
+                    const currentYear = today.getFullYear();
+
+                    let formatted = '';
+                    let day, month, year;
+
+                    switch (filterVal.length) {
+                        case 0:
+                            formatted = '';
+                            break;
+                        case 2:
+                            // DD -> DD-MM-YYYY
+                            day = filterVal.padStart(2, '0');
+                            formatted = `${day}-${currentMonth}-${currentYear}`;
+                            break;
+                        case 4:
+                            // DDMM -> DD-MM-YYYY
+                            day = filterVal.slice(0, 2).padStart(2, '0');
+                            month = filterVal.slice(2, 4).padStart(2, '0') || currentMonth;
+                            formatted = `${day}-${month}-${currentYear}`;
+                            break;
+                        case 6:
+                            // Full DDMMYYYY -> format to DD-MM-YYYY
+                            day = filterVal.slice(0, 2);
+                            month = filterVal.slice(2, 4);
+                            year = filterVal.slice(4, 6);
+                            formatted = `${day}-${month}-20${year}`;
+                            break;
+                        case 8:
+                            // Full DDMMYYYY -> format to DD-MM-YYYY
+                            day = filterVal.slice(0, 2);
+                            month = filterVal.slice(2, 4);
+                            year = filterVal.slice(4, 8);
+                            formatted = `${day}-${month}-${year}`;
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                    if (formatted) {
+                        inputs[columnMap[f.colKey] - 1].value = formatted; // columnMap also count checkbox
+                        filterVal = formatted;
+                    }
+                }
 
                 if (f.operator === "contain")
                     return cellValue.includes(filterVal);

@@ -222,7 +222,7 @@ async function captureProxyStatus() {
 	const containerHeader = cloneContainer.querySelector("#container-header");
 	const rows = cloneContainer.querySelectorAll("tr");
 
-	cloneContainer.className = "fixed bg-body p-3 z-[-10] rounded-xl";
+	cloneContainer.className = "fixed bg-body p-3 z-[-10]";
 
 	// Remove filter, button
 	containerHeader.innerHTML = `
@@ -290,7 +290,7 @@ async function captureProxyStatus() {
 
 	// Capture with html2canvas
 	const captured = await html2canvas(cloneContainer, {
-		backgroundColor: null,
+		backgroundColor: window.getComputedStyle(cloneContainer).backgroundColor,
 	});
 
 	// standardize width (e.g. always 1080px wide)

@@ -400,6 +400,9 @@ async function changeIp() {
 					return;
 				}
 				console.error(`Failed to CHANGE IP for ${ip}:`, data.error);
+				const checkbox = row.children[columnMap.checkbox].querySelector("input");
+				checkbox.checked = false;
+				row.classList.remove("selected-row");
 				row.classList.add("bg-error-cell");
 				if (rowCount === 1) {
 					changeToToast(`Fail to CHANGE IP ${ip}`, "Changing IP", "error");
@@ -410,6 +413,9 @@ async function changeIp() {
 		} catch (err) {
 			failCount++;
 			console.error(`Error CHANGE IP for ${ip}:`, err);
+			const checkbox = row.children[columnMap.checkbox].querySelector("input");
+			checkbox.checked = false;
+			row.classList.remove("selected-row");
 			row.classList.add("bg-error-cell");
 			if (rowCount === 1) {
 				changeToToast(`Fail to CHANGE IP ${ip}`, "Changing IP", "error");
@@ -535,6 +541,9 @@ async function reinstall() {
 					`Failed to REINSTALL for sid ${sid}:`,
 					data.error,
 				);
+				const checkbox = row.children[columnMap.checkbox].querySelector("input");
+				checkbox.checked = false;
+				row.classList.remove("selected-row");
 				row.classList.add("bg-error-cell");
 				if (rowCount === 1) {
 					changeToToast(`Fail to REINSTALL sid ${sid}`, "Reinstalling", "error");
@@ -545,6 +554,9 @@ async function reinstall() {
 		} catch (err) {
 			failCount++;
 			console.error(`Error REINSTALL for sid ${sid}:`, err);
+			const checkbox = row.children[columnMap.checkbox].querySelector("input");
+			checkbox.checked = false;
+			row.classList.remove("selected-row");
 			row.classList.add("bg-error-cell");
 			if (rowCount === 1) {
 				changeToToast(`Fail to REINSTALL sid ${sid}`, "Reinstalling", "error");

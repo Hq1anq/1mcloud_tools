@@ -81,6 +81,52 @@ async function init() {
 		const data = await res.json();
 		elements.apiKey.value = data.textEn;
 	} else elements.apiKey.value = "";
+
+	elements.ipList.addEventListener("keydown", function (e) {
+		if (!e.altKey || (e.key !== "ArrowUp" && e.key !== "ArrowDown")) return;
+
+		e.preventDefault();
+
+		const { selectionStart, selectionEnd, value } = elements.ipList;
+		const lines = value.split("\n");
+
+		let lineStart = 0;
+		let currentLine = 0;
+
+		// Find the current line index
+		for (let i = 0; i < lines.length; i++) {
+			const lineLength = lines[i].length + 1; // +1 for '\n'
+			if (selectionStart < lineStart + lineLength) {
+				currentLine = i;
+				break;
+			}
+			lineStart += lineLength;
+		}
+
+		const column = selectionStart - lineStart;
+
+		if (e.key === "ArrowUp" && currentLine > 0) {
+			[lines[currentLine - 1], lines[currentLine]] = [lines[currentLine], lines[currentLine - 1]];
+			setNewPosition(currentLine - 1, column);
+		} else if (e.key === "ArrowDown" && currentLine < lines.length - 1) {
+			[lines[currentLine], lines[currentLine + 1]] = [lines[currentLine + 1], lines[currentLine]];
+			setNewPosition(currentLine + 1, column);
+		}
+
+		function setNewPosition(targetLine, column) {
+			elements.ipList.value = lines.join("\n");
+
+			let newCursor = 0;
+			for (let i = 0; i < targetLine; i++) {
+				newCursor += lines[i].length + 1;
+			}
+
+			// Clamp column to new line's length
+			newCursor += Math.min(column, lines[targetLine].length);
+
+			elements.ipList.selectionStart = elements.ipList.selectionEnd = newCursor;
+		}
+	});
 }
 
 // Bind event listeners

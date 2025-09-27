@@ -511,7 +511,16 @@ function applyFilter() {
                 } else if (f.colKey === 'sid' || f.colKey === 'ip_changed') {
                     left = parseInt(cellValue);
                     right = parseInt(filterVal);
-                } else {
+                } else if ((f.colKey === 'note')
+                    && (isValidDDMM(filterVal))
+                    && (isValidDDMM(cellValue.replace(/^\*+/, '').slice(0, 4)))) {
+                        const DDMMcellValue = cellValue.replace(/^\*+/, '').slice(0, 4);
+                        left = +str2date(
+                            `${DDMMcellValue.slice(0, 2)}-${DDMMcellValue.slice(2, 4)}-2025`);
+                        right = +str2date(
+                            `${filterVal.slice(0, 2)}-${filterVal.slice(2, 4)}-2025`);
+                    }
+                else {
                     left = cellValue;
                     right = filterVal;
                 }
@@ -531,6 +540,18 @@ function applyFilter() {
     elements.tbody.innerHTML = "";
     renderChunk();
     showEmptyState(filteredData.length === 0);
+}
+
+function isValidDDMM(str) {
+    str = str.trim();
+
+    // Must be exactly 4 digits only — no letters, no extra characters
+    if (!/^\d{4}$/.test(str)) return false;
+
+    const day = parseInt(str.slice(0, 2), 10);
+    const month = parseInt(str.slice(2, 4), 10);
+
+    return day >= 1 && day <= 31 && month >= 1 && month <= 12;
 }
 
 export function showAllData() {

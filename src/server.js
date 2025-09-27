@@ -18,6 +18,10 @@ app.get('/proxyChecker', (req, res) => {
     res.render('proxyChecker'); // This will render views/proxyChecker.ejs
 });
 
+app.get('/', (req, res) => {
+    res.render('proxyManager'); // This will render views/proxyManager.ejs
+});
+
 app.get('/proxyManager', (req, res) => {
     res.render('proxyManager'); // This will render views/proxyManager.ejs
 });

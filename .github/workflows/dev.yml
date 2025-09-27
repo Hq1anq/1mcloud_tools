@@ -1,0 +1,24 @@
+name: 1mcloud tools web
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy using ssh
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: 22
+        script: |
+          cd /home/dev_1mcloud_tools
+          git fetch origin
+          git checkout dev
+          git pull
+          npm run build
+          pm2 reload dev-web

@@ -119,15 +119,22 @@ async function checkProxies() {
 	const proxyType = elements.proxyType.textContent.trim();
 
 	// Send the proxies via POST
-	await fetch("/proxy/send-proxies", {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ proxies }),
-	});
+	try {
+		await fetch("/proxy/send-proxies", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ proxies }),
+		});
+	} catch (err) {
+		showToast("Failed to send proxies to server", "error");
+		console.error("❌ Failed to send proxies:", err);
+		return;
+	}
 
 	// Start the stream
 	const eventSource = new EventSource(
 		`/proxy/check-stream?type=${proxyType}`,
+		{ withCredentials: true }
 	);
 
 	eventSource.onmessage = (event) => {

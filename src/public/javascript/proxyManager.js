@@ -384,6 +384,7 @@ async function getData() {
 			}
 		}
 	} catch (err) {
+		changeToToast("Fail to get data, try again!", "Getting data", "error");
 		console.error("Fetch error:", err);
 	}
 }
@@ -431,17 +432,18 @@ async function buyProxy() {
 			console.log(`❌ Error: ${response.status}`);
 			switch (response.status) {
 				case 401:
-					changeToToast("Wrong API KEY!", "Getting data", "error");
+					changeToToast("Wrong API KEY!", "Buying proxies", "error");
 					break;
 				case 500:
-					changeToToast("Fail to created proxy, try again!", "Getting data", "error");
+					changeToToast("Fail to created proxy, try again!", "Buying proxies", "error");
 					break;
 				default:
-					changeToToast(`❌ Error: ${response.status}`, "Getting data", "error");
+					changeToToast(`❌ Error: ${response.status}`, "Buying proxies", "error");
 					break;
 			}
 		}
 	} catch (err) {
+		changeToToast("Fail to created proxy, try again!", "Buying proxies", "error");
 		console.error("Buy proxy, fetch error:", err);
 	}
 

@@ -710,19 +710,22 @@ async function pause() {
 			// Show appropriate toast message
 			if (errorIds.length === 0)
 				changeToToast(
-					`PAUSE completed ${successIds.length} success`,
+					`PAUSE completed <br> 
+					<span class="text-text-toast-success">${successIds.length} success</span>`,
                     "Pausing",
 					"success",
 				);
 			else if (successIds.length === 0)
 				changeToToast(
-					`PAUSE failed for <span class="text-text-toast-error">${errorIds.length}</span> servers`,
+					`PAUSE completed <br>
+					<span class="text-text-toast-error">${errorIds.length} failed</span>`,
                     "Pausing",
 					"error",
 				);
 			else
 				changeToToast(
-					`PAUSE completed: ${successIds.length} success, ${errorIds.length} failed`,
+					`PAUSE completed <br>
+					<span class="text-text-toast-success">${successIds.length} success</span>, <span class="text-text-toast-error">${errorIds.length} failed</span>`,
                     "Pausing",
 					"warning",
 				);
@@ -799,7 +802,8 @@ async function reboot() {
 				);
 			else if (successIds.length === 0)
 				changeToToast(
-					`Reboot failed for <span class="text-text-toast-error">${errorIds.length}</span> servers`,
+					`Reboot completed <br>
+					<span class="text-text-toast-error">${errorIds.length} failed</span>`,
 					"REBOOT...",
                     "error",
 				);
@@ -871,19 +875,22 @@ async function renew() {
 			// Show appropriate toast message
 			if (errorIPs.length === 0)
 				changeToToast(
-					`RENEW completed ${successIPs.length} success`,
+					`RENEW completed <br>
+					<span class="text-text-toast-success">${successIPs.length} success</span>`,
                     "RENEW...",
 					"success",
 				);
 			else if (successIPs.length === 0)
 				changeToToast(
-					`RENEW failed for <span class="text-text-toast-error">${errorIPs.length}</span> servers`,
+					`RENEW completed <br>
+					<span class="text-text-toast-error">${errorIPs.length} failed</span>`,
                     "RENEW...",
 					"error",
 				);
 			else
 				changeToToast(
-					`RENEW completed: ${successIPs.length} success, ${errorIPs.length} failed`,
+					`RENEW completed <br>
+					<span class="text-text-toast-success">${successIPs.length} success</span>, <span class="text-text-toast-error">${errorIPs.length} failed</span>`,
 					"RENEW...",
                     "warning",
 				);
@@ -998,7 +1005,8 @@ async function changeNote() {
 		);
 	else if (successCount === 0)
 		changeToToast(
-			`CHANGE NOTE failed for <span class="text-text-toast-error">${failCount}</span> servers`,
+			`CHANGE NOTE completed <br>
+			<span class="text-text-toast-error">${failCount} failed</span>`,
 			"Changing Note",
             "error",
 		);
@@ -1030,6 +1038,7 @@ function updateRowContent(row, text, action) {
 		date.setDate(date.getDate() + 30);
 		const newExpired = date2str(date);
 		cells[columnMap.expired].innerHTML = newExpired;
+		cells[columnMap.status].innerHTML = getStatusChip("Running");
 		updateRowData(id, {
 			expired: newExpired,
 			status: "Running"

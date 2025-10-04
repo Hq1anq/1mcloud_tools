@@ -67,7 +67,12 @@ const elements = {
 	refundBtn: document.getElementById("refundBtn"),
 	confirmRefund: document.getElementById("confirmRefund"),
 	renewBtn: document.getElementById("renewBtn"),
-	confirmRenew: document.getElementById("confirmRenew")
+	confirmRenew: document.getElementById("confirmRenew"),
+
+	giaHanContainer: document.getElementById("giaHan-container"),
+	giaHan1: document.getElementById("giaHan1"),
+	giaHan: document.getElementById("giaHan"),
+	giaHan2: document.getElementById("giaHan2"),
 };
 
 // Initialize
@@ -228,6 +233,10 @@ function bindEvents() {
 
 	elements.buyBtn.addEventListener("click", showBuyDialog);
 	elements.confirmBuy.addEventListener("click", buyProxy);
+
+	elements.giaHan1.addEventListener("click", () => giaHan("tuan"));
+	elements.giaHan.addEventListener("click", () => giaHan("auto"));
+	elements.giaHan2.addEventListener("click", () => giaHan("2tuan"));
 }
 
 async function copyIp() {
@@ -1176,6 +1185,216 @@ async function changeNote() {
 		);
 
 	updateCounts();
+}
+
+async function giaHan(type="tuan") {
+	const apiKeyString = elements.apiKey.value.trim();
+
+	const selectedRows = getSelectedRows();
+	const rowCount = selectedRows.length;
+	if (rowCount === 0) {
+		showToast("Select at least one row", "info");
+		return;
+	}
+
+	if (rowCount > 1) showToast(`Changing Note 1/${rowCount}`, "loading");
+	else showToast(`Changing Note...`, "loading");
+
+	function calcNewNote(oldNote, addingDate) {
+		// Split at the first space to extract the date part
+		const [targetStr, ...rest] = oldNote.split(" ");
+		
+		// Extract the DDMM part (last 4 characters of targetStr)
+		const ddmm = targetStr.slice(-4);
+		const day = parseInt(ddmm.slice(0, 2), 10);
+		const month = parseInt(ddmm.slice(2, 4), 10);
+
+		// Construct a date assuming current year
+		const baseDate = new Date();
+		baseDate.setDate(1); // Reset to day 1 to avoid overflow on months
+		baseDate.setMonth(month - 1);
+		baseDate.setDate(day);
+
+		// Add the days
+		baseDate.setDate(baseDate.getDate() + addingDate);
+
+		// Format new date back to DDMM
+		const newDay = String(baseDate.getDate()).padStart(2, '0');
+		const newMonth = String(baseDate.getMonth() + 1).padStart(2, '0');
+		const newDDMM = newDay + newMonth;
+
+		// Count how many * are before the date
+		const prefixStars = targetStr.length - 4;
+
+		// Construct new date string with one more '*' and updated DDMM
+		const newPrefix = '*'.repeat(prefixStars + 1);
+		const updatedNote = `${newPrefix}${newDDMM} ${rest.join(" ")}`;
+
+		return updatedNote;
+	}
+
+	function getGiaHanType(note) {
+		const match = note.match(/([a-zA-Z]+)([12])/);
+		return match ? parseInt(match[2], 10) : null;
+	}
+
+	let successCount = 0;
+	let failCount = 0;
+	const logArr = [];
+
+	for (let i = 0; i < rowCount; i++) {
+		const row = selectedRows[i];
+		const cells = row.cells;
+		if (cells.length < 2) continue;
+
+		// Extract IP from the 'ip_port' column (assumed to be the second column)
+		const sid = cells[columnMap.sid].innerText.trim();
+		const ip = cells[columnMap.ip_port].innerText.split(":")[0].trim();
+		const oldNote = cells[columnMap.note].innerText.trim();
+
+		let newNote;
+		let typeNum;
+
+		try {
+			if (type == "tuan") {
+				newNote = calcNewNote(oldNote, 7);
+				typeNum = 1
+			}
+			else if (type == "2tuan") {
+				newNote = calcNewNote(oldNote, 14);
+				typeNum = 2;
+			}
+			else if (type == "auto") {
+				typeNum = getGiaHanType(oldNote);
+				if (typeNum == 2)
+					newNote = calcNewNote(oldNote, 14);
+				else if (typeNum == 1)
+					newNote = calcNewNote(oldNote, 7);
+				else {
+					throw new Error("note not match format");
+				}
+			} else throw new Error("note not match format");
+		} catch (err) {
+			console.error(err);
+			failCount++;
+			row.classList.add("bg-error-cell");
+			showToast(`Failed to CHANGE NOTE for sid ${sid}`, "error");
+			continue;
+		}
+
+		if (i > 0)
+			changeToToast(
+				`Changing Note ${i + 1}/${rowCount}`,
+                "Changing Note",
+				"loading",
+				true,
+			);
+
+		try {
+			const response = await fetch("/proxy/change-note", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					sid: sid,
+					newNote: newNote,
+					apiKey: apiKeyString,
+				}),
+			});
+
+			const data = await response.json();
+
+			if (response.ok && data.success) {
+				logArr.push(`${ip} - đã gia hạn ${(typeNum == 2) ? '2 ' : ''}tuần`)
+				successCount++;
+				console.log(`✅ CHANGE NOTE for ${sid}`);
+				updateRowContent(row, newNote, "changeNote");
+			} else {
+				failCount++;
+				if (response.status === 401) {
+					changeToToast("Wrong API Key!", "Changing Note", "error");
+					return;
+				}
+				console.error(
+					`Failed to CHANGE NOTE for sid ${sid}:`,
+					data.error,
+				);
+				row.classList.add("bg-error-cell");
+				if (rowCount === 1) {
+					changeToToast(`Fail to CHANGE NOTE for ${sid}`, "Changing Note", "error");
+					return;
+				}
+				showToast(`Failed to CHANGE NOTE for sid ${sid}`, "error");
+			}
+		} catch (err) {
+			failCount++;
+			console.error(`Error CHANGE NOTE for sid ${sid}:`, err);
+			row.classList.add("bg-error-cell");
+			if (rowCount === 1) {
+				changeToToast(`Fail to CHANGE NOTE for sid ${sid}`, "Changing Note", "error");
+				return;
+			}
+			showToast(`Failed to CHANGE NOTE for sid ${sid}`, "error");
+		}
+
+		if (rowCount > 1 && i < rowCount - 1) {
+			await delay(1000);
+		}
+	}
+
+	// Show appropriate toast message based on results
+	if (failCount === 0)
+		changeToToast(
+			`CHANGE NOTE completed <br>
+            <span class="text-text-toast-success">${successCount} success</span>`,
+            "Changing Note",
+			"success",
+		);
+	else if (successCount === 0)
+		changeToToast(
+			`CHANGE NOTE completed <br>
+			<span class="text-text-toast-error">${failCount} failed</span>`,
+			"Changing Note",
+            "error",
+		);
+	else
+		changeToToast(
+			`CHANGE NOTE completed <br>
+            <span class="text-text-toast-success">${successCount} success</span>, <span class="text-text-toast-error">${failCount} failed</span>`,
+			"Changing Note",
+            "warning",
+		);
+
+	updateCounts();
+
+	if (logArr.length > 0) {
+		await delay(1000);
+
+		// Separate logs by type number
+		const log2Weeks = logArr.filter(log => log.includes("2 tuần"));
+		const log1Week = logArr.filter(log => !log.includes("2 tuần"));
+
+		// Build final text conditionally (avoid extra newlines)
+		let textToCopy = "";
+		if (log2Weeks.length && log1Week.length)
+			textToCopy = log2Weeks.join("\n") + "\n\n" + log1Week.join("\n");
+		else if (log2Weeks.length)
+			textToCopy = log2Weeks.join("\n");
+		else
+			textToCopy = log1Week.join("\n");
+
+		if (navigator.clipboard && navigator.clipboard.writeText)
+			try {
+				await navigator.clipboard.writeText(textToCopy);
+				showToast("Gia han logs copied to clipboard!", "success");
+			} catch (err) {
+				console.log("❌ Failed to copy to clipboard:", err);
+				showCopyDialog("Ip Reinstalled", textToCopy);
+			}
+		else {
+			console.log("❌ Failed to access clipboard");
+			showCopyDialog("Ip Reinstalled", textToCopy);
+		}
+	}
 }
 
 function updateRowContent(row, text, action) {

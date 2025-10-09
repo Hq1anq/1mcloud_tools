@@ -270,7 +270,7 @@ async function captureProxyStatus() {
 		rows[i].firstElementChild.remove(); // Remove first checkbox
 		for (let j = 2; j < 11; j += 2) {
 			rows[i].childNodes[j].className =
-				"text-lg bg-surface text-center border-border border-b px-6 py-1 pb-5";
+				"text-[var(--text-secondary)] text-lg bg-surface text-center border-border border-b px-6 py-1 pb-5";
 		}
 		rows[i].childNodes[12].classList.add("bg-surface");
 		rows[i].childNodes[12].firstElementChild.style.padding = "0 1rem 1rem";

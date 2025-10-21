@@ -1,4 +1,3 @@
-import { check } from 'prettier'
 import Proxy from '../models/proxy.model.js'
 import User from '../models/user.model.js'
 
@@ -27,7 +26,8 @@ export async function saveToDb(req, res) {
     let deleteCount = 0
 
     // ------- A. UPDATE OR INSERT -------
-    for (const clientProxy of clientData) {
+    for (const rawClientProxy of clientData) {
+      const clientProxy = sanitizeProxy(rawClientProxy)
       const sid = clientProxy.sid
       const dbProxy = dbMap.get(sid)
 
@@ -42,6 +42,10 @@ export async function saveToDb(req, res) {
       } else {
         // Exists → need merge
         const merged = { ...dbProxy, ...clientProxy }
+
+        delete merged._id // <-- prevent overwriting _id
+        delete merged.__v // prevent version overwrite
+        delete merged.owner // <-- owner MUST NOT be overwritten
 
         // Special rule for user_pass
         const hasClientUserPass = !!clientProxy.user_pass
@@ -103,12 +107,22 @@ export async function getFromDb(req, res) {
     const user = await checkUserApiKey(apiKey)
     if (!user) return res.status(401).json({ error: 'Invalid API key' })
 
-    const allProxies = await Proxy.find({ owner: user._id }).lean()
+    const allProxies = await Proxy.find({ owner: user._id })
+      .lean()
+      .select('-_id -__v -owner') // <--- remove all server-side fields (_owner, _id, __v)
     res.json({ proxies: allProxies })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Failed to get proxies' })
   }
+}
+
+function sanitizeProxy(proxy) {
+  const clean = { ...proxy }
+  delete clean._id // <-- REMOVE this
+  delete clean.__v
+  delete clean.owner // <-- REMOVE this too, only server controls owner
+  return clean
 }
 
 function isEqualObject(a, b) {

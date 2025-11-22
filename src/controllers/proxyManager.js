@@ -1,733 +1,785 @@
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
+import fetch from "node-fetch";
+import dotenv from "dotenv";
 dotenv.config();
 
 export async function getData(req, res) {
-    const url = 'https://api.smartserver.vn/api/server/list';
-    try {
-        const { ips, amount, apiKey } = req.body;
+  const url = "https://api.smartserver.vn/api/server/list";
+  try {
+    const { ips, amount, apiKey } = req.body;
 
-        const headers = {
-            'accept': 'application/json, text/plain, */*',
-            'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
-            'content-type': 'application/json',
-            'origin': 'https://manage.1mcloud.vn',
-            'referer': 'https://manage.1mcloud.vn/',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-        };
+    const headers = {
+      accept: "application/json, text/plain, */*",
+      authorization: `Bearer ${apiKey || process.env.API_KEY}`,
+      "content-type": "application/json",
+      origin: "https://manage.1mcloud.vn",
+      referer: "https://manage.1mcloud.vn/",
+      "user-agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    };
 
-        const params = new URLSearchParams({
-            page: 1,
-            limit: amount || 200,
-            by_status: '',
-            by_time: 'all',
-            by_created: '',
-            keyword: '',
-            ips: ips || '',
-            proxy: 'true',
-        });
+    const params = new URLSearchParams({
+      page: 1,
+      limit: amount || 200,
+      by_status: "",
+      by_time: "all",
+      by_created: "",
+      keyword: "",
+      ips: ips || "",
+      proxy: "true",
+    });
 
-        const response = await fetch(`${url}?${params.toString()}`, {
-            method: 'GET',
-            headers: headers,
-        });
+    const response = await fetch(`${url}?${params.toString()}`, {
+      method: "GET",
+      headers: headers,
+    });
 
-        if (!response.ok || response.status !== 200) {
-            console.error('Request failed:', response.status);
-            return res.status(response.status).json({ error: 'getData Request failed' });;
-        }
-
-        const json = await response.json();
-        const servers = json.servers || [];
-
-        const data = servers.map(server => ({
-            sid: server.server_id,
-            ip_port: server.ip_port,
-            country: server.country,
-            type: server.he_dieu_hanh,
-            created: server.ngay_mua,
-            expired: server.het_han,
-            ip_changed: server.change_ip_time,
-            status: server.trang_thai,
-            note: server.note
-        }));
-
-        return res.json({ data });
-
-    } catch (err) {
-        console.error('Error:', err.message);
-        return res.status(500).json({ error: 'Internal server error' });
+    if (!response.ok || response.status !== 200) {
+      console.error("Request failed:", response.status);
+      return res
+        .status(response.status)
+        .json({ error: "getData Request failed" });
     }
-};
+
+    const json = await response.json();
+    const servers = json.servers || [];
+
+    const data = servers.map((server) => ({
+      sid: server.server_id,
+      ip_port: server.ip_port,
+      country: server.country,
+      type: server.he_dieu_hanh,
+      created: server.ngay_mua,
+      expired: server.het_han,
+      ip_changed: server.change_ip_time,
+      status: server.trang_thai,
+      note: server.note,
+    }));
+
+    return res.json({ data });
+  } catch (err) {
+    console.error("Error:", err.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}
 
 export async function buyProxy(req, res) {
-    const { quantity, note, rangeIp = "Ngẫu nhiên", nation, apiKey, type = 'proxy_https' } = req.body;
+  const {
+    quantity,
+    note,
+    rangeIp = "Ngẫu nhiên",
+    nation,
+    apiKey,
+    type = "proxy_https",
+  } = req.body;
 
-    const url = 'https://api.smartserver.vn/api/server/create';
+  const url = "https://api.smartserver.vn/api/server/create";
 
-    const headers = {
-        'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
-        'content-type': 'application/json',
-        'origin': 'https://manage.1mcloud.vn',
-        'referer': 'https://manage.1mcloud.vn/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+  const headers = {
+    accept: "application/json, text/plain, */*",
+    authorization: `Bearer ${apiKey || process.env.API_KEY}`,
+    "content-type": "application/json",
+    origin: "https://manage.1mcloud.vn",
+    referer: "https://manage.1mcloud.vn/",
+    "user-agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        plan_id: 0,
+        duration: 1,
+        auto_renew: false,
+        quantity: quantity,
+        os_id: 1,
+        random_password: true,
+        random_remote_port: true,
+        install_chrome: false,
+        install_firefox: false,
+        note: note,
+        range_ip: rangeIp,
+        nation: nation,
+        provider: "Ngẫu nhiên",
+        proxy_type: type,
+        is_proxy: true,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to BUY PROXY:`, response.status);
+      return res.status(response.status).json({
+        success: false,
+        error: "BUY PROXY request failed",
+      });
+    }
+
+    const json = await response.json();
+    const servers = json.servers || [];
+    const serverType = type === "proxy_https" ? "HTTPS Proxy" : "SOCKS5 Proxy";
+
+    const today = new Date();
+    const expiredDate = new Date(today);
+    expiredDate.setDate(today.getDate() + 30);
+
+    // Format dates as DD-MM-YYYY
+    const formatDate = (date) => {
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
     };
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({
-                plan_id: 0,
-                duration: 1,
-                auto_renew: false,
-                quantity: quantity,
-                os_id: 1,
-                random_password: true,
-                random_remote_port: true,
-                install_chrome: false,
-                install_firefox: false,
-                note: note,
-                range_ip: rangeIp,
-                nation: nation,
-                provider: "Ngẫu nhiên",
-                proxy_type: type,
-                is_proxy: true
-            }),
-        });
+    const tableData = servers.map((server) => ({
+      sid: server.id,
+      ip_port: `${server.ip}:${server.remote_port}`,
+      country: nation,
+      type: serverType,
+      created: formatDate(today),
+      expired: formatDate(expiredDate),
+      ip_changed: 0,
+      status: "Running",
+      note: note,
+      user_pass: `${server.username}:${server.password}`,
+    }));
 
-        if (!response.ok) {
-            console.error(`Failed to BUY PROXY:`, response.status);
-            return res.status(response.status).json({ 
-                success: false,
-                error: 'BUY PROXY request failed'
-            });
-        }
+    const proxyInfo = servers.map(
+      (server) =>
+        `${server.ip}:${server.remote_port}:${server.username}:${server.password}`,
+    );
 
-        const json = await response.json();
-        const servers = json.servers || [];
-        const serverType = type === "proxy_https"
-            ? "HTTPS Proxy"
-			: "SOCKS5 Proxy";
-            
-        const today = new Date();
-        const expiredDate = new Date(today);
-        expiredDate.setDate(today.getDate() + 30);
-
-        // Format dates as DD-MM-YYYY
-        const formatDate = (date) => {
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}-${month}-${year}`;
-        };
-
-        const tableData = servers.map(server => ({
-            sid: server.id,
-            ip_port: `${server.ip}:${server.remote_port}`,
-            country: nation,
-            type: serverType,
-            created: formatDate(today),
-            expired: formatDate(expiredDate),
-            ip_changed: 0,
-            status: "Running",
-            note: note
-        }));
-
-        const proxyInfo = servers.map(
-            server => `${server.ip}:${server.remote_port}:${server.username}:${server.password}`
-        );
-
-        return res.json({
-            success: true,
-            data: tableData,
-            info: proxyInfo
-        });
-    } catch (error) {
-        console.error('Failed to BUY PROXY', error.response?.data || error.message);
-        return res.status(500).json({ 
-            success: false,
-            error: 'Internal server error'
-        });
-    }
-};
+    return res.json({
+      success: true,
+      data: tableData,
+      info: proxyInfo,
+    });
+  } catch (error) {
+    console.error("Failed to BUY PROXY", error.response?.data || error.message);
+    return res.status(500).json({
+      success: false,
+      error: "Internal server error",
+    });
+  }
+}
 
 export async function buyCalc(req, res) {
-    const { quantity, nation, apiKey } = req.body;
+  const { quantity, nation, apiKey } = req.body;
 
-    const url = 'https://api.smartserver.vn/api/server/create/calculate';
+  const url = "https://api.smartserver.vn/api/server/create/calculate";
 
-    const headers = {
-        'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
-        'content-type': 'application/json',
-        'origin': 'https://manage.1mcloud.vn',
-        'referer': 'https://manage.1mcloud.vn/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-    };
+  const headers = {
+    accept: "application/json, text/plain, */*",
+    authorization: `Bearer ${apiKey || process.env.API_KEY}`,
+    "content-type": "application/json",
+    origin: "https://manage.1mcloud.vn",
+    referer: "https://manage.1mcloud.vn/",
+    "user-agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+  };
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({
-                plan_id: 0,
-                nation: nation,
-                quantity: quantity,
-                duration: 1,
-                is_proxy: true
-            }),
-        });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        plan_id: 0,
+        nation: nation,
+        quantity: quantity,
+        duration: 1,
+        is_proxy: true,
+      }),
+    });
 
-        if (!response.ok) {
-            console.error(`Failed to CALC BUY:`, response.status);
-            return res.status(response.status).json({ 
-                success: false,
-                error: 'CALC BUY request failed'
-            });
-        }
-
-        const data = await response.json();
-
-        return res.json({
-            success: true,
-            info: data
-        });
-    } catch (error) {
-        console.error('Failed to CALC BUY', error.response?.data || error.message);
-        return res.status(500).json({ 
-            success: false,
-            error: 'Internal server error'
-        });
+    if (!response.ok) {
+      console.error(`Failed to CALC BUY:`, response.status);
+      return res.status(response.status).json({
+        success: false,
+        error: "CALC BUY request failed",
+      });
     }
+
+    const data = await response.json();
+
+    return res.json({
+      success: true,
+      info: data,
+    });
+  } catch (error) {
+    console.error("Failed to CALC BUY", error.response?.data || error.message);
+    return res.status(500).json({
+      success: false,
+      error: "Internal server error",
+    });
+  }
 }
 
 export async function changeIp(req, res) {
-    const { ip, custom_info, apiKey, type = 'proxy_https' } = req.body;
+  const { ip, custom_info, apiKey, type = "proxy_https" } = req.body;
 
-    const url = 'https://api.smartserver.vn/api/server/change-ip';
+  const url = "https://api.smartserver.vn/api/server/change-ip";
 
-    const headers = {
-        'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
-        'content-type': 'application/json',
-        'origin': 'https://manage.1mcloud.vn',
-        'referer': 'https://manage.1mcloud.vn/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+  const headers = {
+    accept: "application/json, text/plain, */*",
+    authorization: `Bearer ${apiKey || process.env.API_KEY}`,
+    "content-type": "application/json",
+    origin: "https://manage.1mcloud.vn",
+    referer: "https://manage.1mcloud.vn/",
+    "user-agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+  };
+
+  let data;
+  if (custom_info) {
+    const list_info = custom_info.split(":");
+    if (list_info.length < 4)
+      return res.status(400).json({
+        success: false,
+        error:
+          "Invalid format. Expected: range_ip:remote_port:username:password",
+        ip,
+      });
+
+    data = {
+      ip: ip,
+      proxy_type: type,
+      range_ip: list_info[0],
+      random_password: false,
+      random_remote_port: false,
+      password: list_info[3],
+      remote_port: parseInt(list_info[1]),
+      isp: "Ngẫu nhiên",
     };
+  } else {
+    data = {
+      ip: ip,
+      os_id: 0,
+      proxy_type: type,
+      range_ip: "Ngẫu nhiên",
+      random_password: true,
+      random_remote_port: true,
+      isp: "Ngẫu nhiên",
+    };
+  }
 
-    let data;
-    if (custom_info) {
-        const list_info = custom_info.split(':');
-        if (list_info.length < 4)
-            return res.status(400).json({ 
-                success: false,
-                error: 'Invalid format. Expected: range_ip:remote_port:username:password',
-                ip 
-            });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(data),
+    });
 
-        data = {
-            ip: ip,
-            proxy_type: type,
-            range_ip: list_info[0],
-            random_password: false,
-            random_remote_port: false,
-            password: list_info[3],
-            remote_port: parseInt(list_info[1]),
-            isp: 'Ngẫu nhiên',
-        };
-    } else {
-        data = {
-            ip: ip,
-            os_id: 0,
-            proxy_type: type,
-            range_ip: 'Ngẫu nhiên',
-            random_password: true,
-            random_remote_port: true,
-            isp: 'Ngẫu nhiên',
-        };
+    if (!response.ok) {
+      console.error(`Failed to CHANGE IP for ${ip}:`, response.status);
+      return res.status(response.status).json({
+        success: false,
+        error: "CHANGE IP request failed",
+        ip,
+      });
     }
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(data),
-        });
+    const rawData = await response.json();
+    return res.json({
+      success: true,
+      proxyInfo: [
+        rawData.new_ip,
+        rawData.remote_port,
+        rawData.username,
+        rawData.password,
+      ],
+      type: type,
+    });
+  } catch (error) {
+    console.error(
+      `Failed to CHANGE IP for ${ip}`,
+      error.response?.data || error.message,
+    );
+    return res.status(500).json({
+      success: false,
+      error: "Internal server error",
+      ip,
+    });
+  }
+}
 
-        if (!response.ok) {
-            console.error(`Failed to CHANGE IP for ${ip}:`, response.status);
-            return res.status(response.status).json({ 
-                success: false,
-                error: 'CHANGE IP request failed',
-                ip 
-            });
-        }
-
-        const rawData = await response.json();
-        return res.json({ 
-            success: true,
-            proxyInfo: [
-                rawData.new_ip,
-                rawData.remote_port,
-                rawData.username,
-                rawData.password
-            ],
-            type: type
-        });
-    } catch (error) {
-        console.error(`Failed to CHANGE IP for ${ip}`, error.response?.data || error.message);
-        return res.status(500).json({ 
-            success: false,
-            error: 'Internal server error',
-            ip 
-        });
-    }
-};
-
-const SECRETKEY = 'apoi1ơ6ashdáajo903rjf';
+const SECRETKEY = "apoi1ơ6ashdáajo903rjf";
 
 export async function reinstall(req, res) {
-    const { sid, custom_info, apiKey, type = "proxy_https" } = req.body;
+  const { sid, custom_info, apiKey, type = "proxy_https" } = req.body;
 
-    const url = "https://api.smartserver.vn/api/server/reinstall";
+  const url = "https://api.smartserver.vn/api/server/reinstall";
 
-    let data;
-    if (custom_info) {
-        let range_ip, remote_port, username, password;
-        const reinstallInfo = custom_info.split(":");
-        if (reinstallInfo.length === 4) {
-            [range_ip, remote_port, username, password] = reinstallInfo;
-        } else if (reinstallInfo.length === 3) {
-            [remote_port, username, password] = reinstallInfo;
-        } else {
-            return res.status(400).json({ error: 'Invalid custom_info format. Expected format: range_ip:remote_port:username:password or remote_port:username:password' });
-        }
-        data = {
-            "random_remote_port": "",
-            "remote_port": remote_port,
-            "random_username": "",
-            "username": username,
-            "random_password": "",
-            "password": password,
-            "type": type,
-            "sid": sid
-        };
+  let data;
+  if (custom_info) {
+    let range_ip, remote_port, username, password;
+    const reinstallInfo = custom_info.split(":");
+    if (reinstallInfo.length === 4) {
+      [range_ip, remote_port, username, password] = reinstallInfo;
+    } else if (reinstallInfo.length === 3) {
+      [remote_port, username, password] = reinstallInfo;
     } else {
-        data = {
-            random_remote_port: "on",
-            remote_port: "",
-            random_username: "on",
-            username: "",
-            random_password: "on",
-            password: "",
-            type: type,
-            sid: sid
-        };
+      return res.status(400).json({
+        error:
+          "Invalid custom_info format. Expected format: range_ip:remote_port:username:password or remote_port:username:password",
+      });
     }
-
-    const headers = {
-        'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
-        'content-type': 'application/json',
-        'origin': 'https://manage.1mcloud.vn',
-        'referer': 'https://manage.1mcloud.vn/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+    data = {
+      random_remote_port: "",
+      remote_port: remote_port,
+      random_username: "",
+      username: username,
+      random_password: "",
+      password: password,
+      type: type,
+      sid: sid,
     };
+  } else {
+    data = {
+      random_remote_port: "on",
+      remote_port: "",
+      random_username: "on",
+      username: "",
+      random_password: "on",
+      password: "",
+      type: type,
+      sid: sid,
+    };
+  }
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(data),
-        });
+  const headers = {
+    accept: "application/json, text/plain, */*",
+    authorization: `Bearer ${apiKey || process.env.API_KEY}`,
+    "content-type": "application/json",
+    origin: "https://manage.1mcloud.vn",
+    referer: "https://manage.1mcloud.vn/",
+    "user-agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+  };
 
-        if (!response.ok) {
-            console.error(`Failed to REINSTALL for sid ${sid}:`, response.status);
-            return res.status(response.status).json({ 
-                success: false,
-                error: 'REINSTALL request failed',
-                ip 
-            });
-        }
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(data),
+    });
 
-        const rawData = await response.json();
-        return res.json({ 
-            success: true,
-            proxyInfo: [
-                rawData.ip,
-                rawData.remote_port,
-                rawData.username,
-                rawData.password
-            ],
-            type: type
-        });
-    } catch (error) {
-        console.error(`Failed to REINSTALL for sid: ${sid}`, error.response?.data || error.message);
-        res.status(500).json({
-            success: false,
-            error: 'Internal server error',
-            sid
-        });
+    if (!response.ok) {
+      console.error(`Failed to REINSTALL for sid ${sid}:`, response.status);
+      return res.status(response.status).json({
+        success: false,
+        error: "REINSTALL request failed",
+        ip,
+      });
     }
+
+    const rawData = await response.json();
+    return res.json({
+      success: true,
+      proxyInfo: [
+        rawData.ip,
+        rawData.remote_port,
+        rawData.username,
+        rawData.password,
+      ],
+      type: type,
+    });
+  } catch (error) {
+    console.error(
+      `Failed to REINSTALL for sid: ${sid}`,
+      error.response?.data || error.message,
+    );
+    res.status(500).json({
+      success: false,
+      error: "Internal server error",
+      sid,
+    });
+  }
 }
 
 export async function pause(req, res) {
-    const { sids, apiKey } = req.body;
-    
-    const url = "https://api.smartserver.vn/api/server/pause"
+  const { sids, apiKey } = req.body;
 
-    const headers = {
-        'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
-        'content-type': 'application/json',
-        'origin': 'https://manage.1mcloud.vn',
-        'referer': 'https://manage.1mcloud.vn/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-    };
+  const url = "https://api.smartserver.vn/api/server/pause";
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({ sid: sids })
-        });
+  const headers = {
+    accept: "application/json, text/plain, */*",
+    authorization: `Bearer ${apiKey || process.env.API_KEY}`,
+    "content-type": "application/json",
+    origin: "https://manage.1mcloud.vn",
+    referer: "https://manage.1mcloud.vn/",
+    "user-agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+  };
 
-        if (!response.ok) {
-            console.error(`Failed to PAUSE for sids: ${sids}:`, response.status);
-            return res.status(response.status).json({ 
-                success: false, 
-                error: 'Request failed', 
-                sids 
-            });
-        }
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ sid: sids }),
+    });
 
-        const data = await response.json();
-        // Return the actual response data for better client-side handling
-        res.json({ 
-            success: true,
-            result: data.result
-        });
-    } catch (error) {
-        console.error(`Failed to PAUSE for sid: ${sids}`, error.response?.data || error.message);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Internal server error', 
-            sids 
-        });
+    if (!response.ok) {
+      console.error(`Failed to PAUSE for sids: ${sids}:`, response.status);
+      return res.status(response.status).json({
+        success: false,
+        error: "Request failed",
+        sids,
+      });
     }
+
+    const data = await response.json();
+    // Return the actual response data for better client-side handling
+    res.json({
+      success: true,
+      result: data.result,
+    });
+  } catch (error) {
+    console.error(
+      `Failed to PAUSE for sid: ${sids}`,
+      error.response?.data || error.message,
+    );
+    res.status(500).json({
+      success: false,
+      error: "Internal server error",
+      sids,
+    });
+  }
 }
 
 export async function reboot(req, res) {
-    const { sids, apiKey } = req.body;
-    
-    const url = "https://api.smartserver.vn/api/server/reboot"
+  const { sids, apiKey } = req.body;
 
-    const headers = {
-        'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
-        'content-type': 'application/json',
-        'origin': 'https://manage.1mcloud.vn',
-        'referer': 'https://manage.1mcloud.vn/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-    };
+  const url = "https://api.smartserver.vn/api/server/reboot";
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({ sid: sids })
-        });
+  const headers = {
+    accept: "application/json, text/plain, */*",
+    authorization: `Bearer ${apiKey || process.env.API_KEY}`,
+    "content-type": "application/json",
+    origin: "https://manage.1mcloud.vn",
+    referer: "https://manage.1mcloud.vn/",
+    "user-agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+  };
 
-        if (!response.ok) {
-            console.error(`Failed to REBOOT for sids: ${sids}:`, response.status);
-            return res.status(response.status).json({
-                success: false, 
-                error: 'Request failed', 
-                sids 
-            });
-        }
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ sid: sids }),
+    });
 
-        const data = await response.json();
-        // Return the actual response data for better client-side handling
-        res.json({ 
-            success: true,
-            result: data.result
-        });
-    } catch (error) {
-        console.error(`Failed to REBOOT for sid: ${sids}`, error.response?.data || error.message);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Internal server error', 
-            sids 
-        });
+    if (!response.ok) {
+      console.error(`Failed to REBOOT for sids: ${sids}:`, response.status);
+      return res.status(response.status).json({
+        success: false,
+        error: "Request failed",
+        sids,
+      });
     }
+
+    const data = await response.json();
+    // Return the actual response data for better client-side handling
+    res.json({
+      success: true,
+      result: data.result,
+    });
+  } catch (error) {
+    console.error(
+      `Failed to REBOOT for sid: ${sids}`,
+      error.response?.data || error.message,
+    );
+    res.status(500).json({
+      success: false,
+      error: "Internal server error",
+      sids,
+    });
+  }
 }
 
 export async function refund(req, res) {
-    const { sids, apiKey } = req.body;
-    
-    const url = "https://api.smartserver.vn/api/server/refund"
+  const { sids, apiKey } = req.body;
 
-    const headers = {
-        'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
-        'content-type': 'application/json',
-        'origin': 'https://manage.1mcloud.vn',
-        'referer': 'https://manage.1mcloud.vn/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-    };
+  const url = "https://api.smartserver.vn/api/server/refund";
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({ sid: sids })
-        });
+  const headers = {
+    accept: "application/json, text/plain, */*",
+    authorization: `Bearer ${apiKey || process.env.API_KEY}`,
+    "content-type": "application/json",
+    origin: "https://manage.1mcloud.vn",
+    referer: "https://manage.1mcloud.vn/",
+    "user-agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+  };
 
-        if (!response.ok) {
-            console.error(`Failed to REFUND for sids: ${sids}:`, response.status);
-            return res.status(response.status).json({ 
-                success: false, 
-                error: 'Request failed', 
-                sids 
-            });
-        }
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ sid: sids }),
+    });
 
-        const data = await response.json();
-        // Return the actual response data for better client-side handling
-        res.json({ 
-            success: true,
-            result: data.result
-        });
-    } catch (error) {
-        console.error(`Failed to REFUND for sid: ${sids}`, error.response?.data || error.message);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Internal server error', 
-            sids 
-        });
+    if (!response.ok) {
+      console.error(`Failed to REFUND for sids: ${sids}:`, response.status);
+      return res.status(response.status).json({
+        success: false,
+        error: "Request failed",
+        sids,
+      });
     }
+
+    const data = await response.json();
+    // Return the actual response data for better client-side handling
+    res.json({
+      success: true,
+      result: data.result,
+    });
+  } catch (error) {
+    console.error(
+      `Failed to REFUND for sid: ${sids}`,
+      error.response?.data || error.message,
+    );
+    res.status(500).json({
+      success: false,
+      error: "Internal server error",
+      sids,
+    });
+  }
 }
 
 export async function refundCalc(req, res) {
-    const { sid, apiKey } = req.body;
+  const { sid, apiKey } = req.body;
 
-    const url = 'https://api.smartserver.vn/api/server/refund/calculate';
+  const url = "https://api.smartserver.vn/api/server/refund/calculate";
 
-    const headers = {
-        'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
-        'content-type': 'application/json',
-        'origin': 'https://manage.1mcloud.vn',
-        'referer': 'https://manage.1mcloud.vn/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-    };
+  const headers = {
+    accept: "application/json, text/plain, */*",
+    authorization: `Bearer ${apiKey || process.env.API_KEY}`,
+    "content-type": "application/json",
+    origin: "https://manage.1mcloud.vn",
+    referer: "https://manage.1mcloud.vn/",
+    "user-agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+  };
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({
-                sid: sid
-            }),
-        });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        sid: sid,
+      }),
+    });
 
-        if (!response.ok) {
-            console.error(`Failed to CALC REFUND:`, response.status);
-            return res.status(response.status).json({ 
-                success: false,
-                error: 'CALC REFUND request failed'
-            });
-        }
-
-        const data = await response.json();
-
-        return res.json({
-            success: true,
-            result: data.result
-        });
-    } catch (error) {
-        console.error('Failed to CALC REFUND', error.response?.data || error.message);
-        return res.status(500).json({ 
-            success: false,
-            error: 'Internal server error'
-        });
+    if (!response.ok) {
+      console.error(`Failed to CALC REFUND:`, response.status);
+      return res.status(response.status).json({
+        success: false,
+        error: "CALC REFUND request failed",
+      });
     }
+
+    const data = await response.json();
+
+    return res.json({
+      success: true,
+      result: data.result,
+    });
+  } catch (error) {
+    console.error(
+      "Failed to CALC REFUND",
+      error.response?.data || error.message,
+    );
+    return res.status(500).json({
+      success: false,
+      error: "Internal server error",
+    });
+  }
 }
 
 export async function renew(req, res) {
-    const { sids, month=1, apiKey } = req.body;
+  const { sids, month = 1, apiKey } = req.body;
 
-    const url = "https://api.smartserver.vn/api/server/renew"
+  const url = "https://api.smartserver.vn/api/server/renew";
 
-    const headers = {
-        'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
-        'content-type': 'application/json',
-        'origin': 'https://manage.1mcloud.vn',
-        'referer': 'https://manage.1mcloud.vn/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-    };
+  const headers = {
+    accept: "application/json, text/plain, */*",
+    authorization: `Bearer ${apiKey || process.env.API_KEY}`,
+    "content-type": "application/json",
+    origin: "https://manage.1mcloud.vn",
+    referer: "https://manage.1mcloud.vn/",
+    "user-agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+  };
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({ sid: sids, month: month })
-        });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ sid: sids, month: month }),
+    });
 
-        if (!response.ok) {
-            console.error(`Failed to RENEW for sids: ${sids}:`, response.status);
-            return res.status(response.status).json({ 
-                success: false, 
-                error: 'Request failed', 
-                sids 
-            });
-        }
-
-        const data = await response.json();
-        // Return the actual response data for better client-side handling
-        res.json({ 
-            success: true,
-            result: data.result
-        });
-    } catch (error) {
-        console.error(`Failed to RENEW for sid: ${sids}`, error.response?.data || error.message);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Internal server error', 
-            sids 
-        });
+    if (!response.ok) {
+      console.error(`Failed to RENEW for sids: ${sids}:`, response.status);
+      return res.status(response.status).json({
+        success: false,
+        error: "Request failed",
+        sids,
+      });
     }
+
+    const data = await response.json();
+    // Return the actual response data for better client-side handling
+    res.json({
+      success: true,
+      result: data.result,
+    });
+  } catch (error) {
+    console.error(
+      `Failed to RENEW for sid: ${sids}`,
+      error.response?.data || error.message,
+    );
+    res.status(500).json({
+      success: false,
+      error: "Internal server error",
+      sids,
+    });
+  }
 }
 
 export function checkPair(req, res) {
-    const { text, textEn } = req.body;
+  const { text, textEn } = req.body;
 
-    if (!text || !textEn) {
-        return res.status(400).json({ error: 'Error' });
-    }
+  if (!text || !textEn) {
+    return res.status(400).json({ error: "Error" });
+  }
 
-    const textDe = xorEncryptDecrypt(textEn, SECRETKEY);
-    // Compare
-    const isValid = textDe === text;
+  const textDe = xorEncryptDecrypt(textEn, SECRETKEY);
+  // Compare
+  const isValid = textDe === text;
 
-    res.json({ valid: isValid });
+  res.json({ valid: isValid });
 }
 
 export function getTextEn(req, res) {
-    const { text } = req.body;
+  const { text } = req.body;
 
-    if (!text) {
-        return res.status(400).json({ error: 'Error' });
-    }
+  if (!text) {
+    return res.status(400).json({ error: "Error" });
+  }
 
-    const encryptedText = xorEncryptDecrypt(text, SECRETKEY);
-    res.json({ textEn: encryptedText });
+  const encryptedText = xorEncryptDecrypt(text, SECRETKEY);
+  res.json({ textEn: encryptedText });
 }
 
 function xorEncryptDecrypt(input, secretKey) {
-    let output = "";
-    for (let i = 0; i < input.length; i++) {
-        // XOR each char code with the secret
-        const charCode = input.charCodeAt(i) ^ secretKey.charCodeAt(i % secretKey.length);
-        output += String.fromCharCode(charCode);
-    }
-    return output;
+  let output = "";
+  for (let i = 0; i < input.length; i++) {
+    // XOR each char code with the secret
+    const charCode =
+      input.charCodeAt(i) ^ secretKey.charCodeAt(i % secretKey.length);
+    output += String.fromCharCode(charCode);
+  }
+  return output;
 }
 
 export async function changeNote(req, res) {
-    const { sid, newNote, apiKey } = req.body;
-    
-    const url = "https://api.smartserver.vn/api/server/info/note"
+  const { sid, newNote, apiKey } = req.body;
 
-    const headers = {
-        'accept': 'application/json, text/plain, */*',
-        'authorization': `Bearer ${apiKey || process.env.API_KEY}`,
-        'content-type': 'application/json',
-        'origin': 'https://manage.1mcloud.vn',
-        'referer': 'https://manage.1mcloud.vn/',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
-    };
+  const url = "https://api.smartserver.vn/api/server/info/note";
 
-    try {
-        const response = await fetch(url, {
-            method: 'PUT',
-            headers,
-            body: JSON.stringify({
-                sid: sid,
-                note: newNote
-            })
-        });
+  const headers = {
+    accept: "application/json, text/plain, */*",
+    authorization: `Bearer ${apiKey || process.env.API_KEY}`,
+    "content-type": "application/json",
+    origin: "https://manage.1mcloud.vn",
+    referer: "https://manage.1mcloud.vn/",
+    "user-agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+  };
 
-        if (!response.ok) {
-            console.log(`❌ Failed to CHANGE NOTE for sid: ${sid}: `, response.status);
-            return res.status(response.status).json({ 
-                success: false, 
-                error: 'Request failed', 
-                sid 
-            });
-        }
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify({
+        sid: sid,
+        note: newNote,
+      }),
+    });
 
-        const rawData = await response.json();
-        res.json({ success: rawData.result === 'success' });
-    } catch (error) {
-        console.error(`Failed to CHANGE NOTE for sid: ${sid}`, error.response?.data || error.message);
-        res.status(500).json({ 
-            success: false, 
-            error: 'Internal server error', 
-            sid
-        });
+    if (!response.ok) {
+      console.log(
+        `❌ Failed to CHANGE NOTE for sid: ${sid}: `,
+        response.status,
+      );
+      return res.status(response.status).json({
+        success: false,
+        error: "Request failed",
+        sid,
+      });
     }
+
+    const rawData = await response.json();
+    res.json({ success: rawData.result === "success" });
+  } catch (error) {
+    console.error(
+      `Failed to CHANGE NOTE for sid: ${sid}`,
+      error.response?.data || error.message,
+    );
+    res.status(500).json({
+      success: false,
+      error: "Internal server error",
+      sid,
+    });
+  }
 }
 
 export async function getAPIKey(req, res) {
-    const url = "https://api.smartserver.vn/api/token"
-    try {
-        const { email, password } = req.body;
-        const headers = {
-            'accept': 'application/json, text/plain, */*',
-            'content-type': 'application/x-www-form-urlencoded',
-            'origin': 'https://manage.1mcloud.vn',
-            'referer': 'https://manage.1mcloud.vn/',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
-        };
+  const url = "https://api.smartserver.vn/api/token";
+  try {
+    const { email, password } = req.body;
+    const headers = {
+      accept: "application/json, text/plain, */*",
+      "content-type": "application/x-www-form-urlencoded",
+      origin: "https://manage.1mcloud.vn",
+      referer: "https://manage.1mcloud.vn/",
+      "user-agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    };
 
-        const formData = new URLSearchParams({
-            email: email,
-            password: password,
-            client_id: 'nNrWRrQrwGSj78HBSU05yxM9jW1wq6Br3SsFxRTN',
-            grant_type: 'password',
-        });
+    const formData = new URLSearchParams({
+      email: email,
+      password: password,
+      client_id: "nNrWRrQrwGSj78HBSU05yxM9jW1wq6Br3SsFxRTN",
+      grant_type: "password",
+    });
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: formData.toString(),
-        });
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body: formData.toString(),
+    });
 
-        const rawData = await response.json();
+    const rawData = await response.json();
 
-        if (!response.ok) {
-            const errorText = rawData.error || 'Unknown error';
-            console.log('❌ Request failed:', response.status, errorText);
-            return res.status(response.status).json({
-                success: false,
-                error: errorText || 'getAPIKey Request failed'
-            });
-        }
-
-        return res.json({
-            success: true,
-            apiKey: rawData.access_token
-        });
-    } catch (error) {
-        console.log('❌ Error:', error.message);
-        return res.status(500).json({
-            success: false,
-            error: 'Internal server error'
-        });
+    if (!response.ok) {
+      const errorText = rawData.error || "Unknown error";
+      console.log("❌ Request failed:", response.status, errorText);
+      return res.status(response.status).json({
+        success: false,
+        error: errorText || "getAPIKey Request failed",
+      });
     }
+
+    return res.json({
+      success: true,
+      apiKey: rawData.access_token,
+    });
+  } catch (error) {
+    console.log("❌ Error:", error.message);
+    return res.status(500).json({
+      success: false,
+      error: "Internal server error",
+    });
+  }
 }

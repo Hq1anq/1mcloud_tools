@@ -1,5 +1,4 @@
-<div id="themeToggle"
-    class="relative w-[50px] h-6 bg-toggle-theme cursor-pointer rounded-xl">
+<div id="themeToggle" class="relative w-[50px] h-6 bg-toggle-theme cursor-pointer rounded-xl">
     <div id="theme-toggle-slider"
         class="absolute w-5 h-5 bg-white flex items-center justify-center rounded-[50%] left-0.5 top-0.5">
         <span id="themeIcon"></span>
@@ -29,7 +28,7 @@
         themeIcon: document.getElementById('themeIcon'),
         html: document.documentElement
     };
-    
+
     // Initialize theme based on user preference
     function initTheme() {
         const savedTheme = localStorage.getItem('theme');
@@ -45,29 +44,29 @@
         elements.html.setAttribute('data-theme', theme);
         elements.themeIcon.innerHTML = theme === 'light' ? svgSun : svgMoon;
     }
-    
+
     // Toggle between dark and light mode
     function toggleTheme() {
         const currentTheme = elements.html.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
+
         // Update the theme
         elements.html.setAttribute('data-theme', newTheme);
-        
+
         // Update the icon
         elements.themeIcon.innerHTML = newTheme === 'light' ? svgSun : svgMoon;
-        
+
         // Save the preference
         localStorage.setItem('theme', newTheme);
     }
-    
+
     // Bind event listeners
     function bindEvents() {
         elements.themeToggle.addEventListener('click', toggleTheme);
     }
-    
+
     // Initialize the application
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         initTheme();
         bindEvents();
     });

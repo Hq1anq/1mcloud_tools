@@ -1,12 +1,12 @@
 {
-  "tabWidth": 4,
-  "useTabs": true,
-  "overrides": [
-    {
-      "files": ["*.ejs"],
-      "options": {
-        "parser": "html"
-      }
-    }
-  ]
+	"tabWidth": 2,
+	"useTabs": false,
+	"overrides": [
+		{
+			"files": ["*.ejs"],
+			"options": {
+				"parser": "html"
+			}
+		}
+	]
 }

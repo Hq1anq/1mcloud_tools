@@ -630,23 +630,48 @@ function showEmptyState(show) {
   elements.emptyState.style.display = show ? "block" : "none";
 }
 
-export function syncAllData(newData) {
-  const sidToItem = new Map(allData.map((item) => [item.sid, item]));
+export function downSync(newData) {
+  const ipPortToItem = new Map(allData.map((item) => [item.ip_port, item]));
 
   newData.forEach((newItem) => {
-    const existingItem = sidToItem.get(newItem.sid);
+    const ipPort = newItem.ip_port;
+    const existingItem = ipPortToItem.get(ipPort);
     if (existingItem) {
       const mergedItem = {
-        ...existingItem,
-        ...newItem,
+        ...existingItem, // Bao gồm cả user_pass cũ (nếu có)
+        ...newItem, // Ghi đè các trường 9 field, giữ lại user_pass nếu nó không bị ghi đè
       };
-      sidToItem.set(newItem.sid, mergedItem);
-    } else sidToItem.set(newItem.sid, newItem);
+      ipPortToItem.set(ipPort, mergedItem);
+    } else ipPortToItem.set(ipPort, newItem);
   });
 
-  const syncedData = Array.from(sidToItem.values());
+  const syncedData = Array.from(ipPortToItem.values());
   allData = syncedData;
   return syncedData;
+}
+
+export function upSync(newData) {
+  const ipPortToUserPass = new Map(
+    allData
+      .filter((item) => item.user_pass) // Lọc những mục có user_pass
+      .map((item) => [item.ip_port, item.user_pass]),
+  );
+
+  const syncedData = newData.map((newItem) => {
+    const userPass = ipPortToUserPass.get(newItem.ip_port);
+
+    if (userPass) {
+      // TRƯỜNG HỢP 1: allData có user_pass -> thêm vào newItem
+      return {
+        ...newItem, // 9 trường của newData
+        user_pass: userPass, // Thêm user_pass từ allData
+      };
+    }
+    return newItem;
+  });
+
+  allData = syncedData;
+  return syncedData; // Trả về mảng mới có length = newData.length
 }
 
 export function addData(extraData) {

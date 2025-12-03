@@ -10,7 +10,8 @@ import {
   getStatusChip,
   str2date,
   date2str,
-  syncAllData,
+  downSync,
+  upSync,
   getAllData,
 } from "./components/table.js";
 import { showToast, changeToToast } from "./components/toaster.js";
@@ -38,7 +39,8 @@ const elements = {
 
   ipList: document.getElementById("ip-list"),
   amount: document.getElementById("amount"),
-  getDataBtn: document.getElementById("getDataBtn"),
+  upSyncBtn: document.getElementById("upSyncBtn"),
+  downSyncBtn: document.getElementById("downSyncBtn"),
   shuffleBtn: document.getElementById("shuffleBtn"),
   textCopyBtn: document.getElementById("textCopyBtn"),
 
@@ -208,9 +210,10 @@ function bindEvents() {
   elements.copyIpBtn.addEventListener("click", copyIp);
   elements.shuffleBtn.addEventListener("click", shuffleListIp);
   elements.amount.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") getData();
+    if (event.key === "Enter") getData("down");
   });
-  elements.getDataBtn.addEventListener("click", getData);
+  elements.downSyncBtn.addEventListener("click", () => getData("down"));
+  elements.upSyncBtn.addEventListener("click", () => getData("up"));
 
   elements.changeNoteBtn.addEventListener("click", changeNote);
   elements.reinstallBtn.addEventListener("click", reinstall);
@@ -360,7 +363,7 @@ async function getAPIKey() {
 }
 
 // Feature: Get Servers by IPs
-async function getData() {
+async function getData(type = "up") {
   showToast("Getting data...", "loading");
   const ipString = elements.ipList.value
     .split("\n")
@@ -385,7 +388,9 @@ async function getData() {
       const result = await response.json();
       const data = result.data;
       if (data.length > 0) {
-        const newData = syncAllData(data);
+        let newData;
+        if (type === "down") newData = downSync(data);
+        if (type === "up") newData = upSync(data);
         if (!ipString) {
           showAllData();
           localStorage.setItem("allData", JSON.stringify(newData));

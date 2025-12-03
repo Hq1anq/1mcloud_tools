@@ -67,22 +67,29 @@
 							</div>
 							<!-- GetData & Change Note & Reinstall and Simple Action Buttons -->
 							<div class="flex w-full flex-col space-y-4">
-								<!-- Getdata & Change Note & Reinstall (top) -->
-								<div class="flex gap-3 sm:gap-4">
+								<!-- Getdata & Change Note -->
+								<div class="flex flex-wrap gap-3 sm:gap-4">
 									<!-- Get Data -->
-									<div class="space-y-1">
+									<div class="flex-1 space-y-1">
 										<input type="number" id="amount" placeholder="Enter amount" min="0" />
 										<div class="flex items-center">
-											<button id="getDataBtn"
-												class="bg-bg-getData flex flex-1 items-center justify-center rounded-lg px-3 py-2 font-medium hover:brightness-[var(--highlight-brightness)]">
-												<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-													viewBox="0 0 24 24"
-													class="mr-1 h-5 w-5 flex-shrink-0 sm:mr-2 sm:h-7 sm:w-7">
-													<path stroke="currentColor" stroke-linecap="round"
-														stroke-linejoin="round" stroke-width="2"
-														d="M12 13V4M7 14H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2m-1-5-4 5-4-5m9 8h.01" />
+											<button id="downSyncBtn"
+												class="bg-bg-copyIp flex flex-1 items-center justify-center rounded-l-lg px-3 py-2 font-medium hover:brightness-[var(--highlight-brightness)] text-nowrap">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
+													class="fill-current h-5 w-5 flex-shrink-0 sm:h-7 sm:w-7">
+													<path
+														d="M352 96C352 78.3 337.7 64 320 64C302.3 64 288 78.3 288 96L288 306.7L246.6 265.3C234.1 252.8 213.8 252.8 201.3 265.3C188.8 277.8 188.8 298.1 201.3 310.6L297.3 406.6C309.8 419.1 330.1 419.1 342.6 406.6L438.6 310.6C451.1 298.1 451.1 277.8 438.6 265.3C426.1 252.8 405.8 252.8 393.3 265.3L352 306.7L352 96zM160 384C124.7 384 96 412.7 96 448L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 448C544 412.7 515.3 384 480 384L433.1 384L376.5 440.6C345.3 471.8 294.6 471.8 263.4 440.6L206.9 384L160 384zM464 440C477.3 440 488 450.7 488 464C488 477.3 477.3 488 464 488C450.7 488 440 477.3 440 464C440 450.7 450.7 440 464 440z" />
 												</svg>
-												Get Data
+												Down Sync
+											</button>
+											<button id="upSyncBtn"
+												class="bg-bg-getData flex flex-1 items-center justify-center rounded-r-lg px-3 py-2 font-medium hover:brightness-[var(--highlight-brightness)] text-nowrap">
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"
+													class="fill-current h-5 w-5 flex-shrink-0 sm:h-7 sm:w-7">
+													<path
+														d="M352 173.3L352 384C352 401.7 337.7 416 320 416C302.3 416 288 401.7 288 384L288 173.3L246.6 214.7C234.1 227.2 213.8 227.2 201.3 214.7C188.8 202.2 188.8 181.9 201.3 169.4L297.3 73.4C309.8 60.9 330.1 60.9 342.6 73.4L438.6 169.4C451.1 181.9 451.1 202.2 438.6 214.7C426.1 227.2 405.8 227.2 393.3 214.7L352 173.3zM320 464C364.2 464 400 428.2 400 384L480 384C515.3 384 544 412.7 544 448L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 448C96 412.7 124.7 384 160 384L240 384C240 428.2 275.8 464 320 464zM464 488C477.3 488 488 477.3 488 464C488 450.7 477.3 440 464 440C450.7 440 440 450.7 440 464C440 477.3 450.7 488 464 488z" />
+												</svg>
+												Up Sync
 											</button>
 										</div>
 									</div>

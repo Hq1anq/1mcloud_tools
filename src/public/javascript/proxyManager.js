@@ -10,7 +10,7 @@ import {
   getStatusChip,
   str2date,
   date2str,
-  syncAllData,
+  upSync,
   getAllData,
 } from "./components/table.js";
 import { showToast, changeToToast } from "./components/toaster.js";
@@ -282,7 +282,7 @@ async function getData() {
       const result = await response.json();
       const data = result.data;
       if (data.length > 0) {
-        const newData = syncAllData(data);
+        const newData = upSync(data);
         if (!ipString) {
           showAllData();
           localStorage.setItem("allData", JSON.stringify(newData));

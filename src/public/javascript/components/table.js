@@ -629,23 +629,28 @@ function showEmptyState(show) {
   elements.emptyState.style.display = show ? "block" : "none";
 }
 
-export function syncAllData(newData) {
-  const sidToItem = new Map(allData.map((item) => [item.sid, item]));
+export function upSync(newData) {
+  const ipPortToUserPass = new Map(
+    allData
+      .filter((item) => item.user_pass) // Lọc những mục có user_pass
+      .map((item) => [item.ip_port, item.user_pass]),
+  );
 
-  newData.forEach((newItem) => {
-    const existingItem = sidToItem.get(newItem.sid);
-    if (existingItem) {
-      const mergedItem = {
-        ...existingItem,
-        ...newItem,
+  const syncedData = newData.map((newItem) => {
+    const userPass = ipPortToUserPass.get(newItem.ip_port);
+
+    if (userPass) {
+      // TRƯỜNG HỢP 1: allData có user_pass -> thêm vào newItem
+      return {
+        ...newItem, // 9 trường của newData
+        user_pass: userPass, // Thêm user_pass từ allData
       };
-      sidToItem.set(newItem.sid, mergedItem);
-    } else sidToItem.set(newItem.sid, newItem);
+    }
+    return newItem;
   });
 
-  const syncedData = Array.from(sidToItem.values());
   allData = syncedData;
-  return syncedData;
+  return syncedData; // Trả về mảng mới có length = newData.length
 }
 
 export function addData(extraData) {

@@ -1,438 +1,447 @@
 @import 'tailwindcss';
 
 @theme {
-    /* Backgrounds */
-    --color-body: var(--bg-body);
-    --color-surface: var(--bg-surface);
-    --color-wrapper: var(--bg-wrapper);
-    --color-thead: var(--bg-thead);
-    --color-input: var(--bg-input);
-    --color-checkbox: var(--bg-checkbox);
+  /* Backgrounds */
+  --color-body: var(--bg-body);
+  --color-surface: var(--bg-surface);
+  --color-wrapper: var(--bg-wrapper);
+  --color-thead: var(--bg-thead);
+  --color-input: var(--bg-input);
+  --color-checkbox: var(--bg-checkbox);
 
-    --color-toast: var(--bg-toast);
-    --color-text-toast: var(--text-toast);
-    --color-text-toast-success: var(--text-toast-success);
-    --color-text-toast-error: var(--text-toast-error);
+  --color-toast: var(--bg-toast);
+  --color-text-toast: var(--text-toast);
+  --color-text-toast-success: var(--text-toast-success);
+  --color-text-toast-error: var(--text-toast-error);
 
-    --color-dropdown: var(--bg-dropdown);
-    --color-dropdown-selected: var(--bg-dropdown-selected);
+  --color-dropdown: var(--bg-dropdown);
+  --color-dropdown-selected: var(--bg-dropdown-selected);
 
-    --color-navbar: var(--bg-navbar);
-    --color-navbar-menu: var(--bg-navbar-menu);
-    --color-navbar-menu-selected: var(--bg-navbar-menu-selected);
-    --color-navbar-menu-hover: var(--bg-navbar-menu-hover);
+  --color-navbar: var(--bg-navbar);
+  --color-navbar-menu: var(--bg-navbar-menu);
+  --color-navbar-menu-selected: var(--bg-navbar-menu-selected);
+  --color-navbar-menu-hover: var(--bg-navbar-menu-hover);
 
-    --color-toggle-theme: var(--bg-toggle-theme);
-    --color-bg-hover: var(--bg-hover);
-    --color-bg-selected: var(--bg-selected);
+  --color-toggle-theme: var(--bg-toggle-theme);
+  --color-bg-hover: var(--bg-hover);
+  --color-bg-selected: var(--bg-selected);
 
-    --color-dialog: var(--bg-dialog);
-    --color-dialog-thead: var(--bg-dialog-thead);
-    --color-dialog-td: var(--bg-dialog-td);
+  --color-dialog: var(--bg-dialog);
+  --color-dialog-thead: var(--bg-dialog-thead);
+  --color-dialog-td: var(--bg-dialog-td);
 
-    --color-scrollbar-track: var(--scrollbar-track);
-    --color-scrollbar-thumb: var(--scrollbar-thumb);
-    --color-scrollbar-thumb-hover: var(--scrollbar-thumb-hover);
+  --color-scrollbar-track: var(--scrollbar-track);
+  --color-scrollbar-thumb: var(--scrollbar-thumb);
+  --color-scrollbar-thumb-hover: var(--scrollbar-thumb-hover);
 
-    /* Text */
-    --color-text-title: var(--text-title);
-    --color-text-primary: var(--text-primary);
-    --color-text-secondary: var(--text-secondary);
-    --color-text-muted: var(--text-muted);
+  /* Text */
+  --color-text-title: var(--text-title);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
 
-    /* Border */
-    --color-border: var(--border);
-    --color-border-input: var(--border-input);
-    --color-border-checkbox-hover: var(--border-checkbox-hover);
+  /* Border */
+  --color-border: var(--border);
+  --color-border-input: var(--border-input);
+  --color-border-checkbox-hover: var(--border-checkbox-hover);
 
-    --color-success-cell: var(--success-cell);
-    --color-error-cell: var(--error-cell);
+  --color-success-cell: var(--success-cell);
+  --color-error-cell: var(--error-cell);
 
-    --color-bg-success: var(--bg-success);
-    --color-text-success: var(--text-success);
-    --color-bg-error: var(--bg-error);
-    --color-text-error: var(--text-error);
-    --color-bg-warning: var(--bg-warning);
-    --color-text-warning: var(--text-warning);
-    --color-bg-info: var(--bg-info);
-    --color-text-info: var(--text-info);
+  --color-bg-success: var(--bg-success);
+  --color-text-success: var(--text-success);
+  --color-bg-error: var(--bg-error);
+  --color-text-error: var(--text-error);
+  --color-bg-warning: var(--bg-warning);
+  --color-text-warning: var(--text-warning);
+  --color-bg-info: var(--bg-info);
+  --color-text-info: var(--text-info);
 
-    --color-bg-unknowed: var(--bg-unknowed);
-    --color-text-unknowed: var(--text-unknowed);
+  --color-bg-unknowed: var(--bg-unknowed);
+  --color-text-unknowed: var(--text-unknowed);
 
-    --color-bg-getData: var(--bg-getData);
-    --color-bg-changeNote: var(--bg-changeNote);
-    --color-bg-reinstall: var(--bg-reinstall);
-    --color-bg-changeIp: var(--bg-changeIp);
-    --color-bg-copyIp: var(--bg-copyIp);
-    --color-bg-reboot: var(--bg-reboot);
-    --color-bg-pause: var(--bg-pause);
-    --color-bg-refund: var(--bg-refund);
-    --color-bg-renew: var(--bg-renew);
-    --color-bg-getAPIKey: var(--bg-getAPIKey);
+  --color-bg-getData: var(--bg-getData);
+  --color-bg-changeNote: var(--bg-changeNote);
+  --color-bg-reinstall: var(--bg-reinstall);
+  --color-bg-changeIp: var(--bg-changeIp);
+  --color-bg-copyIp: var(--bg-copyIp);
+  --color-bg-reboot: var(--bg-reboot);
+  --color-bg-pause: var(--bg-pause);
+  --color-bg-refund: var(--bg-refund);
+  --color-bg-renew: var(--bg-renew);
+  --color-bg-getAPIKey: var(--bg-getAPIKey);
 
-    --breakpoint-sm: 749px;
-    --breakpoint-md: 883px;
-    --breakpoint-lg: 1040px;
+  --breakpoint-sm: 749px;
+  --breakpoint-md: 883px;
+  --breakpoint-lg: 1040px;
 }
 
 /* Theme Variables */
 :root {
-    /* Dark Theme colors */
-    --dark-900: #14171c;
-    --dark-800: #282e38;
-    --dark-750: #323a45;
-    --dark-700: #3c4653;
-    --dark-600: #505d6f;
-    --dark-500: #64748b;
-    /* Light Theme Colors */
-    --light-100: #f8fafc;
-    --light-200: #e2e8f0;
-    --light-300: #cbd5e1;
-    --light-400: #94a3b8;
-    --light-500: #64748b;
+  /* Dark Theme colors */
+  --dark-900: #14171c;
+  --dark-800: #282e38;
+  --dark-750: #323a45;
+  --dark-700: #3c4653;
+  --dark-600: #505d6f;
+  --dark-500: #64748b;
+  /* Light Theme Colors */
+  --light-100: #f8fafc;
+  --light-200: #e2e8f0;
+  --light-300: #cbd5e1;
+  --light-400: #94a3b8;
+  --light-500: #64748b;
 
-    --blue-100: #eef5ff;
-    --blue-200: #BBFBFF;
-    --blue-300: #8DD8FF;
-    --blue-400: #46A9FD;
-    --blue-500: #007bfc;
-    --blue-700: #053fe5;
+  --blue-100: #eef5ff;
+  --blue-200: #bbfbff;
+  --blue-300: #8dd8ff;
+  --blue-400: #46a9fd;
+  --blue-500: #007bfc;
+  --blue-700: #053fe5;
 }
 
-[data-theme="light"] {
-    /* Background Colors */
-    --bg-body: var(--blue-100);
-    --bg-surface: var(--blue-200);
-    --bg-wrapper: var(--blue-300);
-    --bg-thead: var(--blue-500);
-    --bg-input: #F5F0CD;
-    --bg-dropdown: #FADA7A;
-    --bg-checkbox: #F5F0CD;
+[data-theme='light'] {
+  /* Background Colors */
+  --bg-body: var(--blue-100);
+  --bg-surface: var(--blue-200);
+  --bg-wrapper: var(--blue-300);
+  --bg-thead: var(--blue-500);
+  --bg-input: #f5f0cd;
+  --bg-dropdown: #fada7a;
+  --bg-checkbox: #f5f0cd;
 
-    --bg-toast: var(--blue-700);
-    --text-toast: #fff;
-    --text-toast-success: #0DE749;
-    --text-toast-error: #F17489;
+  --bg-toast: var(--blue-700);
+  --text-toast: #fff;
+  --text-toast-success: #0de749;
+  --text-toast-error: #f17489;
 
-    --bg-navbar: var(--light-100);
-    --bg-navbar-menu: var(--light-200);
-    --bg-navbar-menu-selected: var(--blue-300);
-    --bg-navbar-menu-hover: var(--light-300);
+  --bg-navbar: var(--light-100);
+  --bg-navbar-menu: var(--light-200);
+  --bg-navbar-menu-selected: var(--blue-300);
+  --bg-navbar-menu-hover: var(--light-300);
 
-    --bg-toggle-theme: var(--blue-400);
-    --bg-hover: hsl(from var(--bg-surface) h s calc(l - 10));
-    --bg-selected: hsl(from var(--bg-surface) h s calc(l - 20));
+  --bg-toggle-theme: var(--blue-400);
+  --bg-hover: hsl(from var(--bg-surface) h s calc(l - 10));
+  --bg-selected: hsl(from var(--bg-surface) h s calc(l - 20));
 
-    --bg-dialog: var(--light-100);
-    --bg-dialog-thead: var(--blue-500);
-    --bg-dialog-td: var(--blue-200);
+  --bg-dialog: var(--light-100);
+  --bg-dialog-thead: var(--blue-500);
+  --bg-dialog-td: var(--blue-200);
 
-    --scrollbar-track: #F5F0CD;
-    --scrollbar-thumb: var(--blue-300);
-    --scrollbar-thumb-hover: var(--blue-400);
+  --scrollbar-track: #f5f0cd;
+  --scrollbar-thumb: var(--blue-300);
+  --scrollbar-thumb-hover: var(--blue-400);
 
-    /* Text Colors */
-    --text-title: #007BFC;
-    --text-primary: var(--light-100);
-    --text-secondary: var(--dark-800);
-    --text-muted: var(--light-400);
+  /* Text Colors */
+  --text-title: #007bfc;
+  --text-primary: var(--light-100);
+  --text-secondary: var(--dark-800);
+  --text-muted: var(--light-400);
 
-    /* Border Colors */
-    --border: var(--light-400);
-    --border-input: var(--light-400);
-    --border-checkbox-hover: var(--light-500);
+  /* Border Colors */
+  --border: var(--light-400);
+  --border-input: var(--light-400);
+  --border-checkbox-hover: var(--light-500);
 
-    --logo-ring: #FAC01A; 
-    --logo-inner: #000000;
+  --logo-ring: #fac01a;
+  --logo-inner: #000000;
 
-    --highlight-brightness: 90%;
+  --highlight-brightness: 90%;
 
-    --success-cell: #00c95066;    /* green-500/40 */
-    --error-cell: #fb2c3666;      /* red-500/40 */
+  --success-cell: #00c95066; /* green-500/40 */
+  --error-cell: #fb2c3666; /* red-500/40 */
 
-    --bg-success: #64a338;
-    --text-success: #dff0d4;
-    --bg-error: #e03b24;
-    --text-error: #f9d8d3;
-    --bg-warning: #e18504;
-    --text-warning: #feecd3;
-    --bg-info: #4B251C;
-    --text-info: #e7ecf4;
-    --bg-unknowed: #A2C7CC;
-    --text-unknowed: #374151;
+  --bg-success: #64a338;
+  --text-success: #dff0d4;
+  --bg-error: #e03b24;
+  --text-error: #f9d8d3;
+  --bg-warning: #9a5b12;
+  --text-warning: #ffc861;
+  --bg-info: #4b251c;
+  --text-info: #e7ecf4;
+  --bg-unknowed: #a2c7cc;
+  --text-unknowed: #374151;
 
-    --bg-getData: #ed0ce2;
-    --bg-changeNote: #ff5555;
-    --bg-reinstall: #6080fa;
-    --bg-changeIp: #28be2b;
-    --bg-copyIp: #8e34d3;
-    --bg-reboot: #fba124;
-    --bg-pause: #F87171;
-    --bg-refund: #F472B6;
-    --bg-renew: #e07211;
-    --bg-getAPIKey: #ef4646;
+  --bg-getData: #ed0ce2;
+  --bg-changeNote: #ff5555;
+  --bg-reinstall: #6080fa;
+  --bg-changeIp: #28be2b;
+  --bg-copyIp: #8e34d3;
+  --bg-reboot: #fba124;
+  --bg-pause: #f87171;
+  --bg-refund: #f472b6;
+  --bg-renew: #e07211;
+  --bg-getAPIKey: #ef4646;
 
-    #theme-toggle-slider {
-        transform: translateX(26px);
-    }
+  #theme-toggle-slider {
+    transform: translateX(26px);
+  }
 }
 
 /* Dark Theme */
-[data-theme="dark"] {
-    /* Background Colors */
-    --bg-body: var(--dark-900);
-    --bg-surface: var(--dark-800);
-    --bg-wrapper: var(--dark-700);
-    --bg-thead: var(--dark-700);
-    --bg-input: var(--dark-600);
-    --bg-dropdown: var(--dark-800);
-    --bg-checkbox: var(--dark-750);
+[data-theme='dark'] {
+  /* Background Colors */
+  --bg-body: var(--dark-900);
+  --bg-surface: var(--dark-800);
+  --bg-wrapper: var(--dark-700);
+  --bg-thead: var(--dark-700);
+  --bg-input: var(--dark-600);
+  --bg-dropdown: var(--dark-800);
+  --bg-checkbox: var(--dark-750);
 
-    --bg-toast: hsl(from var(--bg-surface) h s calc(l + 5));
-    --text-toast: #B3B3B3;
-    --text-toast-success: #4DFFA3;
-    --text-toast-error: #FF99A3;
+  --bg-toast: hsl(from var(--bg-surface) h s calc(l + 5));
+  --text-toast: #b3b3b3;
+  --text-toast-success: #4dffa3;
+  --text-toast-error: #ff99a3;
 
-    --bg-navbar: #1e293b;
-    --bg-navbar-menu: #253349;
-    --bg-navbar-menu-selected: var(--blue-700);
-    --bg-navbar-menu-hover: #2c3c57;
+  --bg-navbar: #1e293b;
+  --bg-navbar-menu: #253349;
+  --bg-navbar-menu-selected: var(--blue-700);
+  --bg-navbar-menu-hover: #2c3c57;
 
-    --bg-toggle-theme: var(--dark-500);
-    --bg-hover: hsl(from var(--bg-surface) h s calc(l + 5));
-    --bg-selected: hsl(from var(--bg-surface) h s calc(l + 10));
+  --bg-toggle-theme: var(--dark-500);
+  --bg-hover: hsl(from var(--bg-surface) h s calc(l + 5));
+  --bg-selected: hsl(from var(--bg-surface) h s calc(l + 10));
 
-    --bg-dialog: var(--dark-700);
-    --bg-dialog-thead: var(--dark-600);
-    --bg-dialog-td: var(--dark-800);
+  --bg-dialog: var(--dark-700);
+  --bg-dialog-thead: var(--dark-600);
+  --bg-dialog-td: var(--dark-800);
 
-    --scrollbar-track: var(--dark-700);
-    --scrollbar-thumb: var(--dark-800);
-    --scrollbar-thumb-hover: var(--dark-900);
+  --scrollbar-track: var(--dark-700);
+  --scrollbar-thumb: var(--dark-800);
+  --scrollbar-thumb-hover: var(--dark-900);
 
-    /* Text Colors */
-    --text-title: #4aa3ff;
-    --text-primary: #f3f4f6;
-    --text-secondary: #f3f4f6;
-    --text-muted: #9ca3af;
+  /* Text Colors */
+  --text-title: #4aa3ff;
+  --text-primary: #f3f4f6;
+  --text-secondary: #f3f4f6;
+  --text-muted: #9ca3af;
 
-    /* Border Colors */
-    --border: var(--dark-600);
-    --border-input: var(--dark-500);
-    --border-checkbox-hover: var(--dark-500);
+  /* Border Colors */
+  --border: var(--dark-600);
+  --border-input: var(--dark-500);
+  --border-checkbox-hover: var(--dark-500);
 
-    --logo-ring: var(--blue-700); 
-    --logo-inner: #e2e2e4;
+  --logo-ring: var(--blue-700);
+  --logo-inner: #e2e2e4;
 
-    --highlight-brightness: 120%;
+  --highlight-brightness: 120%;
 
-    --success-cell: #0d542b99;    /* green-900 */
-    --error-cell: #82181a99;      /* red-900 */
+  --success-cell: #0d542b99; /* green-900 */
+  --error-cell: #82181a99; /* red-900 */
 
-    --bg-success: #1E7D4B;
-    --text-success: #4DFFA3;
-    --bg-error: #922C3C;
-    --text-error: #FF99A3;
-    --bg-warning: #9A5B12;
-    --text-warning: #FFC861;
-    --bg-info: #1B4E89;
-    --text-info: #6CC3FF;
-    --bg-unknowed: #6a7282;
-    --text-unknowed: #D1D5DB;
-    
-    --bg-getData: #900e80;
-    --bg-changeNote: #a95a5a;
-    --bg-reinstall: #0E7490;
-    --bg-changeIp: #16A34A;
-    --bg-copyIp: #620596;
-    --bg-reboot: #D97706;
-    --bg-pause: #DC2626;
-    --bg-refund: #DB2777;
-    --bg-renew: #a1520c;
-    --bg-getAPIKey: #263edc;
+  --bg-success: #1e7d4b;
+  --text-success: #4dffa3;
+  --bg-error: #922c3c;
+  --text-error: #ff99a3;
+  --bg-warning: #9a5b12;
+  --text-warning: #ffc861;
+  --bg-info: #1b4e89;
+  --text-info: #6cc3ff;
+  --bg-unknowed: #6a7282;
+  --text-unknowed: #d1d5db;
+
+  --bg-getData: #900e80;
+  --bg-changeNote: #a95a5a;
+  --bg-reinstall: #0e7490;
+  --bg-changeIp: #16a34a;
+  --bg-copyIp: #620596;
+  --bg-reboot: #d97706;
+  --bg-pause: #dc2626;
+  --bg-refund: #db2777;
+  --bg-renew: #a1520c;
+  --bg-getAPIKey: #263edc;
 }
 
 /* Base theme colors without transitions */
 [data-theme] * {
-    /* Disable all color transitions by default */
-    transition: none;
+  /* Disable all color transitions by default */
+  transition: none;
 }
 
 /* Enable transitions only after adding this class */
 .theme-transitions * {
-    transition: background-color 0.3s ease,
-                color 0.3s ease,
-                border-color 0.3s ease,
-                transform 0.3s ease; /* Add transform transition for slider */
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease; /* Add transform transition for slider */
 }
 
 .theme-transitions .all-slow {
-    transition-property: all;
-    transition-timing-function: ease-out;
-    transition-duration: 0.5s;
+  transition-property: all;
+  transition-timing-function: ease-out;
+  transition-duration: 0.5s;
 }
 
 .theme-transitions .all-fast {
-    transition-property: all;
-    transition-timing-function: ease-out;
-    transition-duration: 0.2s;
+  transition-property: all;
+  transition-timing-function: ease-out;
+  transition-duration: 0.2s;
 }
 
 .theme-transitions .checkbox-transition {
-    transition-property: opacity, background-color;
-    transition-timing-function: ease-out;
-    transition-duration: 0.4s;
+  transition-property: opacity, background-color;
+  transition-timing-function: ease-out;
+  transition-duration: 0.4s;
 }
 
 .theme-transitions .navbar-transition {
-    transition-property: all;
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.5s;
+  transition-property: all;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.5s;
 }
 
 .theme-transitions .social-link {
-    transition: transform 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
 }
 
 .theme-transitions .social-link:hover {
-    transform: translateY(-3px);
-    color: var(--color-text-title);
+  transform: translateY(-3px);
+  color: var(--color-text-title);
 }
 
 /* Custom base styles */
 @layer base {
-    input[type="text"],
-    input[type="number"],
-    input[type="password"],
-    textarea {
-        @apply bg-input text-text-secondary border-2 border-border-input rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:border-blue-500 w-full;
-    }
+  input[type='text'],
+  input[type='number'],
+  input[type='password'],
+  textarea {
+    @apply bg-input text-text-secondary border-2 border-border-input rounded-lg px-3 py-2 placeholder-gray-400 focus:outline-none focus:border-blue-500 w-full;
+  }
 
-    /* Hides the arrows in Chrome, Safari, Edge */
-    input[type='number']::-webkit-inner-spin-button,
-    input[type='number']::-webkit-outer-spin-button {
-        @apply appearance-none;
-        margin: 0;
-    }
+  /* Hides the arrows in Chrome, Safari, Edge */
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    @apply appearance-none;
+    margin: 0;
+  }
 
-    textarea {
-        @apply min-h-52 resize-none;
-    }
+  textarea {
+    @apply min-h-52 resize-none;
+  }
 
-    button {
-        @apply cursor-pointer;
-    }
+  button {
+    @apply cursor-pointer;
+  }
 
-    h1 {
-        @apply text-text-title text-xl;
-    }
+  h1 {
+    @apply text-text-title text-xl;
+  }
 
-    textarea::-webkit-scrollbar,
-    body::-webkit-scrollbar,
-    .scroll-container::-webkit-scrollbar {
-        @apply w-2 h-2;
-    }
+  textarea::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  .scroll-container::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
 
-    textarea::-webkit-scrollbar-track,
-    body::-webkit-scrollbar-track,
-    .scroll-container::-webkit-scrollbar-track {
-        @apply bg-scrollbar-track rounded-full my-1;
-    }
+  textarea::-webkit-scrollbar-track,
+  body::-webkit-scrollbar-track,
+  .scroll-container::-webkit-scrollbar-track {
+    @apply bg-scrollbar-track rounded-full my-1;
+  }
 
-    textarea::-webkit-scrollbar-thumb,
-    body::-webkit-scrollbar-thumb,
-    .scroll-container::-webkit-scrollbar-thumb {
-        @apply bg-scrollbar-thumb rounded-full cursor-pointer;
-    }
+  textarea::-webkit-scrollbar-thumb,
+  body::-webkit-scrollbar-thumb,
+  .scroll-container::-webkit-scrollbar-thumb {
+    @apply bg-scrollbar-thumb rounded-full cursor-pointer;
+  }
 
-    textarea::-webkit-scrollbar-thumb:hover,
-    body::-webkit-scrollbar-thumb:hover,
-    .scroll-container::-webkit-scrollbar-thumb:hover {
-        @apply bg-scrollbar-thumb-hover;
-    }
+  textarea::-webkit-scrollbar-thumb:hover,
+  body::-webkit-scrollbar-thumb:hover,
+  .scroll-container::-webkit-scrollbar-thumb:hover {
+    @apply bg-scrollbar-thumb-hover;
+  }
 
-    body::-webkit-scrollbar-track,
-    body::-webkit-scrollbar-thumb {
-        border-radius: 0;
-        margin: 0px;
-    }
+  body::-webkit-scrollbar-track,
+  body::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    margin: 0px;
+  }
 
-    .selected-row {
-        @apply bg-bg-selected;
-    }
+  .selected-row {
+    @apply bg-bg-selected;
+  }
 
-    .social-link {
-        @apply flex items-center text-text-muted;
-    }
+  .social-link {
+    @apply flex items-center text-text-muted;
+  }
 }
 
 /* Toast Animations */
 @layer utilities {
-    @keyframes fade-in {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
     }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
-    @keyframes fade-out {
-        from {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        to {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+      transform: translateY(0);
     }
-    
-    @keyframes rotation {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(360deg);
-        }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
     }
+  }
 
-    @keyframes flashAnim {
-        0% { opacity: 0; }
-        20% { opacity: 0.8; }
-        100% { opacity: 0; }
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
     }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 
-    .float-in {
-        animation: fade-in 0.3s ease-out forwards;
+  @keyframes flashAnim {
+    0% {
+      opacity: 0;
     }
+    20% {
+      opacity: 0.8;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
 
-    .float-out {
-        animation: fade-out 0.3s ease-in forwards;
-    }
+  .float-in {
+    animation: fade-in 0.3s ease-out forwards;
+  }
 
-    .loader {
-        width: 48px;
-        height: 48px;
-        border: 5px solid #FFF;
-        border-bottom-color: #FF3D00;
-        border-radius: 50%;
-        display: inline-block;
-        box-sizing: border-box;
-        animation: rotation 1s linear infinite;
-    }
+  .float-out {
+    animation: fade-out 0.3s ease-in forwards;
+  }
 
-    /* Flash effect */
-    .flash {
-        position: fixed;
-        inset: 0;
-        background: var(--text-secondary);
-        opacity: 0;
-        animation: flashAnim 0.4s ease-out;
-        pointer-events: none;
-        z-index: 9999;
-    }
+  .loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #fff;
+    border-bottom-color: #ff3d00;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+  /* Flash effect */
+  .flash {
+    position: fixed;
+    inset: 0;
+    background: var(--text-secondary);
+    opacity: 0;
+    animation: flashAnim 0.4s ease-out;
+    pointer-events: none;
+    z-index: 9999;
+  }
 }

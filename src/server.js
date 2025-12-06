@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import routes from './routes/web.js'
+import bodyParser from 'body-parser'
 import { configViewEngine } from './config/viewEngine.js'
 import { connectDB } from './config/database.js'
 
@@ -12,8 +13,8 @@ const PORT = process.env.PORT || 3001
 // config template engine
 configViewEngine(app)
 
-app.use(express.json()) // for json
-app.use(express.urlencoded({ extended: true })) // for form data
+app.use(bodyParser.json({ limit: '10mb' }))
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }))
 
 app.get('/proxyChecker', (req, res) => {
   res.render('proxyChecker') // This will render views/proxyChecker.ejs

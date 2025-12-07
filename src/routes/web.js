@@ -26,7 +26,7 @@ import {
   getUpdatePage,
 } from '../controllers/home.js'
 
-import { saveTodb, getFromDb } from '../controllers/data.controller.js'
+import { saveToDb, getFromDb } from '../controllers/data.controller.js'
 
 const router = express.Router()
 
@@ -54,6 +54,6 @@ router.post('/proxy/buy-proxy', buyProxy)
 router.post('/proxy/buy-calc', buyCalc)
 router.post('/proxy/get-from-db', getFromDb)
 
-router.put('/proxy/sync-to-db', saveTodb)
+router.put('/proxy/sync-to-db', saveToDb)
 
 export default router

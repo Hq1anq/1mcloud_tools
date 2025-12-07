@@ -1,7 +1,7 @@
 import Proxy from '../models/proxy.model.js'
 import User from '../models/user.model.js'
 
-export async function saveTodb(req, res) {
+export async function saveToDb(req, res) {
   try {
     const { proxies: clientData, apiKey } = req.body
 
@@ -9,7 +9,33 @@ export async function saveTodb(req, res) {
       return res.status(400).json({ error: 'Invalid proxies format' })
 
     // ----- AUTH -----
-    const user = await User.findOne({ access_token: apiKey })
+    const checkResponse = await fetch(
+      'https://api.smartserver.vn/api/server/list?page=1&limit=1&by_time=all&proxy=true',
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json, text/plain, */*',
+          authorization: `Bearer ${apiKey}`,
+          'content-type': 'application/json',
+          origin: 'https://manage.1mcloud.vn',
+          referer: 'https://manage.1mcloud.vn/',
+          'user-agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+        },
+      }
+    )
+
+    if (!checkResponse.ok || checkResponse.status !== 200)
+      return res.status(401).json({ error: 'Invalid API key' })
+    const rawData = await checkResponse.json()
+    // servers must exist & be non-empty
+    if (!rawData.servers || rawData.servers.length === 0) {
+      return res.status(401).json({ error: 'Invalid API key' })
+    }
+    const checkEmail = rawData.servers[0].client
+    if (!checkEmail) return res.status(401).json({ error: 'Invalid API key' })
+
+    const user = await User.findOne({ email: checkEmail })
     if (!user) return res.status(401).json({ error: 'Invalid API key' })
 
     // ----- Get only this user's proxies -----

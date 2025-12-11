@@ -13,7 +13,9 @@ export async function saveToDb(req, res) {
     if (!user) return res.status(401).json({ error: 'Invalid API key' })
 
     // ----- Get only this user's proxies -----
-    const dbData = await Proxy.find({ owner: user._id }).lean()
+    const dbData = await Proxy.find({ owner: user._id })
+      .lean()
+      .select('-_id -__v -owner')
 
     // Convert for fast lookup
     const dbMap = new Map(dbData.map((p) => [p.sid, p]))
@@ -42,10 +44,6 @@ export async function saveToDb(req, res) {
       } else {
         // Exists → need merge
         const merged = { ...dbProxy, ...clientProxy }
-
-        delete merged._id // <-- prevent overwriting _id
-        delete merged.__v // prevent version overwrite
-        delete merged.owner // <-- owner MUST NOT be overwritten
 
         // Special rule for user_pass
         const hasClientUserPass = !!clientProxy.user_pass

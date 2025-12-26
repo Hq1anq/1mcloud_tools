@@ -622,21 +622,21 @@ function showEmptyState(show) {
 }
 
 export function downSync(newData) {
-  const ipPortToItem = new Map(allData.map((item) => [item.ip_port, item]))
+  const sidToItem = new Map(allData.map((item) => [item.sid, item]))
 
   newData.forEach((newItem) => {
-    const ipPort = newItem.ip_port
-    const existingItem = ipPortToItem.get(ipPort)
+    const sid = newItem.sid
+    const existingItem = sidToItem.get(sid)
     if (existingItem) {
       const mergedItem = {
         ...existingItem, // Bao gồm cả user_pass cũ (nếu có)
         ...newItem, // Ghi đè các trường 9 field, giữ lại user_pass nếu nó không bị ghi đè
       }
-      ipPortToItem.set(ipPort, mergedItem)
-    } else ipPortToItem.set(ipPort, newItem)
+      sidToItem.set(sid, mergedItem)
+    } else sidToItem.set(sid, newItem)
   })
 
-  const syncedData = Array.from(ipPortToItem.values())
+  const syncedData = Array.from(sidToItem.values())
   allData = syncedData
   return syncedData
 }

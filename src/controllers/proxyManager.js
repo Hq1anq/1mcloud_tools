@@ -314,18 +314,18 @@ export async function reinstall(req, res) {
   if (custom_info) {
     let range_ip, remote_port, username, password
     const reinstallInfo = custom_info.split(':')
-    if (reinstallInfo.length === 4) {
-      ;[range_ip, remote_port, username, password] = reinstallInfo
-    } else if (reinstallInfo.length === 3) {
-      ;[remote_port, username, password] = reinstallInfo
-    } else {
-      return res.status(400).json({
-        error:
-          'Invalid custom_info format. Expected format: range_ip:remote_port:username:password or remote_port:username:password',
-      })
-    }
+    if (reinstallInfo.length === 4)
+      [range_ip, remote_port, username, password] = reinstallInfo
+    else if (reinstallInfo.length === 3)
+      [remote_port, username, password] = reinstallInfo
+    else if (reinstallInfo.length === 2)
+      [username, password] = reinstallInfo
+    else return res.status(400).json({
+      error:
+        'Invalid custom_info format. Expected format: range_ip:remote_port:username:password or remote_port:username:password',
+    })
     data = {
-      random_remote_port: '',
+      random_remote_port: remote_port ? '' : 'on',
       remote_port: remote_port,
       random_username: '',
       username: username,

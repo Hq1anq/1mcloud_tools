@@ -38,7 +38,7 @@ const BaseTable = forwardRef(function BaseTable(
 
     // UI
     extraBtn,
-    emtyState,
+    emptyState,
     isError,
     errorMessage,
     className = '',
@@ -391,7 +391,7 @@ const BaseTable = forwardRef(function BaseTable(
 
         {/* Table Body Container */}
         {!isLoading && !isError && filteredData.length === 0 ? (
-          emtyState
+          emptyState
         ) : (
           <div className="scroll-container overflow-x-auto overflow-y-hidden rounded-b-lg">
             {isLoading ? (

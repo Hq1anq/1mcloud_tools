@@ -560,6 +560,13 @@ const en = {
   'nation.JP': 'Japan(JP)',
   'nation.HK': 'Hong Kong(HK)',
   'nation.VNR': 'Vietnam (Residential)',
+
+  // 404 Page
+  'notFound.code': '404 Page Not Found',
+  'notFound.title': 'Page Not Found or Moved',
+  'notFound.desc': 'The URL you accessed is incorrect. Please check the URL again.',
+  'notFound.btnHome': 'Go to Home',
+  'notFound.btnManager': 'Go to Manager',
 }
 
 export default en

@@ -25,6 +25,7 @@ import ProxyPrice from './pages/ProxyPrice.jsx'
 import BuyProxyPage from './pages/BuyProxyPage.jsx'
 import TermsOfService from './pages/TermsOfService'
 import PrivacyPolicy from './pages/PrivacyPolicy'
+import NotFoundPage from './pages/NotFoundPage'
 import { AppProvider } from './context/AppProvider'
 
 function App() {
@@ -173,6 +174,7 @@ function App() {
 
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
             <Footer />
           </div>

@@ -562,6 +562,13 @@ const vi = {
   'nation.JP': 'Nhật Bản(JP)',
   'nation.HK': 'Hồng Kông(HK)',
   'nation.VNR': 'Việt Nam (Dân cư)',
+
+  // 404 Page
+  'notFound.code': '404 Page Not Found',
+  'notFound.title': 'Trang không tồn tại hoặc đã bị di chuyển',
+  'notFound.desc': 'Đường dẫn bạn truy cập không chính xác. Vui lòng kiểm tra lại.',
+  'notFound.btnHome': 'Về Trang chủ',
+  'notFound.btnManager': 'Trang Quản lý',
 }
 
 export default vi

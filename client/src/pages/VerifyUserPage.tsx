@@ -48,7 +48,6 @@ export default function VerifyUserPage() {
   //   // Step 3: Simulate success verification response & trigger morph (after 6.2s)
   //   const t3 = setTimeout(() => {
   //     setDemoVerifying(false)
-  //     setVerified()
   //     setIsSuccess(true)
   //   }, 6200)
 
@@ -57,7 +56,7 @@ export default function VerifyUserPage() {
   //     clearTimeout(t2)
   //     clearTimeout(t3)
   //   }
-  // }, [token, t, setVerified])
+  // }, [token, t])
   // =========================================================================
 
   // Cooldown timer for email resend
@@ -73,6 +72,7 @@ export default function VerifyUserPage() {
   useEffect(() => {
     if (!isSuccess) return
     if (redirectTimer <= 0) {
+      setVerified()
       navigate('/manager', { replace: true })
       return
     }
@@ -80,7 +80,7 @@ export default function VerifyUserPage() {
       setRedirectTimer((prev) => prev - 1)
     }, 1000)
     return () => clearInterval(timer)
-  }, [isSuccess, redirectTimer, navigate])
+  }, [isSuccess, redirectTimer, navigate, setVerified])
 
   // Automatically execute verification if token is present in URL
   useEffect(() => {
@@ -93,7 +93,6 @@ export default function VerifyUserPage() {
       {
         onSuccess: (data) => {
           if (data.success) {
-            setVerified()
             setIsSuccess(true)
           } else {
             setApiError(data.error || t('verify.failedToast'))
@@ -108,7 +107,7 @@ export default function VerifyUserPage() {
         },
       }
     )
-  }, [token, sendTokenMutation, setVerified, t])
+  }, [token, sendTokenMutation, t])
 
   const handleRequestVerify = () => {
     if (cooldown > 0 || requestEmailMutation.isPending) return
@@ -140,17 +139,20 @@ export default function VerifyUserPage() {
   }
 
   const handleGoManagerNow = () => {
+    if (isSuccess) {
+      setVerified()
+    }
     navigate('/manager', { replace: true })
   }
 
   return (
-    <div className="relative flex min-h-[calc(100vh-130px)] flex-col items-center justify-center p-4">
+    <div className="relative flex min-h-[calc(100vh-130px)] flex-col items-center justify-center p-4 sm:p-6">
       {/* Dynamic Grid Background Overlay */}
       <div className="bg-body pointer-events-none absolute inset-0 opacity-15" />
 
       <main className="relative z-10">
-        <article className="bg-surface border-border rounded-xl border p-6 text-center shadow-2xl sm:p-10">
-          {/* Icon Container with Extraordinary Morphing & Transform Burst */}
+        <article className="bg-surface border-border rounded-xl border p-6 text-center shadow-2xl sm:p-8">
+          {/* Icon Container with Morphing & Glow Rings */}
           <M.div
             layout
             animate={
@@ -162,7 +164,7 @@ export default function VerifyUserPage() {
             className={`mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-2xl border transition-colors duration-700 ${
               isSuccess
                 ? 'border-green/50 bg-green/15 text-green shadow-[0_0_35px_rgba(34,197,94,0.35)]'
-                : 'border-border bg-surface text-blue'
+                : 'border-border bg-surface text-blue shadow-md'
             }`}
           >
             <div className="relative flex h-12 w-12 items-center justify-center">
@@ -261,7 +263,7 @@ export default function VerifyUserPage() {
                 : t('verify.titlePending')}
           </h1>
 
-          <p className="text-text-muted mx-auto mt-3">
+          <p className="text-text-muted mx-auto mt-3 text-base leading-relaxed sm:text-lg">
             {isSuccess
               ? t('verify.subtitleSuccess')
               : isVerifyingToken
@@ -271,13 +273,13 @@ export default function VerifyUserPage() {
 
           {/* Feedback Banners */}
           {apiError && !isSuccess && (
-            <div className="border-red/30 text-red bg-red/10 mt-4 rounded-lg border p-3 text-center text-sm font-medium">
+            <div className="border-red/30 text-red bg-red/10 mt-4 rounded-lg border p-3 text-center text-base font-medium">
               {apiError}
             </div>
           )}
 
           {toastMsg && !apiError && !isSuccess && (
-            <div className="border-blue/30 text-blue bg-blue/10 mt-4 rounded-lg border p-3 text-center text-sm font-medium">
+            <div className="border-blue/30 text-blue bg-blue/10 mt-4 rounded-lg border p-3 text-center text-base font-medium">
               {toastMsg}
             </div>
           )}
@@ -290,40 +292,95 @@ export default function VerifyUserPage() {
                 whileTap={{ scale: 0.98 }}
                 type="button"
                 onClick={handleGoManagerNow}
-                className="bg-green flex min-h-11 w-full items-center justify-center rounded-lg px-6 py-2.5 font-bold text-white shadow-lg transition-colors focus:outline-none"
+                className="bg-green text-text-secondary flex min-h-11 w-full items-center justify-center gap-2 rounded-lg px-6 py-2.5 font-bold shadow-md transition-colors focus:outline-none"
               >
-                {t('verify.btnGoManager')} ({redirectTimer}s)
+                <svg className="size-5 fill-none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                  />
+                </svg>
+                <span>
+                  {t('verify.btnGoManager')} ({redirectTimer}s)
+                </span>
               </M.button>
             ) : (
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="flex flex-col gap-3">
+                {/* Primary Option: Resend/Verify Email */}
                 {!isVerifyingToken && (
-                  <button
+                  <M.button
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.98 }}
                     type="button"
                     onClick={handleRequestVerify}
                     disabled={cooldown > 0 || requestEmailMutation.isPending}
-                    className={`flex min-h-11 items-center justify-center rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-blue-700 focus:outline-none ${
+                    className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 font-bold text-white shadow-md transition-colors hover:bg-blue-700 focus:outline-none ${
                       cooldown > 0 || requestEmailMutation.isPending
-                        ? 'cursor-not-allowed opacity-60'
+                        ? 'cursor-not-allowed opacity-60 shadow-none'
                         : ''
                     }`}
                   >
-                    {requestEmailMutation.isPending
-                      ? t('verify.btnVerifying')
-                      : cooldown > 0
-                        ? `${t('verify.btnSent')} (${cooldown}s)`
-                        : t('verify.btnVerify')}
-                  </button>
+                    <svg className="size-5 fill-none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                      />
+                    </svg>
+                    <span>
+                      {requestEmailMutation.isPending
+                        ? t('verify.btnVerifying')
+                        : cooldown > 0
+                          ? `${t('verify.btnSent')} (${cooldown}s)`
+                          : t('verify.btnVerify')}
+                    </span>
+                  </M.button>
                 )}
 
-                <button
+                {/* Secondary Option: Direct Management Access */}
+                <M.button
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="button"
+                  onClick={handleGoManagerNow}
+                  className="border-border text-text-primary hover:bg-bg-hover group flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border px-5 py-2.5 font-semibold transition-colors focus:outline-none"
+                >
+                  <span>{t('verify.btnGoManager')}</span>
+                  <svg
+                    className="size-4 fill-none transition-transform duration-200 group-hover:translate-x-1"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+                    />
+                  </svg>
+                </M.button>
+
+                {/* Tertiary Option: Back to Login */}
+                <M.button
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
                   type="button"
                   onClick={handleBackToLogin}
-                  className={`border-border text-text-primary hover:bg-bg-hover flex min-h-11 items-center justify-center rounded-lg border px-4 py-2 font-semibold transition-colors focus:outline-none ${
-                    isVerifyingToken ? 'col-span-full' : ''
-                  }`}
+                  className="hover:text-primary text-text-muted mt-1 flex items-center justify-center gap-1.5 py-1 text-base font-medium transition-colors focus:outline-none"
                 >
-                  {t('verify.btnBackLogin')}
-                </button>
+                  <svg className="size-4 fill-none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                    />
+                  </svg>
+                  <span>{t('verify.btnBackLogin')}</span>
+                </M.button>
               </div>
             )}
           </div>

@@ -87,9 +87,6 @@ export default function ProxyManager({ onBuySuccessRef }) {
   // Data from Zustand store
   const queryClient = useQueryClient()
   const data = useProxyStore((s) => s.data)
-  const receivedData = useProxyStore((s) => s.receivedData)
-  const renderingReceived = useProxyStore((s) => s.renderingReceived)
-  const setRenderingReceived = useProxyStore((s) => s.setRenderingReceived)
   const rawUpdateRowBySid = useProxyStore((s) => s.updateRowBySid)
   const rawSyncToDb = useProxyStore((s) => s.syncToDb)
 
@@ -117,8 +114,6 @@ export default function ProxyManager({ onBuySuccessRef }) {
     if (queryResponse?.data) {
       useProxyStore.setState({
         data: queryResponse.data,
-        receivedData: queryResponse.data,
-        renderingReceived: true,
         isLoading: isQueryLoading,
       })
     }
@@ -1372,9 +1367,6 @@ export default function ProxyManager({ onBuySuccessRef }) {
           setPage(1)
           clearSelection()
         }}
-        receivedData={receivedData}
-        renderingReceived={renderingReceived}
-        setRenderingReceived={setRenderingReceived}
         onAutoRenewToggle={async (sid, newState) => {
           // Optimistic Update
           updateRowBySid(sid, () => ({ is_auto_renew: newState }))

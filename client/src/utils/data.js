@@ -160,3 +160,66 @@ export function mergeProxyData(data, res) {
 
   return Array.from(dataMap.values())
 }
+
+/**
+ * Filter proxy dataset purely in memory on frontend.
+ * Evaluates time (due / expired / using), IP list, and keyword across relevant fields.
+ */
+export function filterProxyData(proxies, { keyword = '', byTime = 'all', ips = '' } = {}) {
+  if (!Array.isArray(proxies) || proxies.length === 0) return []
+
+  let filtered = proxies
+
+  // 1. Filter by time
+  if (byTime && byTime !== 'all') {
+    const now = new Date()
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
+
+    filtered = filtered.filter((item) => {
+      const expDate = parseDDMMYYYY(item.expired)
+      if (!expDate) return false
+
+      const diffInDays = Math.floor((expDate.getTime() - today.getTime()) / 86400000)
+
+      if (byTime === 'due') {
+        return diffInDays >= 0 && diffInDays <= 2
+      }
+      if (byTime === 'expired') {
+        return diffInDays < 0
+      }
+      if (byTime === 'using') {
+        return diffInDays >= 0
+      }
+      return true
+    })
+  }
+
+  // 2. Filter by ips
+  const trimmedIps = ips ? ips.trim() : ''
+  if (trimmedIps) {
+    const targetIps = trimmedIps
+      .split('\n')
+      .flatMap((line) => line.split(','))
+      .map((s) => extractIP(s).trim())
+      .filter(Boolean)
+
+    if (targetIps.length > 0) {
+      filtered = filtered.filter((item) => {
+        if (!item.ip_port) return false
+        const rawIp = item.ip_port.split(':')[0].trim()
+        return targetIps.some((targetIp) => item.ip_port.includes(targetIp) || rawIp === targetIp)
+      })
+    }
+  }
+
+  // 3. Filter by keyword
+  const trimmedKw = keyword ? keyword.trim().toLowerCase() : ''
+  if (trimmedKw) {
+    filtered = filtered.filter((item) => {
+      const fields = [item.ip_port, item.note, item.country, item.type, item.status]
+      return fields.some((val) => typeof val === 'string' && val.toLowerCase().includes(trimmedKw))
+    })
+  }
+
+  return filtered
+}

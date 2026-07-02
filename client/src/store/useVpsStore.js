@@ -95,8 +95,19 @@ const useVpsStore = create((set, get) => ({
       const resData = res.data?.data || []
 
       set((state) => {
-        let finalMergedData = resData
-        if (!parsedIps && resData.length <= (params.amount || 200)) {
+        // Always preserve allData by merging incoming resData into master dataset
+        const mergedData = mergeVpsData(state.data, resData)
+
+        // Only run cleanup if this was an unfiltered full fetch of all VPS
+        const isFiltered = Boolean(
+          parsedIps ||
+          (keyword && keyword.trim()) ||
+          (byTime && byTime !== 'all') ||
+          (params.amount && resData.length <= params.amount)
+        )
+
+        let finalData = mergedData
+        if (!isFiltered && resData.length > 0) {
           const trashSids = state.data
             .filter(
               (row) =>
@@ -106,12 +117,12 @@ const useVpsStore = create((set, get) => ({
 
           if (trashSids.length > 0) {
             get().deleteFromDb(trashSids)
-            finalMergedData = resData.filter((row) => !trashSids.includes(row.sid))
+            finalData = resData.filter((row) => !trashSids.includes(row.sid))
           }
         }
 
         return {
-          data: finalMergedData,
+          data: finalData,
           receivedData: resData,
           renderingReceived: true,
         }

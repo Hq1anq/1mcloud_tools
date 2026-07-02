@@ -11,9 +11,6 @@ const BaseTable = forwardRef(function BaseTable(
   {
     // Data
     data,
-    receivedData = DEFAULT_DATA,
-    renderingReceived,
-    setRenderingReceived,
     isLoading = false,
 
     // Config
@@ -55,22 +52,16 @@ const BaseTable = forwardRef(function BaseTable(
     if (parent) setScrollParent(parent)
   }, [])
 
-  // ── Rendering-received sync ────────────────────────────────────────────
-  useEffect(() => {
-    if (renderingReceived && setRenderingReceived) {
-      setRenderingReceived(false)
-    }
-  }, [renderingReceived, setRenderingReceived])
-
   // ── Filter state ───────────────────────────────────────────────────────
   const [filters, setFilters] = useState({})
   const [filterInputs, setFilterInputs] = useState({})
   const [filterVersion, setFilterVersion] = useState(0)
   const [showCountryCode, setShowCountryCode] = useState(false)
 
-  // Snapshot of matched SIDs — only recomputed on Enter, not on every data change
+  // Snapshot of matched SIDs — recomputed on filter change or data prop change
   const matchedSidsRef = useRef(null)
   const lastFilterVersionRef = useRef(0)
+  const lastDataRef = useRef(data)
 
   // ── Selection state ───────────────────────────────────────────────────
   const [lastSelectedIndex, setLastSelectedIndex] = useState(null)
@@ -94,42 +85,36 @@ const BaseTable = forwardRef(function BaseTable(
     const isStatusFilterActive = !!filters['status']?.value
     const shouldHideRefunded = !isIpPortFilterActive && !isStatusFilterActive
 
-    if (renderingReceived) {
+    const dataChanged = data !== lastDataRef.current
+    if (dataChanged) {
+      lastDataRef.current = data
+    }
+
+    if (dataChanged || filterVersion !== lastFilterVersionRef.current || !hasKey) {
       lastFilterVersionRef.current = filterVersion
-      let initialData = receivedData
-      if (shouldHideRefunded)
-        initialData = initialData.filter((row) => row?.status?.toLowerCase() !== 'refunded')
 
-      if (hasKey) matchedSidsRef.current = new Set(initialData.map(getRowKey))
-      else matchedSidsRef.current = initialData
+      let result = applyFilters(data, filters)
+      if (shouldHideRefunded) {
+        result = result.filter((row) => row?.status?.toLowerCase() !== 'refunded')
+      }
 
-      resultData = initialData
+      if (hasKey) matchedSidsRef.current = new Set(result.map(getRowKey))
+      else matchedSidsRef.current = result
+    }
+
+    if (!hasKey) {
+      resultData = matchedSidsRef.current
+    } else if (matchedSidsRef.current) {
+      resultData = data.filter((row) => matchedSidsRef.current.has(getRowKey(row)))
     } else {
-      if (filterVersion !== lastFilterVersionRef.current || !hasKey) {
-        lastFilterVersionRef.current = filterVersion
-
-        let result = applyFilters(data, filters)
-        if (shouldHideRefunded)
-          result = result.filter((row) => row?.status?.toLowerCase() !== 'refunded')
-
-        if (hasKey) matchedSidsRef.current = new Set(result.map(getRowKey))
-        else matchedSidsRef.current = result
-      }
-
-      if (!hasKey) {
-        resultData = matchedSidsRef.current
-      } else if (matchedSidsRef.current) {
-        resultData = data.filter((row) => matchedSidsRef.current.has(getRowKey(row)))
-      } else {
-        resultData = data
-      }
+      resultData = data
     }
 
     return [...resultData].sort((a, b) => {
       if (a.sid !== undefined && b.sid !== undefined) return b.sid - a.sid
       return 0
     })
-  }, [data, receivedData, renderingReceived, filters, useFilter, filterVersion])
+  }, [data, filters, useFilter, filterVersion])
 
   const getRowKey = useCallback(
     (row, index) => {
@@ -267,9 +252,8 @@ const BaseTable = forwardRef(function BaseTable(
         onSelectionChange?.([], new Set())
         setLastSelectedIndex(null)
       }
-      if (setRenderingReceived) setRenderingReceived(false)
     },
-    [filterInputs, filters, selectable, operatorConfig, onSelectionChange, setRenderingReceived]
+    [filterInputs, filters, selectable, operatorConfig, onSelectionChange]
   )
 
   // ── Context for rows ─────────────────────────────────────────────────

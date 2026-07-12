@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, forwardRef, useEffect, useRef } from 'react'
 import { formatInputDate } from '../../../utils/data'
 import { useTranslation } from '../../../i18n'
-import { applyFilters, operatorCycle } from './filterUtils.jsx'
+import { applyFilters } from './filterUtils.jsx'
 import TableFilterHeader from './TableFilterHeader'
 import TableSkeleton from './TableSkeleton'
 import type { BaseTableProps, TableRowContext } from './types'
@@ -21,7 +21,6 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
     // Column config
     tableTitle,
     headers = [],
-    operatorConfig,
     controlButton,
     onAutoRenewToggle,
 
@@ -54,15 +53,16 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
   }, [])
 
   // ── Filter state ───────────────────────────────────────────────────────
-  const [filters, setFilters] = useState<Record<string, any>>({})
+  const [filters, setFilters] = useState<Record<string, string>>({})
   const [filterInputs, setFilterInputs] = useState<Record<string, string>>({})
   const [filterVersion, setFilterVersion] = useState(0)
   const [showCountryCode, setShowCountryCode] = useState(false)
 
-  // Snapshot of matched SIDs — recomputed on filter change or data prop change
-  const matchedSidsRef = useRef<any>(null)
-  const lastFilterVersionRef = useRef(0)
-  const lastDataRef = useRef(data)
+  // Snapshot of filter state & data
+  const isFilterActiveRef = useRef<boolean>(false)
+  const filteredResultRef = useRef<any[] | null>(null)
+  const lastFilterVersionRef = useRef<number>(0)
+  const lastDataRef = useRef<any[] | undefined>(data)
 
   // ── Selection state ───────────────────────────────────────────────────
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null)
@@ -72,9 +72,6 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
   const filteredData = useMemo(() => {
     let resultData = data || DEFAULT_DATA
 
-    const getRowKey = (r: any) => r?.sid
-    const hasKey = resultData.length > 0 && getRowKey(resultData[0]) !== undefined
-
     if (!useFilter) {
       return [...resultData].sort((a, b) => {
         if (a.sid !== undefined && b.sid !== undefined) return b.sid - a.sid
@@ -82,33 +79,32 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
       })
     }
 
-    const isIpPortFilterActive = !!filters['ip_port']?.value
-    const isStatusFilterActive = !!filters['status']?.value
-    const shouldHideRefunded = !isIpPortFilterActive && !isStatusFilterActive
-
     const dataChanged = data !== lastDataRef.current
     if (dataChanged) {
       lastDataRef.current = data
-    }
-
-    if (dataChanged || filterVersion !== lastFilterVersionRef.current || !hasKey) {
+      isFilterActiveRef.current = false
+      filteredResultRef.current = null
       lastFilterVersionRef.current = filterVersion
+    } else if (filterVersion !== lastFilterVersionRef.current) {
+      lastFilterVersionRef.current = filterVersion
+      isFilterActiveRef.current = true
 
-      let result = applyFilters(data, filters)
+      const isIpPortFilterActive = Boolean(filters['ip_port']?.trim())
+      const isStatusFilterActive = Boolean(filters['status']?.trim())
+      const shouldHideRefunded = !isIpPortFilterActive && !isStatusFilterActive
+
+      let result = applyFilters(data || DEFAULT_DATA, filters)
       if (shouldHideRefunded) {
         result = result.filter((row: any) => row?.status?.toLowerCase() !== 'refunded')
       }
-
-      if (hasKey) matchedSidsRef.current = new Set(result.map(getRowKey))
-      else matchedSidsRef.current = result
+      filteredResultRef.current = result
     }
 
-    if (!hasKey) {
-      resultData = matchedSidsRef.current
-    } else if (matchedSidsRef.current) {
-      resultData = data!.filter((row: any) => matchedSidsRef.current.has(getRowKey(row)))
+    if (isFilterActiveRef.current && filteredResultRef.current !== null) {
+      resultData = filteredResultRef.current
     } else {
       resultData = data || DEFAULT_DATA
+      resultData = resultData.filter((row: any) => row?.status?.toLowerCase() !== 'refunded')
     }
 
     return [...resultData].sort((a, b) => {
@@ -203,27 +199,6 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
   )
 
   // ── Filter handlers ────────────────────────────────────────────────────
-  const handleOperatorToggle = useCallback(
-    (header: string) => {
-      const inputValue =
-        filterInputs[header] !== undefined ? filterInputs[header] : filters[header]?.value || ''
-
-      setFilters((prev) => {
-        const cycle = operatorConfig ? operatorConfig[header] || operatorCycle : operatorCycle
-        const defaultOperator = cycle[0]
-        const current = prev[header] || { value: '', operator: defaultOperator }
-        if (cycle.length <= 1) return prev
-
-        let currentIndex = cycle.indexOf(current.operator)
-        if (currentIndex === -1) currentIndex = 0
-        const nextIndex = (currentIndex + 1) % cycle.length
-
-        return { ...prev, [header]: { value: inputValue, operator: cycle[nextIndex] } }
-      })
-    },
-    [filterInputs, filters, operatorConfig]
-  )
-
   const handleFilterInputChange = useCallback((header: string, value: string) => {
     setFilterInputs((prev) => ({ ...prev, [header]: value }))
   }, [])
@@ -233,7 +208,7 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
       if (e.key !== 'Enter') return
 
       const inputValue =
-        filterInputs[header] !== undefined ? filterInputs[header] : filters[header]?.value || ''
+        filterInputs[header] !== undefined ? filterInputs[header] : filters[header] || ''
 
       let finalValue = inputValue
 
@@ -242,10 +217,10 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
         setFilterInputs((prev) => ({ ...prev, [header]: finalValue }))
       }
 
-      const defaultOperator = operatorConfig?.[header]?.[0] || 'contain'
       setFilters((prev) => ({
         ...prev,
-        [header]: { ...(prev[header] || { operator: defaultOperator }), value: finalValue },
+        ...filterInputs,
+        [header]: finalValue,
       }))
       setFilterVersion((v) => v + 1)
 
@@ -254,7 +229,7 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
         setLastSelectedIndex(null)
       }
     },
-    [filterInputs, filters, selectable, operatorConfig, onSelectionChange]
+    [filterInputs, filters, selectable, onSelectionChange]
   )
 
   // ── Context for rows ─────────────────────────────────────────────────
@@ -292,7 +267,6 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
         headers={headers}
         tableTitle={tableTitle}
         useFilter={useFilter}
-        operatorConfig={operatorConfig}
         selectable={selectable}
         selectedIds={selectedIds}
         filteredData={filteredData}
@@ -301,7 +275,6 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
         filterInputs={filterInputs}
         showCountryCode={showCountryCode}
         onToggleCountryCode={() => setShowCountryCode((prev) => !prev)}
-        onOperatorToggle={handleOperatorToggle}
         onFilterInputChange={handleFilterInputChange}
         onFilterKeyDown={handleFilterKeyDown}
         onSelectAll={handleSelectAll}
@@ -312,7 +285,6 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
       headers,
       tableTitle,
       useFilter,
-      operatorConfig,
       selectable,
       selectedIds,
       filteredData,
@@ -320,7 +292,6 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
       filters,
       filterInputs,
       showCountryCode,
-      handleOperatorToggle,
       handleFilterInputChange,
       handleFilterKeyDown,
       handleSelectAll,

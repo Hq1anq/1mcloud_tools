@@ -16,10 +16,6 @@ import useProxyStore from '../store/useProxyStore'
 import useManagerActions from '../hooks/useManagerActions'
 import { filterProxyData } from '../utils/data'
 
-const OPERATOR_CONFIG = {
-  expired: ['equal', 'greater-equal', 'less-equal'],
-}
-
 export default function ProxyManager({ onBuySuccessRef }) {
   const navigate = useNavigate()
   const [reinstallType, setReinstallType] = useState('HTTPS')
@@ -102,8 +98,8 @@ export default function ProxyManager({ onBuySuccessRef }) {
 
   // In-memory pure frontend filtering across allData or temporarily fetched rows (using filterIps from TableFilterToolbar)
   const filteredData = useMemo(() => {
-    const sourceData = tempData ? tempData : data
-    return filterProxyData(sourceData, { keyword, byTime, ips: filterIps })
+    if (tempData) return tempData
+    return filterProxyData(data, { keyword, byTime, ips: filterIps })
   }, [data, tempData, keyword, byTime, filterIps])
 
   const [changeIpState, setChangeIpState] = useState({
@@ -180,9 +176,6 @@ export default function ProxyManager({ onBuySuccessRef }) {
       removeToast(loadingId)
       if (resData.length > 0) {
         setTempData(resData)
-        setByTime('all')
-        setKeyword('')
-        setFilterIps('')
         clearSelection()
         addToast(
           <>
@@ -1860,7 +1853,6 @@ export default function ProxyManager({ onBuySuccessRef }) {
               }}
             />
           )}
-          operatorConfig={OPERATOR_CONFIG}
           rowClassMap={rowClassMap}
           selectedIds={selectedIds}
           selectedRows={selectedRows}

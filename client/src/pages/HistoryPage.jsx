@@ -118,21 +118,11 @@ export default function HistoryPage() {
     'created',
     'description',
   ]
-  const transactionOperatorConfig = {
-    amount: ['equal', 'greater-equal', 'less-equal'],
-    update_balance: ['equal', 'greater-equal', 'less-equal'],
-    created: ['equal', 'greater-equal', 'less-equal'],
-  }
 
   const changeIpHeaders = ['server_name', 'old_ip', 'new_ip', 'created']
-  const changeIpOperatorConfig = {
-    created: ['equal', 'greater-equal', 'less-equal'],
-  }
 
   const currentData = activeTab === 'transaction' ? transactionData : changeIpData
   const currentHeaders = activeTab === 'transaction' ? transactionHeaders : changeIpHeaders
-  const currentOperatorConfig =
-    activeTab === 'transaction' ? transactionOperatorConfig : changeIpOperatorConfig
   const isLoading = activeTab === 'transaction' ? transactionLoading : changeIpLoading
   const error = activeTab === 'transaction' ? transactionError : changeIpError
 
@@ -184,7 +174,6 @@ export default function HistoryPage() {
         headers={currentHeaders}
         isLoading={isLoading}
         useFilter={true}
-        operatorConfig={currentOperatorConfig}
         selectable={false}
         isError={!!error}
         extraBtn={

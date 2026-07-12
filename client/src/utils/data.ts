@@ -1,16 +1,19 @@
-export const extractIP = (line) => {
+import type { ProxyItem, ProxyTimeFilter } from '../types/proxy'
+import type { VpsItem } from '../types/vps'
+
+export const extractIP = (line: string): string => {
   // Looser regex: grab four groups of digits separated by dots
   const ipv4Candidate = line.match(/\d+\.\d+\.\d+\.\d+/)
-  if (!ipv4Candidate) return null
+  if (!ipv4Candidate) return ''
 
   const ip = ipv4Candidate[0]
 
   // Validate each octet (0–255)
   const parts = ip.split('.')
-  if (parts.length !== 4) return null
-  for (let part of parts) {
+  if (parts.length !== 4) return ''
+  for (const part of parts) {
     const num = Number(part)
-    if (num < 0 || num > 255) return null
+    if (num < 0 || num > 255) return ''
   }
 
   return ip
@@ -18,11 +21,14 @@ export const extractIP = (line) => {
 
 // Proxy parser
 // Supports: ip:port:user:pass | user:pass@ip:port
-export const parseProxy = (raw) => {
+export const parseProxy = (raw: string): string | null => {
   const line = raw.trim()
   if (!line) return null
 
-  let ip, port, username, password
+  let ip: string | undefined
+  let port: string | undefined
+  let username: string | undefined
+  let password: string | undefined
 
   if (line.includes('@')) {
     // user:pass@ip:port
@@ -42,15 +48,15 @@ export const parseProxy = (raw) => {
   return `${ip}:${port}:${username}:${password}`
 }
 
-export function str2date(str) {
+export function str2date(str: string): Date {
   const [d, m, y] = str.split('-')
-  return new Date(y, m - 1, d)
+  return new Date(Number(y), Number(m) - 1, Number(d))
 }
 
 /**
  * Parse a date string formatted as DD-MM-YYYY and return a Date at midnight.
  */
-export function parseDDMMYYYY(str) {
+export function parseDDMMYYYY(str: string): Date | null {
   if (!str) return null
   const parts = str.split('-')
   if (parts.length !== 3) return null
@@ -59,7 +65,7 @@ export function parseDDMMYYYY(str) {
   return isNaN(d.getTime()) ? null : d
 }
 
-export function formatInputDate(inputValue) {
+export function formatInputDate(inputValue: string): string {
   const filterVal = inputValue.trim()
   const now = new Date()
   const currentMonth = String(now.getMonth() + 1).padStart(2, '0')
@@ -77,7 +83,7 @@ export function formatInputDate(inputValue) {
     const month = filterVal.slice(2, 4)
     const year = filterVal.slice(4).padStart(2, '0')
     return `${day}-${month}-20${year}`
-  } else if (filterVal.length <= 8) {
+  } else {
     const day = filterVal.slice(0, 2)
     const month = filterVal.slice(2, 4)
     const year = filterVal.slice(4)
@@ -89,19 +95,19 @@ export function formatInputDate(inputValue) {
  * Parse a Vietnamese-formatted price string (e.g. "245.000") to a raw integer.
  * Returns 0 if the string is empty, undefined, or unparseable.
  */
-export function parseVND(priceStr) {
+export function parseVND(priceStr: string): number {
   if (!priceStr) return 0
-  const raw = String(priceStr).replace(/[^0-9]/g, '')
+  const raw = priceStr.replace(/[^0-9]/g, '')
   return parseInt(raw, 10) || 0
 }
 
 /** Format a raw integer back to Vietnamese dot-separated string. */
-export function formatVND(n) {
+export function formatVND(n: number): string {
   return Math.round(n).toLocaleString('vi-VN')
 }
 
-export function mergeVpsData(data, res) {
-  const dataMap = new Map(data.map((row) => [row.sid, row]))
+export function mergeVpsData(data: VpsItem[], res: VpsItem[]): VpsItem[] {
+  const dataMap = new Map<number, VpsItem>(data.map((row) => [row.sid, row]))
 
   for (const resRow of res) {
     const existingRow = dataMap.get(resRow.sid)
@@ -130,7 +136,7 @@ export function mergeVpsData(data, res) {
       }
     } else {
       // New row from res — add to data
-      const newRow = { ...resRow }
+      const newRow: VpsItem = { ...resRow }
       if (userPass !== undefined) newRow.user_pass = userPass
       dataMap.set(resRow.sid, newRow)
     }
@@ -139,8 +145,8 @@ export function mergeVpsData(data, res) {
   return Array.from(dataMap.values())
 }
 
-export function mergeProxyData(data, res) {
-  const dataMap = new Map(data.map((row) => [row.sid, row]))
+export function mergeProxyData(data: ProxyItem[], res: ProxyItem[]): ProxyItem[] {
+  const dataMap = new Map<number, ProxyItem>(data.map((row) => [row.sid, row]))
 
   for (const resRow of res) {
     const existingRow = dataMap.get(resRow.sid)
@@ -161,11 +167,20 @@ export function mergeProxyData(data, res) {
   return Array.from(dataMap.values())
 }
 
+export interface FilterProxyOptions {
+  keyword?: string
+  byTime?: ProxyTimeFilter | string
+  ips?: string
+}
+
 /**
  * Filter proxy dataset purely in memory on frontend.
  * Evaluates time (due / expired / using), IP list, and keyword across relevant fields.
  */
-export function filterProxyData(proxies, { keyword = '', byTime = 'all', ips = '' } = {}) {
+export function filterProxyData(
+  proxies: ProxyItem[],
+  { keyword = '', byTime = 'all', ips = '' }: FilterProxyOptions = {}
+): ProxyItem[] {
   if (!Array.isArray(proxies) || proxies.length === 0) return []
 
   let filtered = proxies

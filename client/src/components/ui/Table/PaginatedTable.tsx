@@ -123,7 +123,7 @@ const PaginatedTableInternal = forwardRef<HTMLDivElement, PaginatedTableInternal
       <BaseTable
         {...props}
         ref={ref}
-        useFilter={false}
+        useFilter={props.useFilter ?? false}
         renderBody={({
           filteredData,
           context,

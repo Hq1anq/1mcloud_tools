@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, forwardRef, useEffect, useRef } from 'react'
 import { formatInputDate } from '../../../utils/data'
 import { useTranslation } from '../../../i18n'
-import { applyFilters } from './filterUtils.jsx'
+import { applyFilters } from './filterUtils'
 import TableFilterHeader from './TableFilterHeader'
 import TableSkeleton from './TableSkeleton'
 import type { BaseTableProps, TableRowContext } from './types'
@@ -61,8 +61,17 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
   // Snapshot of filter state & data
   const isFilterActiveRef = useRef<boolean>(false)
   const filteredResultRef = useRef<any[] | null>(null)
+  const matchedKeysRef = useRef<any[] | null>(null)
   const lastFilterVersionRef = useRef<number>(0)
   const lastDataRef = useRef<any[] | undefined>(data)
+
+  const getRowKey = useCallback(
+    (row: any, index?: number) => {
+      if (propsGetRowKey) return propsGetRowKey(row, index)
+      return row?.sid ?? index ?? 0
+    },
+    [propsGetRowKey]
+  )
 
   // ── Selection state ───────────────────────────────────────────────────
   const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null)
@@ -79,25 +88,59 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
       })
     }
 
-    const dataChanged = data !== lastDataRef.current
-    if (dataChanged) {
+    const prevData = lastDataRef.current
+    const dataChanged = data !== prevData
+
+    if (filterVersion !== lastFilterVersionRef.current) {
+      lastFilterVersionRef.current = filterVersion
       lastDataRef.current = data
-      isFilterActiveRef.current = false
-      filteredResultRef.current = null
-      lastFilterVersionRef.current = filterVersion
-    } else if (filterVersion !== lastFilterVersionRef.current) {
-      lastFilterVersionRef.current = filterVersion
-      isFilterActiveRef.current = true
 
       const isIpPortFilterActive = Boolean(filters['ip_port']?.trim())
       const isStatusFilterActive = Boolean(filters['status']?.trim())
       const shouldHideRefunded = !isIpPortFilterActive && !isStatusFilterActive
 
-      let result = applyFilters(data || DEFAULT_DATA, filters)
-      if (shouldHideRefunded) {
-        result = result.filter((row: any) => row?.status?.toLowerCase() !== 'refunded')
+      const hasActiveHeaderFilter = Object.values(filters).some((v) => Boolean(v?.trim()))
+      isFilterActiveRef.current = hasActiveHeaderFilter
+
+      if (hasActiveHeaderFilter) {
+        let result = applyFilters(data || DEFAULT_DATA, filters)
+        if (shouldHideRefunded) {
+          result = result.filter((row: any) => row?.status?.toLowerCase() !== 'refunded')
+        }
+        filteredResultRef.current = result
+        matchedKeysRef.current = result.map((r, i) => getRowKey(r, i))
+      } else {
+        filteredResultRef.current = null
+        matchedKeysRef.current = null
       }
-      filteredResultRef.current = result
+    } else if (dataChanged) {
+      lastDataRef.current = data
+
+      // Check if this is an in-place update of rows in the same dataset
+      const isSameDatasetStructure =
+        isFilterActiveRef.current &&
+        matchedKeysRef.current !== null &&
+        Array.isArray(prevData) &&
+        Array.isArray(data) &&
+        prevData.length === data.length &&
+        prevData.every((item, i) => getRowKey(item, i) === getRowKey(data[i], i))
+
+      if (isSameDatasetStructure && matchedKeysRef.current) {
+        // In-place row updates (e.g. ChangeNote, changeIp, autoRenew, check):
+        // Preserve the currently filtered k records and update their data from new data
+        const dataMap = new Map((data || []).map((r, i) => [getRowKey(r, i), r]))
+        const updatedResult = matchedKeysRef.current
+          .map((key) => dataMap.get(key))
+          .filter(Boolean)
+
+        filteredResultRef.current = updatedResult
+      } else {
+        // Dataset as a whole changed (e.g. toolbar filter byTime/ips/keyword, new dataset):
+        // Reset header filter so new data is shown completely
+        isFilterActiveRef.current = false
+        filteredResultRef.current = null
+        matchedKeysRef.current = null
+      }
     }
 
     if (isFilterActiveRef.current && filteredResultRef.current !== null) {
@@ -111,15 +154,7 @@ const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
       if (a.sid !== undefined && b.sid !== undefined) return b.sid - a.sid
       return 0
     })
-  }, [data, filters, useFilter, filterVersion])
-
-  const getRowKey = useCallback(
-    (row: any, index?: number) => {
-      if (propsGetRowKey) return propsGetRowKey(row, index)
-      return row?.sid ?? index ?? 0
-    },
-    [propsGetRowKey]
-  )
+  }, [data, filters, useFilter, filterVersion, getRowKey])
 
   // ── Selection handlers ─────────────────────────────────────────────────
   const handleSelectRow = useCallback(

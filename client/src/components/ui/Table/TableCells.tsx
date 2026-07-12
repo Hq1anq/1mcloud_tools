@@ -1,5 +1,5 @@
 import React from 'react'
-import { getNationFlag } from './filterUtils.jsx'
+import { getNationFlag } from './filterUtils'
 import Checkbox from '../Checkbox.jsx'
 import RenewToggle from '../RenewToggle.jsx'
 import { getStatusClasses, handleCopy } from '../../../utils/ui'

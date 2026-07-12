@@ -20,10 +20,6 @@ import { extractIP } from '../utils/data'
 import useDebounce from '../hooks/useDebounce'
 import getOS from '../data/osMap'
 
-const OPERATOR_CONFIG = {
-  expired: ['equal', 'greater-equal', 'less-equal'],
-}
-
 export default function VpsManager({ onBuySuccessRef }) {
   const navigate = useNavigate()
   const { addToast, removeToast } = useToast()
@@ -998,7 +994,6 @@ export default function VpsManager({ onBuySuccessRef }) {
             }}
           />
         )}
-        operatorConfig={OPERATOR_CONFIG}
         rowClassMap={rowClassMap}
         selectedIds={selectedIds}
         selectedRows={selectedRows}

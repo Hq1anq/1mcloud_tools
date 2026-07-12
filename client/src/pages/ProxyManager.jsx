@@ -19,10 +19,6 @@ import { useProxyListQuery, PROXY_QUERY_KEY } from '../hooks/useProxyQuery'
 import { extractIP } from '../utils/data'
 import useDebounce from '../hooks/useDebounce'
 
-const OPERATOR_CONFIG = {
-  expired: ['equal', 'greater-equal', 'less-equal'],
-}
-
 export default function ProxyManager({ onBuySuccessRef }) {
   const navigate = useNavigate()
   const [reinstallType, setReinstallType] = useState('HTTPS')
@@ -1537,7 +1533,6 @@ export default function ProxyManager({ onBuySuccessRef }) {
             }}
           />
         )}
-        operatorConfig={OPERATOR_CONFIG}
         rowClassMap={rowClassMap}
         selectedIds={selectedIds}
         selectedRows={selectedRows}

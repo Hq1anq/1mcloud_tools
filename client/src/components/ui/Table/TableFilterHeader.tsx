@@ -1,21 +1,18 @@
 import React from 'react'
 import Checkbox from '../Checkbox.jsx'
-import { operatorIcons } from './filterUtils.jsx'
 
 export interface TableFilterHeaderProps {
   headers: string[]
   tableTitle?: string
   useFilter?: boolean
-  operatorConfig?: Record<string, string[]>
   selectable?: boolean
   selectedIds: Set<any>
   filteredData: any[]
   getRowKey: (row: any, index?: number) => any
-  filters: Record<string, any>
+  filters: Record<string, string>
   filterInputs: Record<string, string>
   showCountryCode: boolean
   onToggleCountryCode: () => void
-  onOperatorToggle: (header: string) => void
   onFilterInputChange: (header: string, value: string) => void
   onFilterKeyDown: (e: React.KeyboardEvent<HTMLInputElement>, header: string) => void
   onSelectAll: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -27,7 +24,6 @@ export default function TableFilterHeader({
   headers,
   tableTitle,
   useFilter = false,
-  operatorConfig,
   selectable = true,
   selectedIds,
   filteredData,
@@ -36,7 +32,6 @@ export default function TableFilterHeader({
   filterInputs,
   showCountryCode,
   onToggleCountryCode,
-  onOperatorToggle,
   onFilterInputChange,
   onFilterKeyDown,
   onSelectAll,
@@ -51,8 +46,7 @@ export default function TableFilterHeader({
   const isAllSelected = selectableRows.length > 0 && pageSelectedCount === selectableRows.length
   const isIndeterminate = pageSelectedCount > 0 && pageSelectedCount < selectableRows.length
 
-  const isHistoryTitle =
-    tableTitle === 'Transaction History' || tableTitle === 'Change-IP History'
+  const isHistoryTitle = tableTitle === 'Transaction History' || tableTitle === 'Change-IP History'
 
   return (
     <tr className="bg-thead border-wrapper border-t-4 border-b-2">
@@ -69,13 +63,8 @@ export default function TableFilterHeader({
       )}
 
       {headers.map((header) => {
-        const defaultOperator = operatorConfig?.[header]?.[0] || 'contain'
-        const currentFilter = filters[header] || { value: '', operator: defaultOperator }
-        const operator = currentFilter.operator
-        const OperatorIcon = operatorIcons[operator as keyof typeof operatorIcons]
-        const showOperator = operatorConfig ? !!operatorConfig[header] : true
-        const inputValue =
-          filterInputs[header] !== undefined ? filterInputs[header] : currentFilter.value
+        const currentFilter = filters[header] || ''
+        const inputValue = filterInputs[header] !== undefined ? filterInputs[header] : currentFilter
 
         return (
           <th key={header} className="px-2 py-3 font-medium tracking-wider uppercase sm:px-4">
@@ -134,20 +123,9 @@ export default function TableFilterHeader({
                 )}
               </span>
 
-              {/* Filter input + operator toggle */}
+              {/* Filter input */}
               {useFilter && !['control', 'is_auto_renew'].includes(header) && (
                 <div className="relative">
-                  {showOperator && (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 640 640"
-                      className="bg-blue filter-operator fill-text-secondary absolute -top-0.5 -right-1.5 size-4 cursor-pointer rounded-full p-0.5"
-                      onClick={() => onOperatorToggle(header)}
-                    >
-                      <title>{`Filter: ${operator}`}</title>
-                      {OperatorIcon}
-                    </svg>
-                  )}
                   <input
                     type="text"
                     placeholder={t('filter')}

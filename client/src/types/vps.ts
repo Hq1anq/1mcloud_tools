@@ -5,14 +5,14 @@ export interface VpsItem {
   type?: string
   created: string
   expired: string
-  ip_changed: number
+  ip_changed?: number
   status: string
   note: string
   is_auto_renew?: boolean
   plan_number?: string
   he_dieu_hanh?: string
   price_vnd?: string
-  user_pass?: string
+  user_pass?: string | null
 }
 
 export type VpsStatusFilter = 'running' | 'off' | 'other' | ''

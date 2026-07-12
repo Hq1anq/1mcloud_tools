@@ -19,15 +19,17 @@ export interface TableCellsProps<T = Record<string, any>> {
   context: TableRowContext<T>
 }
 
-export interface TableRowProps<T = Record<string, any>>
-  extends React.HTMLAttributes<HTMLTableRowElement> {
+export interface TableRowProps<
+  T = Record<string, any>,
+> extends React.HTMLAttributes<HTMLTableRowElement> {
   row: T
   index: number
   context: TableRowContext<T>
 }
 
-export interface VirtuosoTableRowProps<T = Record<string, any>>
-  extends React.HTMLAttributes<HTMLTableRowElement> {
+export interface VirtuosoTableRowProps<
+  T = Record<string, any>,
+> extends React.HTMLAttributes<HTMLTableRowElement> {
   context: TableRowContext<T>
   item: T
   'data-index': number
@@ -48,15 +50,15 @@ export interface RenderFooterParams<T = Record<string, any>> {
   t: (key: string) => string
 }
 
-export interface BaseTableProps<T = Record<string, any>>
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface BaseTableProps<
+  T = Record<string, any>,
+> extends React.HTMLAttributes<HTMLDivElement> {
   data?: T[]
   isLoading?: boolean
   selectable?: boolean
   useFilter?: boolean
   tableTitle?: string
   headers?: string[]
-  operatorConfig?: Record<string, string[]>
   controlButton?: (row: T) => React.ReactNode
   onAutoRenewToggle?: (sid: number | string, newState: boolean) => void
   selectedIds?: Set<number | string>

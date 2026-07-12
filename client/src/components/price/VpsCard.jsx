@@ -1,6 +1,6 @@
 import CardBody from './CardBody.jsx'
 import CountUp from '../ui/CountUp.jsx'
-import { parseVND, formatVND } from '../../utils/data.js'
+import { parseVND, formatVND } from '../../utils/data'
 import { useTranslation } from '../../i18n'
 import {
   CpuIcon,

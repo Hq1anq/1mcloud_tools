@@ -282,8 +282,7 @@ export default function useManagerActions<T extends ManagerRowItem>(store: Manag
     async (
       rows: T[],
       configOrApiCallFn:
-        | SequentialActionConfig<T>
-        | ((row: T) => Promise<SequentialActionResponse>),
+        SequentialActionConfig<T> | ((row: T) => Promise<SequentialActionResponse>),
       actionNameParam?: string,
       onRowSuccessParam?: (res: SequentialActionResponse, row: T) => Partial<T> | void | null
     ): Promise<ActionResult<T>> => {
@@ -342,6 +341,7 @@ export default function useManagerActions<T extends ManagerRowItem>(store: Manag
         const isReinstallOrChangeIp = [
           t('manager.reinstall').toUpperCase(),
           t('manager.changeIp').toUpperCase(),
+          t('manager.reset').toUpperCase(),
         ].includes(actionName.toUpperCase())
 
         const shouldUncheck = isReinstallOrChangeIp ? !isSuccess : isSuccess

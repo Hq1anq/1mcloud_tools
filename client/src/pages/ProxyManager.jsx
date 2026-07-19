@@ -301,17 +301,7 @@ export default function ProxyManager({ onBuySuccessRef }) {
         }
         return res
       },
-      t('manager.changeIp').toUpperCase(),
-      (res) => {
-        const info = res.data?.info
-        if (!info) return null
-        return {
-          ip_port: `${info.ip}:${info.port}`,
-          user_pass: `${info.username}:${info.password}`,
-          type: changeIpType + ' Proxy',
-          status: 'Running',
-        }
-      }
+      t('manager.changeIp').toUpperCase()
     )
 
     // Sync only the updated rows to DB
@@ -473,17 +463,7 @@ export default function ProxyManager({ onBuySuccessRef }) {
         }
         return res
       },
-      t('manager.reinstall').toUpperCase(),
-      (res) => {
-        const info = res.data?.info
-        if (!info) return null
-        return {
-          ip_port: `${info.ip}:${info.port}`,
-          user_pass: `${info.username}:${info.password}`,
-          type: reinstallType + ' Proxy',
-          status: 'Running',
-        }
-      }
+      t('manager.reinstall').toUpperCase()
     )
 
     // Sync only the updated rows to DB
@@ -517,6 +497,105 @@ export default function ProxyManager({ onBuySuccessRef }) {
     t,
     syncToDb,
   ])
+
+  // --- Reset handler ---
+  const handleReset = useCallback(
+    async (rowsToReset = null, skipConfirm = false) => {
+      const rows = Array.isArray(rowsToReset) && rowsToReset.length > 0 ? rowsToReset : selectedRows
+      if (rows.length === 0) {
+        addToast(t('manager.noRowsSelected'), 'warning')
+        return
+      }
+
+      if (!skipConfirm) {
+        const confirmed = await confirmAction({
+          title: t('manager.confirmReset'),
+          infoText: t('manager.resetConfirmInfo'),
+          isProxy: true,
+          isRenew: false,
+          selectedRows: rows,
+        })
+        if (!confirmed) return
+      }
+
+      const proxyResults = []
+      const updatedRows = []
+
+      await processSequential(
+        rows,
+        async (row) => {
+          const latestRow = data.find((d) => d.sid === row.sid) || row
+          const [ip, port] = (latestRow.ip_port || '').split(':')
+          const [username, password] = (latestRow.user_pass || '').split(':')
+
+          const isSocks = latestRow.type === 'SOCKS5 Proxy'
+          const type = isSocks ? 'proxy_sock_5' : 'proxy_https'
+
+          const remote_port = port || ''
+          const u = username || ''
+          const p = password || ''
+
+          const res = await axiosInstance.post('/server/reinstall', {
+            sid: latestRow.sid.toString(),
+            random_remote_port: remote_port ? '' : 'on',
+            random_username: u ? '' : 'on',
+            random_password: p ? '' : 'on',
+            remote_port,
+            username: u,
+            password: p,
+            type,
+            isProxy: true,
+          })
+
+          if (res.data?.success) {
+            const info = res.data.info
+            const updates = {
+              ip_port: `${info.ip}:${info.port}`,
+              user_pass: `${info.username}:${info.password}`,
+              type: latestRow.type,
+              status: 'Running',
+            }
+            updateRowBySid(latestRow.sid, () => updates)
+            updatedRows.push({ ...latestRow, ...updates })
+            proxyResults.push(`${info.ip}:${info.port}:${info.username}:${info.password}`)
+          }
+          return res
+        },
+        t('manager.reset').toUpperCase()
+      )
+
+      // Sync only the updated rows to DB
+      if (updatedRows.length > 0) {
+        syncToDb(updatedRows)
+      }
+
+      if (proxyResults.length > 0) {
+        const text = proxyResults.join('\n')
+        safeCopy(text).then(
+          (ok) =>
+            ok &&
+            addToast(
+              <>
+                {t('manager.copied')}{' '}
+                <span className="text-text-toast-success">{proxyResults.length}</span> Proxy
+              </>,
+              'success'
+            )
+        )
+      }
+    },
+    [
+      selectedRows,
+      data,
+      confirmAction,
+      processSequential,
+      updateRowBySid,
+      safeCopy,
+      addToast,
+      t,
+      syncToDb,
+    ]
+  )
 
   // --- Change Note handler ---
   const handleChangeNote = useCallback(async () => {
@@ -1389,6 +1468,23 @@ export default function ProxyManager({ onBuySuccessRef }) {
                       {t('manager.reboot')}
                     </button>
 
+                    {/* Reset */}
+                    <button
+                      className="bg-action flex grow items-center justify-center rounded-lg px-3 py-2 font-medium whitespace-nowrap"
+                      style={{ '--action-color': 'var(--blue)' }}
+                      onClick={() => handleReset()}
+                      disabled={isProcessing}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 640 640"
+                        className="mr-1 size-5 shrink-0 fill-current sm:mr-2 sm:size-6"
+                      >
+                        <path d="M88 256L232 256C241.7 256 250.5 250.2 254.2 241.2C257.9 232.2 255.9 221.9 249 215L202.3 168.3C277.6 109.7 386.6 115 455.8 184.2C530.8 259.2 530.8 380.7 455.8 455.7C380.8 530.7 259.3 530.7 184.3 455.7C174.1 445.5 165.3 434.4 157.9 422.7C148.4 407.8 128.6 403.4 113.7 412.9C98.8 422.4 94.4 442.2 103.9 457.1C113.7 472.7 125.4 487.5 139 501C239 601 401 601 501 501C601 401 601 239 501 139C406.8 44.7 257.3 39.3 156.7 122.8L105 71C98.1 64.2 87.8 62.1 78.8 65.8C69.8 69.5 64 78.3 64 88L64 232C64 245.3 74.7 256 88 256z" />
+                      </svg>
+                      {t('manager.reset')}
+                    </button>
+
                     {/* Check */}
                     <button
                       className="bg-action flex grow items-center justify-center rounded-lg px-3 py-2 font-medium"
@@ -1548,18 +1644,11 @@ export default function ProxyManager({ onBuySuccessRef }) {
                       onClick={handleSyncData}
                     >
                       <svg
-                        aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        className={`mr-1 size-5 shrink-0 fill-none sm:mr-2 sm:size-7 ${isSyncing ? 'animate-spin' : ''}`}
+                        viewBox="0 0 640 640"
+                        className={`mr-1 size-5 shrink-0 fill-current sm:mr-2 sm:size-7 ${isSyncing ? 'animate-spin' : ''}`}
                       >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                        />
+                        <path d="M544.1 256L552 256C565.3 256 576 245.3 576 232L576 88C576 78.3 570.2 69.5 561.2 65.8C552.2 62.1 541.9 64.2 535 71L483.3 122.8C439 86.1 382 64 320 64C191 64 84.3 159.4 66.6 283.5C64.1 301 76.2 317.2 93.7 319.7C111.2 322.2 127.4 310 129.9 292.6C143.2 199.5 223.3 128 320 128C364.4 128 405.2 143 437.7 168.3L391 215C384.1 221.9 382.1 232.2 385.8 241.2C389.5 250.2 398.3 256 408 256L544.1 256zM573.5 356.5C576 339 563.8 322.8 546.4 320.3C529 317.8 512.7 330 510.2 347.4C496.9 440.4 416.8 511.9 320.1 511.9C275.7 511.9 234.9 496.9 202.4 471.6L249 425C255.9 418.1 257.9 407.8 254.2 398.8C250.5 389.8 241.7 384 232 384L88 384C74.7 384 64 394.7 64 408L64 552C64 561.7 69.8 570.5 78.8 574.2C87.8 577.9 98.1 575.8 105 569L156.8 517.2C201 553.9 258 576 320 576C449 576 555.7 480.6 573.4 356.5z" />
                       </svg>
                       {t('manager.syncData')}
                     </button>
@@ -1778,6 +1867,7 @@ export default function ProxyManager({ onBuySuccessRef }) {
                   })
                 )
               }
+              onReset={() => handleReset([row], true)}
               onRefund={
                 profile?.is_refund
                   ? () =>

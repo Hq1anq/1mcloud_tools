@@ -55,7 +55,12 @@ export default function LoginPage() {
       } else {
         localStorage.removeItem('rememberedPassword')
       }
-      navigate('/manager')
+      const currentUser = useAuthStore.getState().user
+      if (currentUser && currentUser.is_verified === false) {
+        navigate('/verify-user')
+      } else {
+        navigate('/manager')
+      }
     } else {
       const storeError = useAuthStore.getState().error
       setError(storeError || 'Login failed. Please check your credentials.')

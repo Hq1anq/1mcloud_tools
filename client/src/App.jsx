@@ -14,6 +14,7 @@ import ManagerPage from './pages/ManagerPage.jsx'
 import ProxyChecker from './pages/ProxyChecker.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import SignupPage from './pages/SignupPage'
+import VerifyUserPage from './pages/VerifyUserPage'
 import Contact from './pages/Contact.jsx'
 import AccountPage from './pages/AccountPage.jsx'
 import HistoryPage from './pages/HistoryPage.jsx'
@@ -27,7 +28,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy'
 import { AppProvider } from './context/AppProvider'
 
 function App() {
-  const { checkAuth, isAuthenticated } = useAuthStore()
+  const { checkAuth, isAuthenticated, user } = useAuthStore()
 
   useEffect(() => {
     checkAuth()
@@ -155,6 +156,19 @@ function App() {
               <Route
                 path="/signup"
                 element={isAuthenticated ? <Navigate to="/" replace /> : <SignupPage />}
+              />
+
+              <Route
+                path="/verify-user"
+                element={
+                  !isAuthenticated ? (
+                    <Navigate to="/login" replace />
+                  ) : user?.is_verified ? (
+                    <Navigate to="/manager" replace />
+                  ) : (
+                    <VerifyUserPage />
+                  )
+                }
               />
 
               <Route path="/terms" element={<TermsOfService />} />

@@ -207,6 +207,27 @@ const vi = {
   'signup.failed': 'Đăng ký thất bại.',
   'signup.tryAgain': 'Đăng ký thất bại. Vui lòng thử lại.',
 
+  // Verification Page
+  'verify.pageTitle': 'Xác thực tài khoản',
+  'verify.eyebrowPending': 'Email verification',
+  'verify.eyebrowVerifying': 'VerifyToken',
+  'verify.eyebrowSuccess': 'Xác thực thành công',
+  'verify.titlePending': 'Tài khoản chưa được xác thực.',
+  'verify.titleVerifying': 'Tài khoản của quý khách đang được xác thực.',
+  'verify.titleSuccess': 'Tài khoản đã được xác thực thành công!',
+  'verify.subtitlePending': 'Nhấn Xác thực và kiểm tra email (bao gồm cả hộp thư SPAM).',
+  'verify.subtitleVerifying': 'Hệ thống đang kiểm tra token xác thực từ email của bạn...',
+  'verify.subtitleSuccess':
+    'Tài khoản của bạn đã được kích hoạt. Đang chuyển hướng đến trang quản lý dịch vụ...',
+  'verify.btnVerify': 'Xác thực',
+  'verify.btnVerifying': 'Đang xác thực...',
+  'verify.btnSent': 'Đã gửi email',
+  'verify.btnBackLogin': 'Quay lại trang đăng nhập',
+  'verify.btnGoManager': 'Đi tới trang quản lý ngay',
+  'verify.emailSentToast': 'Đã gửi email xác thực. Vui lòng kiểm tra hộp thư của quý khách.',
+  'verify.successToast': 'Xác thực tài khoản thành công! Vui lòng tiếp tục sử dụng dịch vụ.',
+  'verify.failedToast': 'Xác thực tài khoản thất bại. Token không hợp lệ hoặc đã hết hạn.',
+
   // Proxy Checker
   'checker.proxyList': 'Nhập Proxy',
   check: 'Kiểm tra',

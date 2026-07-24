@@ -207,6 +207,27 @@ const en = {
   'signup.failed': 'Registration failed.',
   'signup.tryAgain': 'Registration failed. Please try again.',
 
+  // Verification Page
+  'verify.pageTitle': 'Account Verification',
+  'verify.eyebrowPending': 'Email verification',
+  'verify.eyebrowVerifying': 'VerifyToken',
+  'verify.eyebrowSuccess': 'Verification Successful',
+  'verify.titlePending': 'Account not verified.',
+  'verify.titleVerifying': 'Your account is being verified.',
+  'verify.titleSuccess': 'Account successfully verified!',
+  'verify.subtitlePending': 'Click Verify and check your email (including SPAM folder).',
+  'verify.subtitleVerifying': 'The system is verifying the token from your email...',
+  'verify.subtitleSuccess':
+    'Your account has been activated. Redirecting to management dashboard...',
+  'verify.btnVerify': 'Verify',
+  'verify.btnVerifying': 'Verifying...',
+  'verify.btnSent': 'Email Sent',
+  'verify.btnBackLogin': 'Back to Login',
+  'verify.btnGoManager': 'Go to Management Now',
+  'verify.emailSentToast': 'Verification email sent. Please check your inbox.',
+  'verify.successToast': 'Account verification successful! Redirecting...',
+  'verify.failedToast': 'Account verification failed. Token is invalid or expired.',
+
   // Proxy Checker
   'checker.proxyList': 'Enter Proxy',
   check: 'Check',

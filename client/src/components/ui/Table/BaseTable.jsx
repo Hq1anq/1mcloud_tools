@@ -390,19 +390,16 @@ const BaseTable = forwardRef(function BaseTable(
         </div>
 
         {/* Table Body Container */}
-        {!isLoading && !isError && filteredData.length === 0 ? (
-          emtyState
-        ) : (
-          <div className="scroll-container overflow-x-auto overflow-y-hidden rounded-b-lg">
-            {isLoading ? (
-              <TableSkeleton headers={headers} selectable={selectable} fixedHeader={fixedHeader} />
-            ) : (
-              renderBody?.({ filteredData, virtuosoContext, fixedHeader, scrollParent, t })
-            )}
-          </div>
-        )}
+        <div className="scroll-container overflow-x-auto overflow-y-hidden rounded-b-lg">
+          {isLoading ? (
+            <TableSkeleton headers={headers} selectable={selectable} fixedHeader={fixedHeader} />
+          ) : (
+            renderBody?.({ filteredData, virtuosoContext, fixedHeader, scrollParent, t })
+          )}
+        </div>
 
         {!isLoading && isError && errorMessage}
+        {!isLoading && !isError && filteredData.length === 0 && emtyState}
       </div>
 
       {renderFooter?.({ filteredData, t })}

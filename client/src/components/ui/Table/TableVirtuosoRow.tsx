@@ -10,7 +10,7 @@ export const VirtuosoTableRow = <T extends Record<string, any>>({
   const index = props['data-index']
   const row = props.item
 
-  const { expiryStyle, rowClassName, handleClick } = getTableRowState({
+  const { isSelected, isRefunded, rowStyle, rowClassName, handleClick } = getTableRowState({
     row,
     index,
     context,
@@ -20,7 +20,9 @@ export const VirtuosoTableRow = <T extends Record<string, any>>({
   return (
     <tr
       {...props}
-      style={{ ...expiryStyle, ...props.style }}
+      data-selected={isSelected ? 'true' : undefined}
+      data-refunded={isRefunded ? 'true' : undefined}
+      style={{ ...rowStyle, ...props.style }}
       className={`${rowClassName} ${props.className || ''}`.trim()}
       onClick={handleClick}
     />

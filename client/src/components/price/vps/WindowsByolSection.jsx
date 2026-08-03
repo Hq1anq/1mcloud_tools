@@ -4,7 +4,7 @@ import Checkbox from '../../ui/Checkbox.jsx'
 import Skeleton from '../../ui/Skeleton.jsx'
 import WindowsKeyInput from '../../ui/WindowsKeyInput.jsx'
 import { useTranslation } from '../../../i18n/index.js'
-import { maskProductKey, isValidLicense } from '../../../utils/ui.js'
+import { maskProductKey, isValidLicense } from '../../../utils/ui'
 
 export default function WindowsByolSection({
   userLicenses = [],

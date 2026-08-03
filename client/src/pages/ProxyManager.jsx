@@ -525,7 +525,7 @@ export default function ProxyManager({ onBuySuccessRef }) {
         rows,
         async (row) => {
           const latestRow = data.find((d) => d.sid === row.sid) || row
-          const [ip, port] = (latestRow.ip_port || '').split(':')
+          const port = latestRow.ip_port.split(':')[1]
           const [username, password] = (latestRow.user_pass || '').split(':')
 
           const isSocks = latestRow.type === 'SOCKS5 Proxy'

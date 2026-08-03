@@ -42,7 +42,6 @@ export interface SequentialActionResponse {
 export interface SequentialActionConfig<T extends ManagerRowItem> {
   apiCallFn: (row: T) => Promise<SequentialActionResponse>
   actionName: string
-  onRowSuccess?: (res: SequentialActionResponse, row: T) => Partial<T> | void | null
   onRowCompleted?: (row: T, success: boolean, res?: SequentialActionResponse) => void
   onDeselect?: (rows: T[]) => void
 }
@@ -283,19 +282,17 @@ export default function useManagerActions<T extends ManagerRowItem>(store: Manag
       rows: T[],
       configOrApiCallFn:
         SequentialActionConfig<T> | ((row: T) => Promise<SequentialActionResponse>),
-      actionNameParam?: string,
-      onRowSuccessParam?: (res: SequentialActionResponse, row: T) => Partial<T> | void | null
+      actionNameParam?: string
     ): Promise<ActionResult<T>> => {
       const config: SequentialActionConfig<T> =
         typeof configOrApiCallFn === 'function'
           ? {
               apiCallFn: configOrApiCallFn,
               actionName: actionNameParam || '',
-              onRowSuccess: onRowSuccessParam,
             }
           : configOrApiCallFn
 
-      const { apiCallFn, actionName, onRowSuccess, onRowCompleted, onDeselect } = config
+      const { apiCallFn, actionName, onRowCompleted, onDeselect } = config
       const deselectFn = onDeselect || defaultOnDeselect
 
       if (!rows || rows.length === 0) {
@@ -348,11 +345,6 @@ export default function useManagerActions<T extends ManagerRowItem>(store: Manag
 
         if (shouldUncheck) {
           deselectFn?.([row])
-        } else if (isReinstallOrChangeIp && isSuccess && onRowSuccess && res) {
-          const updatedRow = onRowSuccess(res, row)
-          if (updatedRow) {
-            updateRowBySid(row.sid, () => updatedRow)
-          }
         }
 
         onRowCompleted?.(row, isSuccess, res)
@@ -425,7 +417,7 @@ export default function useManagerActions<T extends ManagerRowItem>(store: Manag
 
       return { success: failCount === 0, rows }
     },
-    [addToast, updateToast, removeToast, t, fetchBalance, defaultOnDeselect, updateRowBySid]
+    [addToast, updateToast, removeToast, t, fetchBalance, defaultOnDeselect]
   )
 
   return {

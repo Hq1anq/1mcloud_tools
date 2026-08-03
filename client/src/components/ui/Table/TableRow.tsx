@@ -1,5 +1,5 @@
 import React from 'react'
-import { getExpiryStyle } from '../../../utils/ui'
+import { resolveRowBaseColor, buildTableRowStyle } from './tableRowStyles'
 import TableCells from './TableCells'
 import type { TableRowProps, TableRowContext } from './types'
 
@@ -23,10 +23,21 @@ export function getTableRowState<T extends Record<string, any>>({
   const overrideClass = row && rowClassMap ? rowClassMap[row.sid] : undefined
   const isRefunded = row?.status === 'Refunded'
 
-  // Expiry style is only applied when no action-override class is present.
-  const expiryStyle = !overrideClass ? getExpiryStyle(row?.expired) : null
-  const bgClass = overrideClass ? overrideClass : isSelected ? 'bg-bg-selected' : ''
-  const rowClassName = `transition-colors ${isRefunded ? 'cursor-not-allowed opacity-50 select-none' : 'hover:bg-bg-hover'} ${bgClass}`
+  // Resolve base background color systematically (Refunded -> Override -> Expiry -> Surface)
+  const baseBgColor = resolveRowBaseColor({
+    isRefunded,
+    overrideClass,
+    expired: row?.expired,
+  })
+  const rowStyle = buildTableRowStyle(baseBgColor)
+
+  // Pass any custom override class if it is not an action-cell class handled by baseBgColor
+  const customOverrideClass =
+    overrideClass && overrideClass !== 'bg-success-cell' && overrideClass !== 'bg-error-cell'
+      ? overrideClass
+      : ''
+
+  const rowClassName = `table-row-system ${customOverrideClass}`.trim()
 
   const handleClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     if (isRefunded || !selectable) return
@@ -42,7 +53,9 @@ export function getTableRowState<T extends Record<string, any>>({
     isSelected,
     isRefunded,
     selectable,
-    expiryStyle,
+    baseBgColor,
+    rowStyle,
+    expiryStyle: rowStyle,
     rowClassName,
     handleClick,
   }
@@ -58,7 +71,7 @@ export default function TableRow<T extends Record<string, any>>({
   children,
   ...props
 }: TableRowProps<T>) {
-  const { expiryStyle, rowClassName, handleClick } = getTableRowState({
+  const { isSelected, isRefunded, rowStyle, rowClassName, handleClick } = getTableRowState({
     row,
     index,
     context,
@@ -68,7 +81,9 @@ export default function TableRow<T extends Record<string, any>>({
   return (
     <tr
       {...props}
-      style={{ ...expiryStyle, ...style }}
+      data-selected={isSelected ? 'true' : undefined}
+      data-refunded={isRefunded ? 'true' : undefined}
+      style={{ ...rowStyle, ...style }}
       className={`${rowClassName} ${className}`.trim()}
       onClick={handleClick}
     >

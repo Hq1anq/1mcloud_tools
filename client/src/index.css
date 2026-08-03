@@ -140,6 +140,22 @@
   --bg-hover: color-mix(in srgb, var(--bg-surface), white 50%);
   --bg-selected: white;
 
+  /* Table Row Dynamic Color System */
+  --table-row-bg-expired: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--purple) 70%, var(--red) 30%) 20%,
+    var(--bg-surface)
+  );
+  --table-row-bg-expiring-1: color-mix(in srgb, var(--red) 30%, var(--bg-surface));
+  --table-row-bg-expiring-2: color-mix(in srgb, var(--red) 20%, var(--bg-surface));
+  --table-row-bg-expiring-3: color-mix(in srgb, var(--red) 10%, var(--bg-surface));
+
+  --table-row-hover-text: var(--highlight-text);
+  --table-row-hover-text-shadow: 0 0 1px currentColor, 0 1px 3px rgba(29, 78, 216, 0.18);
+  --table-row-hover-border: color-mix(in srgb, var(--primary) 45%, var(--border));
+  --table-row-selected-tint: var(--primary);
+  --table-row-selected-intensity: 22%;
+
   --scrollbar-track: #f5f0cd;
   --scrollbar-thumb: var(--color-sky-400);
   --scrollbar-thumb-hover: var(--color-sky-500);
@@ -219,6 +235,24 @@
 
   --bg-hover: color-mix(in srgb, var(--bg-thead), var(--border) 2%);
   --bg-selected: color-mix(in srgb, var(--bg-thead), var(--border) 20%);
+
+  /* Table Row Dynamic Color System */
+  --table-row-bg-expired: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--purple) 70%, var(--red) 30%) 28%,
+    var(--bg-surface)
+  );
+  --table-row-bg-expiring-1: color-mix(in srgb, var(--red) 36%, var(--bg-surface));
+  --table-row-bg-expiring-2: color-mix(in srgb, var(--red) 24%, var(--bg-surface));
+  --table-row-bg-expiring-3: color-mix(in srgb, var(--red) 12%, var(--bg-surface));
+
+  --table-row-hover-text: var(--highlight-text);
+  --table-row-hover-text-shadow:
+    0 0 12px color-mix(in srgb, var(--highlight-text) 55%, transparent),
+    0 0 1px var(--highlight-text);
+  --table-row-hover-border: color-mix(in srgb, var(--primary) 50%, var(--border));
+  --table-row-selected-tint: var(--primary);
+  --table-row-selected-intensity: 22%;
 
   --scrollbar-track: var(--dark-600);
   --scrollbar-thumb: var(--dark-800);
@@ -637,5 +671,58 @@
 
   .proxy-highlight-glow {
     animation: proxy-glow-pulse 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* ── Table Row Background & State System ───────────────────────── */
+  .table-row-system {
+    --row-base: var(--table-row-base, var(--bg-surface));
+    --row-current: var(--row-base);
+    background-color: var(--row-current);
+    color: var(--text-primary);
+    transition:
+      background-color 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.15s ease,
+      opacity 0.18s ease;
+  }
+
+  .table-row-system > td {
+    transition:
+      border-color 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+
+  /* Selected state: mixes base background with selected tint */
+  .table-row-system[data-selected='true'] {
+    --row-current: color-mix(
+      in srgb,
+      var(--row-base) calc(100% - var(--table-row-selected-intensity)),
+      var(--table-row-selected-tint)
+    );
+  }
+
+  /* Selected state: persistent left accent bar */
+  .table-row-system[data-selected='true'] > td:first-child {
+    box-shadow: inset 3px 0 0 0 var(--primary);
+  }
+
+  /* Hover state: cool text glow + illuminated border + left accent bar */
+  .table-row-system:not([data-refunded='true']):hover {
+    color: var(--table-row-hover-text);
+    text-shadow: var(--table-row-hover-text-shadow);
+  }
+
+  .table-row-system:not([data-refunded='true']):hover > td {
+    border-bottom-color: var(--table-row-hover-border);
+  }
+
+  .table-row-system:not([data-refunded='true']):hover > td:first-child {
+    box-shadow: inset 3px 0 0 0 var(--table-row-hover-text);
+  }
+
+  /* Refunded state: visually disabled, cannot be selected or hovered */
+  .table-row-system[data-refunded='true'] {
+    cursor: not-allowed;
+    opacity: 0.5;
+    user-select: none;
   }
 }

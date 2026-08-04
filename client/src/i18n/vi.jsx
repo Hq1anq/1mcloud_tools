@@ -434,7 +434,7 @@ const vi = {
   'account.discountHeading': 'Mức chiết khấu hiện tại',
   'account.discountVps': 'Ưu đãi VPS',
   'account.discountProxy': 'Ưu đãi Proxy',
-  'account.discountDedicate': 'Ưu đãi Dedicate',
+  'account.discountGpu': 'Ưu đãi GPU',
 
   // Add Funds Dialog
   'addfunds.title': 'Nạp tiền',

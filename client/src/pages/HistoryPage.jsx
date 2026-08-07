@@ -178,7 +178,7 @@ export default function HistoryPage() {
       </div>
 
       <Table
-        title="History"
+        tableTitle="History"
         className="mt-4 px-4 text-base sm:text-lg"
         data={currentData}
         headers={currentHeaders}

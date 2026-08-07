@@ -372,7 +372,7 @@ export default function ProxyChecker() {
       </div>
       <StandardTable
         data={results}
-        title={t('checker.proxyStatus')}
+        tableTitle={t('checker.proxyStatus')}
         useFilter={false}
         className="mt-4 px-4 text-base sm:text-lg"
         headers={['ip', 'port', 'username', 'password', 'type', 'country', 'status']}

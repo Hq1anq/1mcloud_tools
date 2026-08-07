@@ -1349,7 +1349,7 @@ export default function ProxyManager({ onBuySuccessRef }) {
       />
 
       <PaginatedTable
-        title={t('manager.proxyManager')}
+        tableTitle={t('manager.proxyManager')}
         className="mt-2 px-4 text-xs sm:text-sm"
         data={data}
         pagination={true}

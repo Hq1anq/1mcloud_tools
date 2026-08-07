@@ -862,7 +862,7 @@ export default function VpsManager({ onBuySuccessRef }) {
       />
 
       <PaginatedTable
-        title={t('vpsManager.title')}
+        tableTitle={t('vpsManager.title')}
         className="mt-2 px-4 text-xs sm:text-sm"
         data={data}
         pagination={true}

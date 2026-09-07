@@ -159,8 +159,7 @@ export default function Navbar() {
             {Logo}
             <div className="flex items-center gap-3 md:hidden">
               <Link
-                to="https://1mcloud.vn/"
-                target="_blank"
+                to="/login"
                 className="w-28 rounded-lg bg-blue-600 px-4 py-2 text-center font-medium whitespace-nowrap text-white shadow-sm hover:bg-blue-700"
               >
                 {t('menu.login')}
@@ -182,8 +181,7 @@ export default function Navbar() {
             <LanguageToggle />
             <ThemeToggle />
             <Link
-              to="https://1mcloud.vn/"
-              target="_blank"
+              to="/login"
               className="w-32 rounded-lg bg-blue-600 px-4 py-2 text-center font-medium whitespace-nowrap text-white shadow-sm hover:bg-blue-700"
             >
               {t('menu.login')}
@@ -310,6 +308,18 @@ export default function Navbar() {
               <path d="M320 576C178.6 576 64 461.4 64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576zM438 209.7C427.3 201.9 412.3 204.3 404.5 215L285.1 379.2L233 327.1C223.6 317.7 208.4 317.7 199.1 327.1C189.8 336.5 189.7 351.7 199.1 361L271.1 433C276.1 438 282.9 440.5 289.9 440C296.9 439.5 303.3 435.9 307.4 430.2L443.3 243.2C451.1 232.5 448.7 217.5 438 209.7z" />
             </svg>
             {t('nav.proxyChecker')}
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/manager" className={navLinkClass} onClick={() => setIsMenuOpen(false)}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 640 640"
+              className="mr-2 size-7 shrink-0 fill-current"
+            >
+              <path d="M380.8 96C372.7 110.1 368 126.5 368 144L368 160L96 160L96 384L368 384L368 448L96 448C60.7 448 32 419.3 32 384L32 160C32 124.7 60.7 96 96 96L380.8 96zM368 496C368 513.5 372.7 529.9 380.8 544L152 544C138.7 544 128 533.3 128 520C128 506.7 138.7 496 152 496L368 496zM464 96L560 96C586.5 96 608 117.5 608 144L608 496C608 522.5 586.5 544 560 544L464 544C437.5 544 416 522.5 416 496L416 144C416 117.5 437.5 96 464 96zM488 160C474.7 160 464 170.7 464 184C464 197.3 474.7 208 488 208L536 208C549.3 208 560 197.3 560 184C560 170.7 549.3 160 536 160L488 160zM488 256C474.7 256 464 266.7 464 280C464 293.3 474.7 304 488 304L536 304C549.3 304 560 293.3 560 280C560 266.7 549.3 256 536 256L488 256zM544 400C544 382.3 529.7 368 512 368C494.3 368 480 382.3 480 400C480 417.7 494.3 432 512 432C529.7 432 544 417.7 544 400z" />
+            </svg>
+            {t('nav.manager')}
           </NavLink>
         </li>
       </ul>

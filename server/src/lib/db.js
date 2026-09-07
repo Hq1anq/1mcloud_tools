@@ -100,6 +100,22 @@ export async function initDatabase() {
     BEGIN
       ALTER TABLE Vps ALTER COLUMN user_pass NVARCHAR(500);
     END;
+
+    IF NOT EXISTS (
+      SELECT 1 FROM sys.columns 
+      WHERE object_id = OBJECT_ID('Users') AND name = 'last_vps_synced_at'
+    )
+    BEGIN
+      ALTER TABLE Users ADD last_vps_synced_at DATETIME2 NULL;
+    END;
+
+    IF NOT EXISTS (
+      SELECT 1 FROM sys.columns 
+      WHERE object_id = OBJECT_ID('Users') AND name = 'last_proxy_synced_at'
+    )
+    BEGIN
+      ALTER TABLE Users ADD last_proxy_synced_at DATETIME2 NULL;
+    END;
   `);
 
   console.log("✅ Database tables initialized");

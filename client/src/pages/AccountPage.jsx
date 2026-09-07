@@ -125,9 +125,31 @@ export default function AccountPage() {
                       {t('account.verified')}
                     </span>
                   ) : (
-                    <span className="bg-red/15 text-red inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium ring-1 ring-red-600/20 ring-inset">
-                      {t('account.unverified')}
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => navigate('/verify-user')}
+                      className="bg-red/15 text-red hover:bg-red/25 ring-red/30 inline-flex cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-bold ring-1 transition-all ring-inset hover:scale-105 focus:outline-none"
+                    >
+                      <span className="relative flex h-2 w-2">
+                        <span className="bg-red/75 absolute inline-flex h-full w-full animate-ping rounded-full"></span>
+                        <span className="bg-red relative inline-flex h-2 w-2 rounded-full"></span>
+                      </span>
+                      <span>{t('account.unverified')}</span>
+                      <span className="ml-0.5 underline">{t('verify.btnVerify')}</span>
+                      <svg
+                        className="h-3 w-3"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </button>
                   )}
                 </div>
               </div>

@@ -12,6 +12,7 @@ cleanRefundedRows.js
 updateProxyList.js
 test.*
 proxies.txt
+sample_page/
 
 # Node.js
 node_modules/

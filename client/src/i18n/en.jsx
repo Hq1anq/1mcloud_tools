@@ -199,6 +199,34 @@ const en = {
   'signup.login': 'Log in',
   'signup.passwordMismatch': 'Passwords do not match',
   'signup.passwordLength': 'Password must be at least 8 characters',
+  'signup.fullnameRequired': 'Full name is required.',
+  'signup.emailRequired': 'Email address is required.',
+  'signup.phoneRequired': 'Phone number is required.',
+  'signup.passwordRequired': 'Password is required.',
+  'signup.successRedirect': 'Registration successful! Redirecting...',
+  'signup.failed': 'Registration failed.',
+  'signup.tryAgain': 'Registration failed. Please try again.',
+
+  // Verification Page
+  'verify.pageTitle': 'Account Verification',
+  'verify.eyebrowPending': 'Email verification',
+  'verify.eyebrowVerifying': 'VerifyToken',
+  'verify.eyebrowSuccess': 'Verification Successful',
+  'verify.titlePending': 'Account not verified.',
+  'verify.titleVerifying': 'Your account is being verified.',
+  'verify.titleSuccess': 'Account successfully verified!',
+  'verify.subtitlePending': 'Click Verify and check your email (including SPAM folder).',
+  'verify.subtitleVerifying': 'The system is verifying the token from your email...',
+  'verify.subtitleSuccess':
+    'Your account has been activated. Redirecting to management dashboard...',
+  'verify.btnVerify': 'Verify',
+  'verify.btnVerifying': 'Verifying...',
+  'verify.btnSent': 'Email Sent',
+  'verify.btnBackLogin': 'Back to Login',
+  'verify.btnGoManager': 'Go to Management Now',
+  'verify.emailSentToast': 'Verification email sent. Please check your inbox.',
+  'verify.successToast': 'Account verification successful! Redirecting...',
+  'verify.failedToast': 'Account verification failed. Token is invalid or expired.',
 
   // Proxy Checker
   'checker.proxyList': 'Enter Proxy',
@@ -532,6 +560,13 @@ const en = {
   'nation.JP': 'Japan(JP)',
   'nation.HK': 'Hong Kong(HK)',
   'nation.VNR': 'Vietnam (Residential)',
+
+  // 404 Page
+  'notFound.code': '404 Page Not Found',
+  'notFound.title': 'Page Not Found or Moved',
+  'notFound.desc': 'The URL you accessed is incorrect. Please check the URL again.',
+  'notFound.btnHome': 'Go to Home',
+  'notFound.btnManager': 'Go to Manager',
 }
 
 export default en

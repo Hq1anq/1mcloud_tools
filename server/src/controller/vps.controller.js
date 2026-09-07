@@ -7,6 +7,7 @@ import {
   decryptPayload,
   isPayloadEncrypted,
 } from "../services/payloadCrypto.service.ts";
+import { syncUserData } from "../services/sync.service.ts";
 
 const HEADERS = {
   accept: "application/json, text/plain, */*",
@@ -276,6 +277,31 @@ export async function deleteVpsList(req, res) {
     return res.json({ success: true });
   } catch (error) {
     console.error("❌ deleteVpsList error:", error.message);
+    return res
+      .status(error.status || 500)
+      .json({ success: false, error: error.message });
+  }
+}
+
+/**
+ * POST /api/vps/sync — Synchronize user VPS data from ServerB to local database
+ */
+export async function syncVps(req, res) {
+  try {
+    const userId = await resolveUser(req.token);
+    const summary = await syncUserData({
+      userId,
+      userToken: req.token,
+      isProxy: false,
+    });
+
+    return res.json({
+      success: true,
+      message: "VPS synchronization completed successfully",
+      summary,
+    });
+  } catch (error) {
+    console.error("❌ syncVps error:", error.message);
     return res
       .status(error.status || 500)
       .json({ success: false, error: error.message });

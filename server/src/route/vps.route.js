@@ -18,6 +18,7 @@ router.get("/change-ip-params", vpsController.supportChangeIp);
 
 router.get("/", vpsController.getVpsList);
 router.post("/", vpsController.saveVpsList);
+router.post("/sync", vpsController.syncVps);
 router.delete("/", vpsController.deleteVpsList);
 
 export default router;

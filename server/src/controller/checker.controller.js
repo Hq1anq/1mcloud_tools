@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Reader } from "@maxmind/geoip2-node";
 import { SocksProxyAgent } from "socks-proxy-agent";
-import { parseProxy } from "../lib/utils.js";
+import { parseProxy } from "../utils/formatter.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 

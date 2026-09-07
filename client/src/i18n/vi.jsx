@@ -199,6 +199,34 @@ const vi = {
   'signup.login': 'Đăng nhập',
   'signup.passwordMismatch': 'Mật khẩu không khớp',
   'signup.passwordLength': 'Mật khẩu phải có ít nhất 8 ký tự',
+  'signup.fullnameRequired': 'Vui lòng nhập họ tên.',
+  'signup.emailRequired': 'Vui lòng nhập email.',
+  'signup.phoneRequired': 'Vui lòng nhập số điện thoại.',
+  'signup.passwordRequired': 'Vui lòng nhập mật khẩu.',
+  'signup.successRedirect': 'Đăng ký thành công! Đang chuyển hướng...',
+  'signup.failed': 'Đăng ký thất bại.',
+  'signup.tryAgain': 'Đăng ký thất bại. Vui lòng thử lại.',
+
+  // Verification Page
+  'verify.pageTitle': 'Xác thực tài khoản',
+  'verify.eyebrowPending': 'Email verification',
+  'verify.eyebrowVerifying': 'VerifyToken',
+  'verify.eyebrowSuccess': 'Xác thực thành công',
+  'verify.titlePending': 'Tài khoản chưa được xác thực.',
+  'verify.titleVerifying': 'Tài khoản của quý khách đang được xác thực.',
+  'verify.titleSuccess': 'Tài khoản đã được xác thực thành công!',
+  'verify.subtitlePending': 'Nhấn Xác thực và kiểm tra email (bao gồm cả hộp thư SPAM).',
+  'verify.subtitleVerifying': 'Hệ thống đang kiểm tra token xác thực từ email của bạn...',
+  'verify.subtitleSuccess':
+    'Tài khoản của bạn đã được kích hoạt. Đang chuyển hướng đến trang quản lý dịch vụ...',
+  'verify.btnVerify': 'Xác thực',
+  'verify.btnVerifying': 'Đang xác thực...',
+  'verify.btnSent': 'Đã gửi email',
+  'verify.btnBackLogin': 'Quay lại trang đăng nhập',
+  'verify.btnGoManager': 'Đi tới trang quản lý ngay',
+  'verify.emailSentToast': 'Đã gửi email xác thực. Vui lòng kiểm tra hộp thư của quý khách.',
+  'verify.successToast': 'Xác thực tài khoản thành công! Vui lòng tiếp tục sử dụng dịch vụ.',
+  'verify.failedToast': 'Xác thực tài khoản thất bại. Token không hợp lệ hoặc đã hết hạn.',
 
   // Proxy Checker
   'checker.proxyList': 'Nhập Proxy',
@@ -534,6 +562,13 @@ const vi = {
   'nation.JP': 'Nhật Bản(JP)',
   'nation.HK': 'Hồng Kông(HK)',
   'nation.VNR': 'Việt Nam (Dân cư)',
+
+  // 404 Page
+  'notFound.code': '404 Page Not Found',
+  'notFound.title': 'Trang không tồn tại hoặc đã bị di chuyển',
+  'notFound.desc': 'Đường dẫn bạn truy cập không chính xác. Vui lòng kiểm tra lại.',
+  'notFound.btnHome': 'Về Trang chủ',
+  'notFound.btnManager': 'Trang Quản lý',
 }
 
 export default vi

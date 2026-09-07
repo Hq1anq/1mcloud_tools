@@ -1,6 +1,12 @@
 import { getPool } from "../lib/db.js";
 
 export const login = async (req, res) => {
+  if (!process.env.CLIENT_ID) {
+    throw new Error("CLIENT_ID is not configured in environment variables");
+  }
+  if (!process.env.BASE_URL) {
+    throw new Error("BASE_URL is not configured in environment variables");
+  }
   const url = `${process.env.BASE_URL}/token`;
   try {
     const { email, password } = req.body;
@@ -12,7 +18,7 @@ export const login = async (req, res) => {
     const formData = new URLSearchParams({
       email: email,
       password: password,
-      client_id: "nNrWRrQrwGSj78HBSU05yxM9jW1wq6Br3SsFxRTN",
+      client_id: process.env.CLIENT_ID,
       grant_type: "password",
     });
 

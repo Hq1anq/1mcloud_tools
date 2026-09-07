@@ -1,5 +1,5 @@
 import DropDown from '../components/ui/DropDown'
-import Table, { TableFilterToolbar, useTableSelection } from '../components/ui/Table'
+import { VirtualizedTable, TableFilterToolbar, useTableSelection } from '../components/ui/Table'
 import ControlButton from '../components/ui/ControlButton'
 import StatusMetricsMeter from '../components/ui/StatusMetricsMeter'
 import ChangeIpDialog from '../components/dialog/proxy/ChangeIpDialog'
@@ -14,6 +14,7 @@ import { useTranslation } from '../i18n'
 import useAuthStore from '../store/useAuthStore'
 import useProxyStore from '../store/useProxyStore'
 import useManagerActions from '../hooks/useManagerActions'
+import { filterProxyData } from '../utils/data'
 
 const OPERATOR_CONFIG = {
   expired: ['equal', 'greater-equal', 'less-equal'],
@@ -30,7 +31,7 @@ export default function ProxyManager({ onBuySuccessRef }) {
 
   // Controlled input state
   const [ips, setIps] = useState('')
-  const [amount, setAmount] = useState('')
+  const [filterIps, setFilterIps] = useState('')
   const [noteInput, setNoteInput] = useState('')
   const [reinstallInput, setReinstallInput] = useState('')
   const [changeIpInput, setChangeIpInput] = useState('')
@@ -41,11 +42,8 @@ export default function ProxyManager({ onBuySuccessRef }) {
 
   // Data from Zustand store
   const data = useProxyStore((s) => s.data)
-  const receivedData = useProxyStore((s) => s.receivedData)
-  const renderingReceived = useProxyStore((s) => s.renderingReceived)
-  const setRenderingReceived = useProxyStore((s) => s.setRenderingReceived)
   const isLoading = useProxyStore((s) => s.isLoading)
-  const updateRowBySid = useProxyStore((s) => s.updateRowBySid)
+  const rawUpdateRowBySid = useProxyStore((s) => s.updateRowBySid)
   const rawSyncToDb = useProxyStore((s) => s.syncToDb)
 
   const syncToDb = useCallback(
@@ -84,8 +82,29 @@ export default function ProxyManager({ onBuySuccessRef }) {
     [rawSyncToDb, addToast, removeToast, t]
   )
   const loadFromDb = useProxyStore((s) => s.loadFromDb)
-  const fetchData = useProxyStore((s) => s.fetchData)
+  const syncData = useProxyStore((s) => s.syncData)
+  const fetchByIps = useProxyStore((s) => s.fetchByIps)
   const handleBuySuccessStore = useProxyStore((s) => s.handleBuySuccess)
+  const [isSyncing, setIsSyncing] = useState(false)
+  const [isFetchingIps, setIsFetchingIps] = useState(false)
+  const [tempData, setTempData] = useState(null)
+
+  // Keep both local tempData (if viewing temporary results) and store data updated
+  const updateRowBySid = useCallback(
+    (sid, updater) => {
+      rawUpdateRowBySid(sid, updater)
+      setTempData((prev) =>
+        prev ? prev.map((r) => (r.sid === sid ? { ...r, ...updater(r) } : r)) : null
+      )
+    },
+    [rawUpdateRowBySid]
+  )
+
+  // In-memory pure frontend filtering across allData or temporarily fetched rows (using filterIps from TableFilterToolbar)
+  const filteredData = useMemo(() => {
+    const sourceData = tempData ? tempData : data
+    return filterProxyData(sourceData, { keyword, byTime, ips: filterIps })
+  }, [data, tempData, keyword, byTime, filterIps])
 
   const [changeIpState, setChangeIpState] = useState({
     isOpen: false,
@@ -99,7 +118,7 @@ export default function ProxyManager({ onBuySuccessRef }) {
 
   // Table selection logic handled cleanly by table selection hook
   const { selectedIds, selectedRows, clearSelection, deselectRows, onSelectionChange } =
-    useTableSelection({ data })
+    useTableSelection({ data: filteredData })
 
   // Action runner for batch, single, and sequential operations
   const {
@@ -128,26 +147,61 @@ export default function ProxyManager({ onBuySuccessRef }) {
     if (isAuthenticated) loadFromDb()
   }, [isAuthenticated, loadFromDb])
 
-  // handleGetData — thin wrapper around store.fetchData with toast feedback
-  const handleGetData = useCallback(async () => {
-    const loadingId = addToast(t('manager.fetchingData'), 'loading')
+  // handleSyncData — calls backend syncProxy API then reloads from DB
+  const handleSyncData = useCallback(async () => {
+    setTempData(null)
+    setIsSyncing(true)
+    const loadingId = addToast(t('manager.syncingData'), 'loading')
     try {
-      const finalResData = await fetchData({ ips, amount, byTime, keyword })
+      await syncData()
       clearSelection()
       removeToast(loadingId)
-      addToast(
-        <>
-          {t('manager.loadedRows')}{' '}
-          <span className="text-text-toast-success">{finalResData.length}</span> {t('manager.rows')}
-        </>,
-        'success'
-      )
+      addToast(t('manager.syncedSuccess'), 'success')
     } catch (err) {
-      console.error('[GetData] Error:', err.message)
+      console.error('[SyncData] Error:', err.message)
       removeToast(loadingId)
-      addToast(`${t('manager.failedGetData')}: ${err.message}`, 'error')
+      addToast(`${t('syncFailed')}: ${err.message}`, 'error')
+    } finally {
+      setIsSyncing(false)
     }
-  }, [ips, amount, byTime, keyword, fetchData, clearSelection, addToast, removeToast, t])
+  }, [syncData, clearSelection, addToast, removeToast, t])
+
+  // handleFetchByIps — fetches and syncs specific designated IPs from ServerB
+  const handleFetchByIps = useCallback(async () => {
+    const trimmed = ips.trim()
+    if (!trimmed) {
+      return
+    }
+
+    setIsFetchingIps(true)
+    const loadingId = addToast(t('manager.fetchingByIps'), 'loading')
+    try {
+      const resData = await fetchByIps(trimmed)
+      removeToast(loadingId)
+      if (resData.length > 0) {
+        setTempData(resData)
+        setByTime('all')
+        setKeyword('')
+        setFilterIps('')
+        clearSelection()
+        addToast(
+          <>
+            {t('manager.loadedRows')}{' '}
+            <span className="text-text-toast-success">{resData.length}</span> {t('manager.rows')}
+          </>,
+          'success'
+        )
+      } else {
+        addToast(t('manager.noRowsFound'), 'info')
+      }
+    } catch (err) {
+      console.error('[FetchByIps] Error:', err.message)
+      removeToast(loadingId)
+      addToast(`${t('dialog.failed')}: ${err.message}`, 'error')
+    } finally {
+      setIsFetchingIps(false)
+    }
+  }, [ips, fetchByIps, clearSelection, addToast, removeToast, t])
 
   // Register buy success handler on parent ref
   useEffect(() => {
@@ -169,14 +223,22 @@ export default function ProxyManager({ onBuySuccessRef }) {
               )
           )
         } else {
-          handleGetData()
+          handleSyncData()
         }
       }
     }
     return () => {
       if (onBuySuccessRef) onBuySuccessRef.current = null
     }
-  }, [onBuySuccessRef, handleBuySuccessStore, clearSelection, safeCopy, addToast, t, handleGetData])
+  }, [
+    onBuySuccessRef,
+    handleBuySuccessStore,
+    clearSelection,
+    safeCopy,
+    addToast,
+    t,
+    handleSyncData,
+  ])
 
   // --- Change IP handler ---
   const handleChangeIp = useCallback(async () => {
@@ -1264,39 +1326,28 @@ export default function ProxyManager({ onBuySuccessRef }) {
                 {/* Action Buttons */}
                 <div className="flex flex-col gap-2 md:flex-row lg:gap-3">
                   <div className="flex flex-wrap gap-2 lg:gap-3">
-                    {/* Get Data */}
-                    <div className="flex">
-                      <input
-                        type="number"
-                        placeholder={t('manager.enterAmount')}
-                        min="1"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        className="w-24 rounded-r-none border-r-0 py-1"
-                      />
-                      <button
-                        className="bg-action flex flex-1 items-center justify-center rounded-lg rounded-l-none px-3 py-2 font-medium"
-                        style={{ '--action-color': 'var(--purple)' }}
-                        disabled={isProcessing}
-                        onClick={handleGetData}
+                    <button
+                      onClick={handleFetchByIps}
+                      disabled={isProcessing || isFetchingIps || !ips.trim()}
+                      className="bg-action flex flex-1 items-center justify-center rounded-lg px-3 py-2 font-medium"
+                      style={{ '--action-color': 'var(--purple)' }}
+                    >
+                      <svg
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        className="mr-1 size-5 shrink-0 fill-none sm:mr-2 sm:size-7"
                       >
-                        <svg
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          className="mr-1 size-5 shrink-0 fill-none sm:mr-2 sm:size-7"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M12 13V4M7 14H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2m-1-5-4 5-4-5m9 8h.01"
-                          />
-                        </svg>
-                        {t('manager.getData')}
-                      </button>
-                    </div>
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M12 13V4M7 14H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2m-1-5-4 5-4-5m9 8h.01"
+                        />
+                      </svg>
+                      {t('manager.getData')}
+                    </button>
 
                     {/* Pause */}
                     <button
@@ -1466,6 +1517,30 @@ export default function ProxyManager({ onBuySuccessRef }) {
                       {t('manager.getInfo')}
                     </button>
 
+                    {/* Sync Data */}
+                    <button
+                      className="bg-action flex grow items-center justify-center rounded-lg px-4 py-2 font-medium"
+                      style={{ '--action-color': 'var(--purple)' }}
+                      disabled={isProcessing || isSyncing}
+                      onClick={handleSyncData}
+                    >
+                      <svg
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        className={`mr-1 size-5 shrink-0 fill-none sm:mr-2 sm:size-7 ${isSyncing ? 'animate-spin' : ''}`}
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                        />
+                      </svg>
+                      {t('manager.syncData')}
+                    </button>
+
                     {/* Change Note */}
                     <div className="flex grow">
                       <input
@@ -1595,258 +1670,268 @@ export default function ProxyManager({ onBuySuccessRef }) {
         onKeywordChange={setKeyword}
         byTime={byTime}
         onByTimeChange={setByTime}
-        ips={ips}
-        onIpsChange={setIps}
+        ips={filterIps}
+        onIpsChange={(val) => {
+          if (tempData) setTempData(null)
+          setFilterIps(val)
+        }}
       />
 
-      <Table
-        title={t('manager.proxyManager')}
-        className="mt-2 px-4 text-xs sm:text-sm"
-        data={data}
-
-        receivedData={receivedData}
-        renderingReceived={renderingReceived}
-        setRenderingReceived={setRenderingReceived}
-        onAutoRenewToggle={async (sid, newState) => {
-          // Optimistic Update
-          updateRowBySid(sid, () => ({ is_auto_renew: newState }))
-
-          try {
-            const res = await axiosInstance.post('/server/auto-renew', {
-              sid: sid.toString(),
-            })
-            if (res.data?.success) {
-              const finalState = res.data.changes.is_on
-              // Refine state if the server result differs
-              updateRowBySid(sid, () => ({ is_auto_renew: finalState }))
-
-              const row = data.find((r) => r.sid === sid)
-              if (row) {
-                syncToDb([{ ...row, is_auto_renew: finalState }])
-              }
-
-              addToast(t('dialog.success'), 'success')
-            } else {
-              throw new Error('API reported failure')
-            }
-          } catch (err) {
-            console.error('[AutoRenew] Error:', err.message)
-            addToast(t('dialog.failed'), 'error')
-            // Rollback parent state
-            updateRowBySid(sid, () => ({ is_auto_renew: !newState }))
-            throw err // Re-throw for PopConfirmToggle rollback
+      <div
+        onKeyDownCapture={(e) => {
+          if (tempData && e.key === 'Enter') {
+            setTempData(null)
           }
         }}
-        isLoading={isLoading}
-        useFilter={true}
-        headers={[
-          'control',
-          'ip_port',
-          'country',
-          'type',
-          'created',
-          'expired',
-          'status',
-          'note',
-          'is_auto_renew',
-        ]}
-        controlButton={(row) => (
-          <ControlButton
-            onPause={() =>
-              handleSingleAction(
-                row,
-                '/server/pause',
-                { sids: row.sid.toString() },
-                t('manager.pause').toUpperCase(),
-                () => ({
-                  status: 'Paused',
-                })
-              )
-            }
-            onReboot={() =>
-              handleSingleAction(
-                row,
-                '/server/reboot',
-                { sids: row.sid.toString() },
-                t('manager.reboot').toUpperCase(),
-                () => ({
-                  status: 'Running',
-                })
-              )
-            }
-            onRefund={
-              profile?.is_refund
-                ? () =>
-                    handleSingleAction(
-                      row,
-                      '/server/refund',
-                      { sid: row.sid.toString() },
-                      t('manager.refund').toUpperCase(),
-                      () => ({
-                        status: 'Refunded',
-                      })
-                    )
-                : undefined
-            }
-            onReinstall={() => {
-              setReinstallState({
-                isOpen: true,
-                data: {
-                  sid: row.sid,
-                  ip: row.ip_port.split(':')[0],
-                  remote_port: row.ip_port.split(':')[1],
-                  username: row.user_pass ? row.user_pass.split(':')[0] : '',
-                  password: row.user_pass ? row.user_pass.split(':')[1] : '',
-                  type: row.type ? row.type.split(' ')[0] : 'HTTPS',
-                  note: row.note || '',
-                },
+      >
+        <VirtualizedTable
+          title={t('manager.proxyManager')}
+          className="mt-2 px-4 text-xs sm:text-sm"
+          data={filteredData}
+          onAutoRenewToggle={async (sid, newState) => {
+            // Optimistic Update
+            updateRowBySid(sid, () => ({ is_auto_renew: newState }))
+
+            try {
+              const res = await axiosInstance.post('/server/auto-renew', {
+                sid: sid.toString(),
               })
-            }}
-            onChangeIp={() => {
-              setChangeIpState({
-                isOpen: true,
-                data: {
-                  sid: row.sid,
-                  ip: row.ip_port.split(':')[0],
-                  remote_port: row.ip_port.split(':')[1],
-                  password: row.user_pass ? row.user_pass.split(':')[1] : '',
-                  type: row.type ? row.type.split(' ')[0] : 'HTTPS',
-                  note: row.note || '',
-                },
-              })
-            }}
-            onCheck={async () => {
-              const latestRow = data.find((d) => d.sid === row.sid) || row
-              const [ip, port] = (latestRow.ip_port || '').split(':')
-              const [username, password] = (latestRow.user_pass || '').split(':')
-              const proxies = [`${ip}:${port}:${username}:${password}`]
-              setIsProcessing(true)
-              setRowClassMap({})
-              const loadingId = addToast(t('checking'), 'loading')
-              let newStatus
+              if (res.data?.success) {
+                const finalState = res.data.changes.is_on
+                // Refine state if the server result differs
+                updateRowBySid(sid, () => ({ is_auto_renew: finalState }))
 
-              try {
-                await axiosInstance.post(
-                  '/check',
-                  { type: 'auto', proxies },
-                  {
-                    timeout: 0,
-                    responseType: 'text',
-                    onDownloadProgress: (e) => {
-                      const text = e.event.target.responseText
-                      const jsonStr = text.slice(6)
-                      const result = JSON.parse(jsonStr)
+                const row = data.find((r) => r.sid === sid)
+                if (row) {
+                  syncToDb([{ ...row, is_auto_renew: finalState }])
+                }
 
-                      newStatus = result.status === 'Active' ? 'Running' : 'Off'
-                      updateRowBySid(row.sid, () => ({ status: newStatus }))
-                      setRowClassMap({
-                        [row.sid]: 'bg-success-cell',
-                      })
-
-                      // Uncheck the checked row
-                      deselectRows([row])
-                    },
-                  }
-                )
-
-                syncToDb([{ ...latestRow, status: newStatus }])
-
-                if (newStatus === 'Running')
-                  addToast(
-                    <>
-                      {t('checker.checkCompleted')} <br />
-                      <span className="text-text-toast-success">Proxy {t('checker.active')}</span>
-                    </>,
-                    'success'
-                  )
-                else
-                  addToast(
-                    <>
-                      {t('checker.checkCompleted')} <br />
-                      <span className="text-text-toast-success">Proxy {t('checker.inactive')}</span>
-                    </>,
-                    'success'
-                  )
-              } catch (err) {
-                console.error('Proxy check failed:', err)
-                addToast(t('checker.checkFailed'), 'error')
-              } finally {
-                setIsProcessing(false)
-                removeToast(loadingId)
+                addToast(t('dialog.success'), 'success')
+              } else {
+                throw new Error('API reported failure')
               }
-            }}
-          />
-        )}
-        operatorConfig={OPERATOR_CONFIG}
-        rowClassMap={rowClassMap}
-        selectedIds={selectedIds}
-        selectedRows={selectedRows}
-        extraBtn={
-          <button
-            id="reloadBtn"
-            className="bg-action group rounded-lg p-2"
-            style={{ '--action-color': 'var(--orange)' }}
-            onClick={() => {
-              loadFromDb()
-              clearSelection()
-              setRowClassMap({})
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 640 640"
-              className="fill-text-secondary size-5 shrink-0 transition-transform group-hover:rotate-30 sm:size-7"
-            >
-              <path d="M544.1 256L552 256C565.3 256 576 245.3 576 232L576 88C576 78.3 570.2 69.5 561.2 65.8C552.2 62.1 541.9 64.2 535 71L483.3 122.8C439 86.1 382 64 320 64C191 64 84.3 159.4 66.6 283.5C64.1 301 76.2 317.2 93.7 319.7C111.2 322.2 127.4 310 129.9 292.6C143.2 199.5 223.3 128 320 128C364.4 128 405.2 143 437.7 168.3L391 215C384.1 221.9 382.1 232.2 385.8 241.2C389.5 250.2 398.3 256 408 256L544.1 256zM573.5 356.5C576 339 563.8 322.8 546.4 320.3C529 317.8 512.7 330 510.2 347.4C496.9 440.4 416.8 511.9 320.1 511.9C275.7 511.9 234.9 496.9 202.4 471.6L249 425C255.9 418.1 257.9 407.8 254.2 398.8C250.5 389.8 241.7 384 232 384L88 384C74.7 384 64 394.7 64 408L64 552C64 561.7 69.8 570.5 78.8 574.2C87.8 577.9 98.1 575.8 105 569L156.8 517.2C201 553.9 258 576 320 576C449 576 555.7 480.6 573.4 356.5z" />
-            </svg>
-          </button>
-        }
-        emptyState={
-          <div
-            id="emptyState"
-            className="mx-auto flex max-w-2xl flex-col items-center gap-8 px-4 py-10 select-none"
-          >
-            <div className="border-primary/25 bg-primary/10 text-primary mx-auto flex size-24 items-center justify-center rounded-2xl border shadow-inner">
-              <svg
-                className="size-12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="2" y1="12" x2="22" y2="12" />
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-              </svg>
-            </div>
-            <h3 className="font-headline text-text-primary text-xl font-bold">
-              {t('manager.noProxiesFound')}
-            </h3>
+            } catch (err) {
+              console.error('[AutoRenew] Error:', err.message)
+              addToast(t('dialog.failed'), 'error')
+              // Rollback parent state
+              updateRowBySid(sid, () => ({ is_auto_renew: !newState }))
+              throw err // Re-throw for PopConfirmToggle rollback
+            }
+          }}
+          isLoading={isLoading}
+          useFilter={true}
+          headers={[
+            'control',
+            'ip_port',
+            'country',
+            'type',
+            'created',
+            'expired',
+            'status',
+            'note',
+            'is_auto_renew',
+          ]}
+          controlButton={(row) => (
+            <ControlButton
+              onPause={() =>
+                handleSingleAction(
+                  row,
+                  '/server/pause',
+                  { sids: row.sid.toString() },
+                  t('manager.pause').toUpperCase(),
+                  () => ({
+                    status: 'Paused',
+                  })
+                )
+              }
+              onReboot={() =>
+                handleSingleAction(
+                  row,
+                  '/server/reboot',
+                  { sids: row.sid.toString() },
+                  t('manager.reboot').toUpperCase(),
+                  () => ({
+                    status: 'Running',
+                  })
+                )
+              }
+              onRefund={
+                profile?.is_refund
+                  ? () =>
+                      handleSingleAction(
+                        row,
+                        '/server/refund',
+                        { sid: row.sid.toString() },
+                        t('manager.refund').toUpperCase(),
+                        () => ({
+                          status: 'Refunded',
+                        })
+                      )
+                  : undefined
+              }
+              onReinstall={() => {
+                setReinstallState({
+                  isOpen: true,
+                  data: {
+                    sid: row.sid,
+                    ip: row.ip_port.split(':')[0],
+                    remote_port: row.ip_port.split(':')[1],
+                    username: row.user_pass ? row.user_pass.split(':')[0] : '',
+                    password: row.user_pass ? row.user_pass.split(':')[1] : '',
+                    type: row.type ? row.type.split(' ')[0] : 'HTTPS',
+                    note: row.note || '',
+                  },
+                })
+              }}
+              onChangeIp={() => {
+                setChangeIpState({
+                  isOpen: true,
+                  data: {
+                    sid: row.sid,
+                    ip: row.ip_port.split(':')[0],
+                    remote_port: row.ip_port.split(':')[1],
+                    password: row.user_pass ? row.user_pass.split(':')[1] : '',
+                    type: row.type ? row.type.split(' ')[0] : 'HTTPS',
+                    note: row.note || '',
+                  },
+                })
+              }}
+              onCheck={async () => {
+                const latestRow = data.find((d) => d.sid === row.sid) || row
+                const [ip, port] = (latestRow.ip_port || '').split(':')
+                const [username, password] = (latestRow.user_pass || '').split(':')
+                const proxies = [`${ip}:${port}:${username}:${password}`]
+                setIsProcessing(true)
+                setRowClassMap({})
+                const loadingId = addToast(t('checking'), 'loading')
+                let newStatus
+
+                try {
+                  await axiosInstance.post(
+                    '/check',
+                    { type: 'auto', proxies },
+                    {
+                      timeout: 0,
+                      responseType: 'text',
+                      onDownloadProgress: (e) => {
+                        const text = e.event.target.responseText
+                        const jsonStr = text.slice(6)
+                        const result = JSON.parse(jsonStr)
+
+                        newStatus = result.status === 'Active' ? 'Running' : 'Off'
+                        updateRowBySid(row.sid, () => ({ status: newStatus }))
+                        setRowClassMap({
+                          [row.sid]: 'bg-success-cell',
+                        })
+
+                        // Uncheck the checked row
+                        deselectRows([row])
+                      },
+                    }
+                  )
+
+                  syncToDb([{ ...latestRow, status: newStatus }])
+
+                  if (newStatus === 'Running')
+                    addToast(
+                      <>
+                        {t('checker.checkCompleted')} <br />
+                        <span className="text-text-toast-success">Proxy {t('checker.active')}</span>
+                      </>,
+                      'success'
+                    )
+                  else
+                    addToast(
+                      <>
+                        {t('checker.checkCompleted')} <br />
+                        <span className="text-text-toast-success">
+                          Proxy {t('checker.inactive')}
+                        </span>
+                      </>,
+                      'success'
+                    )
+                } catch (err) {
+                  console.error('Proxy check failed:', err)
+                  addToast(t('checker.checkFailed'), 'error')
+                } finally {
+                  setIsProcessing(false)
+                  removeToast(loadingId)
+                }
+              }}
+            />
+          )}
+          operatorConfig={OPERATOR_CONFIG}
+          rowClassMap={rowClassMap}
+          selectedIds={selectedIds}
+          selectedRows={selectedRows}
+          extraBtn={
             <button
-              type="button"
-              onClick={() => navigate('/price/proxy')}
-              className="bg-primary hover:bg-primary/90 inline-flex cursor-pointer items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:scale-[1.02] active:scale-[0.98]"
+              id="reloadBtn"
+              className="bg-action group rounded-lg p-2"
+              style={{ '--action-color': 'var(--orange)' }}
+              onClick={() => {
+                setTempData(null)
+                loadFromDb()
+                clearSelection()
+                setRowClassMap({})
+              }}
             >
               <svg
-                className="size-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 640 640"
+                className="fill-text-secondary size-5 shrink-0 transition-transform group-hover:rotate-30 sm:size-7"
               >
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
+                <path d="M544.1 256L552 256C565.3 256 576 245.3 576 232L576 88C576 78.3 570.2 69.5 561.2 65.8C552.2 62.1 541.9 64.2 535 71L483.3 122.8C439 86.1 382 64 320 64C191 64 84.3 159.4 66.6 283.5C64.1 301 76.2 317.2 93.7 319.7C111.2 322.2 127.4 310 129.9 292.6C143.2 199.5 223.3 128 320 128C364.4 128 405.2 143 437.7 168.3L391 215C384.1 221.9 382.1 232.2 385.8 241.2C389.5 250.2 398.3 256 408 256L544.1 256zM573.5 356.5C576 339 563.8 322.8 546.4 320.3C529 317.8 512.7 330 510.2 347.4C496.9 440.4 416.8 511.9 320.1 511.9C275.7 511.9 234.9 496.9 202.4 471.6L249 425C255.9 418.1 257.9 407.8 254.2 398.8C250.5 389.8 241.7 384 232 384L88 384C74.7 384 64 394.7 64 408L64 552C64 561.7 69.8 570.5 78.8 574.2C87.8 577.9 98.1 575.8 105 569L156.8 517.2C201 553.9 258 576 320 576C449 576 555.7 480.6 573.4 356.5z" />
               </svg>
-              {t('manager.buyProxy')}
             </button>
-          </div>
-        }
-        onSelectionChange={onSelectionChange}
-      />
+          }
+          emptyState={
+            <div
+              id="emptyState"
+              className="mx-auto flex max-w-2xl flex-col items-center gap-8 px-4 py-10 select-none"
+            >
+              <div className="border-primary/25 bg-primary/10 text-primary mx-auto flex size-24 items-center justify-center rounded-2xl border shadow-inner">
+                <svg
+                  className="size-12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="2" y1="12" x2="22" y2="12" />
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+              </div>
+              <h3 className="font-headline text-text-primary text-xl font-bold">
+                {t('manager.noProxiesFound')}
+              </h3>
+              <button
+                type="button"
+                onClick={() => navigate('/price/proxy')}
+                className="bg-primary hover:bg-primary/90 inline-flex cursor-pointer items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <svg
+                  className="size-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                {t('manager.buyProxy')}
+              </button>
+            </div>
+          }
+          onSelectionChange={onSelectionChange}
+        />
+      </div>
 
       <ReinstallDialog
         key={`reinstall-${reinstallState?.sid}-${reinstallState?.isOpen}`}

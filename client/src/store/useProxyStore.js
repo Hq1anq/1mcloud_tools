@@ -5,19 +5,15 @@ import useAuthStore from './useAuthStore'
 
 const useProxyStore = create((set, get) => ({
   data: [],
-  receivedData: [],
-  renderingReceived: false,
   isLoading: false,
 
   // --- Core setters ---
   setIsLoading: (isLoading) => set({ isLoading }),
-  setRenderingReceived: (renderingReceived) => set({ renderingReceived }),
 
-  // Update a single row in both data and receivedData by sid
+  // Update a single row in data by sid
   updateRowBySid: (sid, updater) =>
     set((state) => ({
       data: state.data.map((r) => (r.sid === sid ? { ...r, ...updater(r) } : r)),
-      receivedData: state.receivedData.map((r) => (r.sid === sid ? { ...r, ...updater(r) } : r)),
     })),
 
   // --- DB sync ---
@@ -25,14 +21,6 @@ const useProxyStore = create((set, get) => ({
     const isAuthenticated = useAuthStore.getState().isAuthenticated
     if (!isAuthenticated || !rowsToSync || rowsToSync.length === 0) return
     await axiosInstance.post('/proxy', { proxies: rowsToSync })
-  },
-
-  deleteFromDb: async (sids) => {
-    try {
-      await axiosInstance.delete('/proxy', { data: { sids } })
-    } catch (err) {
-      console.error('[Cleanup] Delete failed:', err.message)
-    }
   },
 
   // Load from DB on mount
@@ -46,28 +34,15 @@ const useProxyStore = create((set, get) => ({
       const dbData = res.data?.data || []
 
       if (dbData.length > 0) {
-        set({
-          data: dbData,
-          receivedData: dbData,
-          renderingReceived: true,
-        })
+        set({ data: dbData })
       } else {
-        // First-time user — DB empty, auto-fetch from API
+        // First-time user — DB empty, auto-sync from ServerB via backend API
         try {
-          const listRes = await axiosInstance.get('/server/list', {
-            params: { proxy: 'true' },
-          })
-          const listData = listRes.data?.data || []
-          if (listData.length > 0) {
-            set({
-              data: listData,
-              receivedData: listData,
-              renderingReceived: true,
-            })
-            get().syncToDb(listData)
-          }
-        } catch (listErr) {
-          console.error('[DB Sync] Initial fetch failed:', listErr.message)
+          const retryRes = await axiosInstance.get('/proxy')
+          const retryData = retryRes.data?.data || []
+          set({ data: retryData })
+        } catch (syncErr) {
+          console.error('[DB Sync] Initial sync failed:', syncErr.message)
         }
       }
     } catch (err) {
@@ -77,52 +52,61 @@ const useProxyStore = create((set, get) => ({
     }
   },
 
-  // --- Data fetch ---
-  fetchData: async ({ ips = '', amount = '', byTime = '', keyword = '' } = {}) => {
+  // --- Synchronize with ServerB via backend sync API ---
+  syncData: async () => {
+    const isAuthenticated = useAuthStore.getState().isAuthenticated
+    if (!isAuthenticated) return
+
+    set({ isLoading: true })
+    try {
+      const res = await axiosInstance.post('/proxy/sync')
+      if (res.data?.success) {
+        await get().loadFromDb()
+      }
+      return res.data
+    } catch (err) {
+      console.error('[Proxy Sync] Sync failed:', err.message)
+      throw err
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  // --- Fetch and sync proxies by designated IPs ---
+  fetchByIps: async (ips) => {
+    const isAuthenticated = useAuthStore.getState().isAuthenticated
+    if (!isAuthenticated || !ips) return []
+
     const parsedIps = ips
       .split('\n')
+      .flatMap((line) => line.split(','))
       .map((line) => extractIP(line))
       .filter(Boolean)
       .join(',')
 
-    const params = { proxy: 'true' }
-    if (parsedIps) params.ips = parsedIps
-    if (amount) params.amount = +amount
-    else params.amount = get().data.filter((row) => row.status !== 'Refunded').length + 20
-    if (byTime && byTime !== 'all') params.by_time = byTime
-    if (keyword && keyword.trim()) params.keyword = keyword.trim()
+    if (!parsedIps) return []
 
     set({ isLoading: true })
     try {
-      const res = await axiosInstance.get('/server/list', { params })
+      const res = await axiosInstance.get('/server/list', {
+        params: {
+          proxy: 'true',
+          ips: parsedIps,
+        },
+      })
       const resData = res.data?.data || []
 
-      set((state) => {
-        let finalMergedData = resData
-        if (!parsedIps && resData.length <= (params.amount || 200)) {
-          const trashSids = state.data
-            .filter(
-              (row) =>
-                !resData.some((r) => r.sid === row.sid) && row.status?.toLowerCase() !== 'refunded'
-            )
-            .map((row) => row.sid)
+      if (resData.length > 0) {
+        set((state) => ({
+          data: mergeProxyData(state.data, resData),
+        }))
+        await get().syncToDb(resData)
+      }
 
-          if (trashSids.length > 0) {
-            get().deleteFromDb(trashSids)
-            finalMergedData = resData.filter((row) => !trashSids.includes(row.sid))
-          }
-        }
-
-        return {
-          data: finalMergedData,
-          receivedData: resData,
-          renderingReceived: true,
-        }
-      })
-
-      // Sync updated data to DB in background
-      get().syncToDb(resData)
       return resData
+    } catch (err) {
+      console.error('[Proxy FetchByIps] Failed:', err.message)
+      throw err
     } finally {
       set({ isLoading: false })
     }
@@ -137,8 +121,6 @@ const useProxyStore = create((set, get) => ({
       }))
       set((state) => ({
         data: mergeProxyData(state.data, enrichedData),
-        receivedData: enrichedData,
-        renderingReceived: true,
       }))
       get().syncToDb(enrichedData)
       return enrichedData

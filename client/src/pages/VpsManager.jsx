@@ -1048,7 +1048,7 @@ export default function VpsManager({ onBuySuccessRef }) {
             </svg>
           </button>
         }
-        emtyState={
+        emptyState={
           <div
             id="emptyState"
             className="mx-auto flex max-w-2xl flex-col items-center gap-8 px-4 py-10 select-none"

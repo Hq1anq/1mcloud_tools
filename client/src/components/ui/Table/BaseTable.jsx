@@ -38,7 +38,7 @@ const BaseTable = forwardRef(function BaseTable(
 
     // UI
     extraBtn,
-    emtyState,
+    emptyState,
     isError,
     errorMessage,
     className = '',
@@ -399,7 +399,7 @@ const BaseTable = forwardRef(function BaseTable(
         </div>
 
         {!isLoading && isError && errorMessage}
-        {!isLoading && !isError && filteredData.length === 0 && emtyState}
+        {!isLoading && !isError && filteredData.length === 0 && emptyState}
       </div>
 
       {renderFooter?.({ filteredData, t })}

@@ -394,7 +394,7 @@ export default function ProxyChecker() {
             </svg>
           </button>
         }
-        emtyState={
+        emptyState={
           !isChecking && (
             <div
               id="emptyState"

@@ -60,10 +60,14 @@ const useAuthStore = create(
           const response = await axiosInstance.get('/user/profile')
           if (response.data.success) {
             const profile = response.data.user
+            const normalizedProfile = {
+              ...profile,
+              username: profile.get_full_name,
+            }
             set((state) => ({
-              user: state.user ? { ...state.user, ...profile } : profile,
+              user: state.user ? { ...state.user, ...normalizedProfile } : normalizedProfile,
             }))
-            localStorage.setItem('account-profile', JSON.stringify(profile))
+            localStorage.setItem('account-profile', JSON.stringify(normalizedProfile))
           }
         } catch (err) {
           console.error('Failed to fetch profile in background:', err)

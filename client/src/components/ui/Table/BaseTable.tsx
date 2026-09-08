@@ -1,13 +1,14 @@
-import { useState, useMemo, useCallback, forwardRef, useEffect, useRef } from 'react'
+import React, { useState, useMemo, useCallback, forwardRef, useEffect, useRef } from 'react'
 import { formatInputDate } from '../../../utils/data'
 import { useTranslation } from '../../../i18n'
 import { applyFilters, operatorCycle } from './filterUtils.jsx'
-import TableFilterHeader from './TableFilterHeader.jsx'
-import TableSkeleton from './TableSkeleton.jsx'
+import TableFilterHeader from './TableFilterHeader'
+import TableSkeleton from './TableSkeleton'
+import type { BaseTableProps, TableRowContext } from './types'
 
-const DEFAULT_DATA = []
+const DEFAULT_DATA: any[] = []
 
-const BaseTable = forwardRef(function BaseTable(
+const BaseTable = forwardRef<HTMLDivElement, BaseTableProps>(function BaseTable(
   {
     // Data
     data,
@@ -18,8 +19,8 @@ const BaseTable = forwardRef(function BaseTable(
     useFilter = false,
 
     // Column config
-    title,
-    headers,
+    tableTitle,
+    headers = [],
     operatorConfig,
     controlButton,
     onAutoRenewToggle,
@@ -46,32 +47,32 @@ const BaseTable = forwardRef(function BaseTable(
   const t = useTranslation()
 
   // ── Scroll parent ──────────────────────────────────────────────────────
-  const [scrollParent, setScrollParent] = useState(undefined)
+  const [scrollParent, setScrollParent] = useState<HTMLElement | undefined>(undefined)
   useEffect(() => {
     const parent = document.getElementById('main-scroll-container')
     if (parent) setScrollParent(parent)
   }, [])
 
   // ── Filter state ───────────────────────────────────────────────────────
-  const [filters, setFilters] = useState({})
-  const [filterInputs, setFilterInputs] = useState({})
+  const [filters, setFilters] = useState<Record<string, any>>({})
+  const [filterInputs, setFilterInputs] = useState<Record<string, string>>({})
   const [filterVersion, setFilterVersion] = useState(0)
   const [showCountryCode, setShowCountryCode] = useState(false)
 
   // Snapshot of matched SIDs — recomputed on filter change or data prop change
-  const matchedSidsRef = useRef(null)
+  const matchedSidsRef = useRef<any>(null)
   const lastFilterVersionRef = useRef(0)
   const lastDataRef = useRef(data)
 
   // ── Selection state ───────────────────────────────────────────────────
-  const [lastSelectedIndex, setLastSelectedIndex] = useState(null)
-  const [lastSelectionAction, setLastSelectionAction] = useState('add')
+  const [lastSelectedIndex, setLastSelectedIndex] = useState<number | null>(null)
+  const [lastSelectionAction, setLastSelectionAction] = useState<'add' | 'delete'>('add')
 
   // ── Filtered + sorted data ─────────────────────────────────────────────
   const filteredData = useMemo(() => {
     let resultData = data || DEFAULT_DATA
 
-    const getRowKey = (r) => r.sid
+    const getRowKey = (r: any) => r?.sid
     const hasKey = resultData.length > 0 && getRowKey(resultData[0]) !== undefined
 
     if (!useFilter) {
@@ -95,7 +96,7 @@ const BaseTable = forwardRef(function BaseTable(
 
       let result = applyFilters(data, filters)
       if (shouldHideRefunded) {
-        result = result.filter((row) => row?.status?.toLowerCase() !== 'refunded')
+        result = result.filter((row: any) => row?.status?.toLowerCase() !== 'refunded')
       }
 
       if (hasKey) matchedSidsRef.current = new Set(result.map(getRowKey))
@@ -105,9 +106,9 @@ const BaseTable = forwardRef(function BaseTable(
     if (!hasKey) {
       resultData = matchedSidsRef.current
     } else if (matchedSidsRef.current) {
-      resultData = data.filter((row) => matchedSidsRef.current.has(getRowKey(row)))
+      resultData = data!.filter((row: any) => matchedSidsRef.current.has(getRowKey(row)))
     } else {
-      resultData = data
+      resultData = data || DEFAULT_DATA
     }
 
     return [...resultData].sort((a, b) => {
@@ -117,16 +118,16 @@ const BaseTable = forwardRef(function BaseTable(
   }, [data, filters, useFilter, filterVersion])
 
   const getRowKey = useCallback(
-    (row, index) => {
+    (row: any, index?: number) => {
       if (propsGetRowKey) return propsGetRowKey(row, index)
-      return row?.sid ?? index
+      return row?.sid ?? index ?? 0
     },
     [propsGetRowKey]
   )
 
   // ── Selection handlers ─────────────────────────────────────────────────
   const handleSelectRow = useCallback(
-    (index, shiftKey, clickedRow) => {
+    (index: number, shiftKey: boolean, clickedRow: any) => {
       if (!selectable) return
 
       const row = clickedRow || filteredData[index]
@@ -178,7 +179,7 @@ const BaseTable = forwardRef(function BaseTable(
   )
 
   const handleSelectAll = useCallback(
-    (e) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       if (!selectable) return
       const newSelected = new Set(selectedIds)
 
@@ -203,7 +204,7 @@ const BaseTable = forwardRef(function BaseTable(
 
   // ── Filter handlers ────────────────────────────────────────────────────
   const handleOperatorToggle = useCallback(
-    (header) => {
+    (header: string) => {
       const inputValue =
         filterInputs[header] !== undefined ? filterInputs[header] : filters[header]?.value || ''
 
@@ -223,12 +224,12 @@ const BaseTable = forwardRef(function BaseTable(
     [filterInputs, filters, operatorConfig]
   )
 
-  const handleFilterInputChange = useCallback((header, value) => {
+  const handleFilterInputChange = useCallback((header: string, value: string) => {
     setFilterInputs((prev) => ({ ...prev, [header]: value }))
   }, [])
 
   const handleFilterKeyDown = useCallback(
-    (e, header) => {
+    (e: React.KeyboardEvent<HTMLInputElement>, header: string) => {
       if (e.key !== 'Enter') return
 
       const inputValue =
@@ -257,7 +258,7 @@ const BaseTable = forwardRef(function BaseTable(
   )
 
   // ── Context for rows ─────────────────────────────────────────────────
-  const virtuosoContext = useMemo(
+  const virtuosoContext = useMemo<TableRowContext>(
     () => ({
       selectable,
       selectedIds,
@@ -289,7 +290,7 @@ const BaseTable = forwardRef(function BaseTable(
     () => (
       <TableFilterHeader
         headers={headers}
-        title={title}
+        tableTitle={tableTitle}
         useFilter={useFilter}
         operatorConfig={operatorConfig}
         selectable={selectable}
@@ -309,7 +310,7 @@ const BaseTable = forwardRef(function BaseTable(
     ),
     [
       headers,
-      title,
+      tableTitle,
       useFilter,
       operatorConfig,
       selectable,
@@ -351,7 +352,7 @@ const BaseTable = forwardRef(function BaseTable(
                 d="M4 9L20 9M8 9V20M6.2 20H17.8C18.9201 20 19.4802 20 19.908 19.782C20.2843 19.5903 20.5903 19.2843 20.782 18.908C21 18.4802 21 17.9201 21 16.8V7.2C21 6.0799 21 5.51984 20.782 5.09202C20.5903 4.71569 20.2843 4.40973 19.908 4.21799C19.4802 4 18.9201 4 17.8 4H6.2C5.0799 4 4.51984 4 4.09202 4.21799C3.71569 4.40973 3.40973 4.71569 3.21799 5.09202C3 5.51984 3 6.07989 3 7.2V16.8C3 17.9201 3 18.4802 3.21799 18.908C3.40973 19.2843 3.71569 19.5903 4.09202 19.782C4.51984 20 5.07989 20 6.2 20Z"
               />
             </svg>
-            <span>{title}</span>
+            <span>{tableTitle}</span>
           </h2>
 
           <div className="flex items-center gap-3 sm:gap-5">
@@ -378,7 +379,14 @@ const BaseTable = forwardRef(function BaseTable(
           {isLoading ? (
             <TableSkeleton headers={headers} selectable={selectable} fixedHeader={fixedHeader} />
           ) : (
-            renderBody?.({ filteredData, virtuosoContext, fixedHeader, scrollParent, t })
+            renderBody?.({
+              filteredData,
+              context: virtuosoContext,
+              virtuosoContext,
+              fixedHeader,
+              scrollParent,
+              t,
+            })
           )}
         </div>
 

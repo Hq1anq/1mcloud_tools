@@ -14,15 +14,6 @@ export default function VpsPrice() {
   const [selectedNation, setSelectedNation] = useState(initialType)
   const [plans, setPlans] = useState(() => getDefaultPlans(initialType))
 
-  // Sync state if URL query param changes (e.g. clicking Footer link while already on /price/vps)
-  useEffect(() => {
-    const typeFromUrl = searchParams.get('plan')
-    if (typeFromUrl && typeFromUrl !== selectedNation) {
-      setSelectedNation(typeFromUrl)
-      setPlans(getDefaultPlans(typeFromUrl))
-    }
-  }, [searchParams])
-
   const handleSelectNation = (nationSymbol) => {
     setSelectedNation(nationSymbol)
     setPlans(getDefaultPlans(nationSymbol))
@@ -78,91 +69,85 @@ export default function VpsPrice() {
           <div className="border-primary/10 pointer-events-none absolute top-1/2 -right-20 size-84 -translate-y-1/2 rounded-full border" />
           <div className="border-primary/5 pointer-events-none absolute top-1/2 -right-32 size-108 -translate-y-1/2 rounded-full border" />
 
-          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
-            <div>
-              <div className="mb-3">
-                <span className="from-primary/20 text-primary border-primary/30 inline-flex items-center gap-2 rounded-full border bg-linear-to-r to-purple-500/20 px-3.5 py-1 text-xs font-bold tracking-wide">
-                  <span className="relative flex size-2">
-                    <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
-                    <span className="bg-primary relative inline-flex size-2 rounded-full" />
-                  </span>
-                  {t('vpsPrice.bannerBadge')}
-                </span>
-              </div>
+          {/* Glowing Server Icon Badge placed at the center of the concentric circles */}
+          <div className="border-primary/30 bg-primary/10 absolute top-1/2 right-10 hidden size-24 -translate-y-1/2 items-center justify-center rounded-2xl border shadow-[0_0_35px_rgba(74,163,255,0.25)] md:flex">
+            <ServerIcon className="text-primary size-12" />
+            <span className="bg-primary absolute -top-1.5 -right-1.5 flex size-4 items-center justify-center rounded-full text-white shadow-xs">
+              <svg
+                className="size-2.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </span>
+          </div>
 
-              <h1 className="font-headline text-text-primary text-2xl font-bold tracking-tight md:text-3xl lg:text-4xl">
-                {t('vpsPrice.title')}
-              </h1>
-              <p className="text-text-muted mt-2 max-w-2xl text-sm leading-relaxed md:text-base">
-                {t('vpsPrice.subtitle')}
-              </p>
+          <span className="from-primary/20 text-primary border-primary/30 mb-3 inline-flex items-center gap-2 rounded-full border bg-linear-to-r to-purple-500/20 px-3.5 py-1 text-xs font-bold tracking-wide">
+            <span className="relative flex size-2">
+              <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
+              <span className="bg-primary relative inline-flex size-2 rounded-full" />
+            </span>
+            {t('vpsPrice.bannerBadge')}
+          </span>
 
-              {/* Feature pills row */}
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="bg-body/60 border-border/60 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium">
-                  <svg
-                    className="text-primary size-3.5 shrink-0"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  </svg>
-                  {t('vpsPrice.pillDDoS')}
-                </span>
-                <span className="bg-body/60 border-border/60 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium">
-                  <svg
-                    className="text-primary size-3.5 shrink-0"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <ellipse cx="12" cy="5" rx="9" ry="3" />
-                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
-                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
-                  </svg>
-                  {t('vpsPrice.pillStorage')}
-                </span>
-                <span className="bg-body/60 border-border/60 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium">
-                  <svg
-                    className="text-primary size-3.5 shrink-0"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                  </svg>
-                  {t('vpsPrice.pillBandwidth')}
-                </span>
-              </div>
-            </div>
+          <h1 className="font-headline text-text-primary text-2xl font-bold tracking-tight md:text-3xl lg:text-4xl">
+            {t('vpsPrice.title')}
+          </h1>
+          <p className="text-text-muted mt-2 max-w-2xl text-sm leading-relaxed md:text-base">
+            {t('vpsPrice.subtitle')}
+          </p>
 
-            {/* Glowing Server Icon Badge */}
-            <div className="border-primary/30 bg-primary/10 relative hidden size-24 items-center justify-center rounded-2xl border shadow-[0_0_35px_rgba(74,163,255,0.25)] backdrop-blur-md md:flex">
-              <ServerIcon className="text-primary size-12" />
-              <span className="bg-primary absolute -top-1.5 -right-1.5 flex size-4 items-center justify-center rounded-full text-white shadow-xs">
-                <svg
-                  className="size-2.5"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              </span>
-            </div>
+          {/* Feature pills row */}
+          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+            <span className="bg-body/60 border-border/60 inline-flex max-w-60 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium max-sm:grow">
+              <svg
+                className="text-primary size-3.5 shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+              </svg>
+              {t('vpsPrice.pillStorage')}
+            </span>
+            <span className="bg-body/60 border-border/60 inline-flex max-w-60 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium max-sm:grow">
+              <svg
+                className="text-primary size-3.5 shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              {t('vpsPrice.pillDDoS')}
+            </span>
+            <span className="bg-body/60 border-border/60 inline-flex max-w-60 items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium max-sm:grow">
+              <svg
+                className="text-primary size-3.5 shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+              </svg>
+              {t('vpsPrice.pillBandwidth')}
+            </span>
           </div>
         </div>
       </section>

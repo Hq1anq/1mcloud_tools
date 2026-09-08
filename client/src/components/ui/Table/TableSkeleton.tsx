@@ -1,3 +1,5 @@
+import React from 'react'
+
 const SKELETON_WIDTHS = [
   ['w-20', 'w-32', 'w-24', 'w-16', 'w-24', 'w-24', 'w-24', 'w-20', 'w-32'],
   ['w-24', 'w-28', 'w-20', 'w-16', 'w-20', 'w-24', 'w-24', 'w-16', 'w-28'],
@@ -7,13 +9,16 @@ const SKELETON_WIDTHS = [
   ['w-16', 'w-28', 'w-24', 'w-16', 'w-20', 'w-24', 'w-24', 'w-16', 'w-32'],
 ]
 
+export interface TableSkeletonProps {
+  headers: string[]
+  selectable: boolean
+  fixedHeader: () => React.ReactNode
+}
+
 /**
  * Animated skeleton shown while `isLoading` is true.
- * @param {string[]}  headers     - Column header keys
- * @param {boolean}   selectable  - Whether to include the checkbox column
- * @param {() => JSX} fixedHeader - Header factory (same as TableVirtuoso's fixedHeaderContent)
  */
-export default function TableSkeleton({ headers, selectable, fixedHeader }) {
+export default function TableSkeleton({ headers, selectable, fixedHeader }: TableSkeletonProps) {
   return (
     <table className="w-full border-collapse text-left">
       <thead>{fixedHeader()}</thead>

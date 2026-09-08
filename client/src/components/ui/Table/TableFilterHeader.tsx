@@ -1,13 +1,34 @@
+import React from 'react'
 import Checkbox from '../Checkbox.jsx'
 import { operatorIcons } from './filterUtils.jsx'
+
+export interface TableFilterHeaderProps {
+  headers: string[]
+  tableTitle?: string
+  useFilter?: boolean
+  operatorConfig?: Record<string, string[]>
+  selectable?: boolean
+  selectedIds: Set<any>
+  filteredData: any[]
+  getRowKey: (row: any, index?: number) => any
+  filters: Record<string, any>
+  filterInputs: Record<string, string>
+  showCountryCode: boolean
+  onToggleCountryCode: () => void
+  onOperatorToggle: (header: string) => void
+  onFilterInputChange: (header: string, value: string) => void
+  onFilterKeyDown: (e: React.KeyboardEvent<HTMLInputElement>, header: string) => void
+  onSelectAll: (e: React.ChangeEvent<HTMLInputElement>) => void
+  t: (key: string) => string
+}
 
 // Fixed header + per-column filter inputs
 export default function TableFilterHeader({
   headers,
-  title,
-  useFilter,
+  tableTitle,
+  useFilter = false,
   operatorConfig,
-  selectable,
+  selectable = true,
   selectedIds,
   filteredData,
   getRowKey,
@@ -20,7 +41,7 @@ export default function TableFilterHeader({
   onFilterKeyDown,
   onSelectAll,
   t,
-}) {
+}: TableFilterHeaderProps) {
   const selectableRows = filteredData.filter((row) => row?.status?.toLowerCase() !== 'refunded')
   const pageSelectedCount = selectableRows.filter((row, i) => {
     const key = getRowKey(row, i)
@@ -30,6 +51,9 @@ export default function TableFilterHeader({
   const isAllSelected = selectableRows.length > 0 && pageSelectedCount === selectableRows.length
   const isIndeterminate = pageSelectedCount > 0 && pageSelectedCount < selectableRows.length
 
+  const isHistoryTitle =
+    tableTitle === 'Transaction History' || tableTitle === 'Change-IP History'
+
   return (
     <tr className="bg-thead border-wrapper border-t-4 border-b-2">
       {/* Select-all checkbox */}
@@ -38,6 +62,7 @@ export default function TableFilterHeader({
           <Checkbox
             checked={isAllSelected}
             indeterminate={isIndeterminate}
+            disabled={false}
             onChange={onSelectAll}
           />
         </th>
@@ -47,7 +72,7 @@ export default function TableFilterHeader({
         const defaultOperator = operatorConfig?.[header]?.[0] || 'contain'
         const currentFilter = filters[header] || { value: '', operator: defaultOperator }
         const operator = currentFilter.operator
-        const OperatorIcon = operatorIcons[operator]
+        const OperatorIcon = operatorIcons[operator as keyof typeof operatorIcons]
         const showOperator = operatorConfig ? !!operatorConfig[header] : true
         const inputValue =
           filterInputs[header] !== undefined ? filterInputs[header] : currentFilter.value
@@ -56,7 +81,7 @@ export default function TableFilterHeader({
           <th key={header} className="px-2 py-3 font-medium tracking-wider uppercase sm:px-4">
             <div
               className={`flex min-w-15 flex-col gap-1 font-bold whitespace-nowrap ${
-                title === 'Proxy Status' ? 'text-base sm:text-lg' : 'text-sm sm:text-base'
+                tableTitle === 'Proxy Status' ? 'text-base sm:text-lg' : 'text-sm sm:text-base'
               }`}
             >
               {/* Column label */}
@@ -102,8 +127,7 @@ export default function TableFilterHeader({
                   </div>
                 ) : (
                   <>
-                    {['Transaction History', 'Change-IP History'].includes(title) &&
-                    header === 'created'
+                    {isHistoryTitle && header === 'created'
                       ? t('table.date')
                       : t('table.' + header) || header.replace(/_/g, ' ')}
                   </>
@@ -119,8 +143,8 @@ export default function TableFilterHeader({
                       viewBox="0 0 640 640"
                       className="bg-blue filter-operator fill-text-secondary absolute -top-0.5 -right-1.5 size-4 cursor-pointer rounded-full p-0.5"
                       onClick={() => onOperatorToggle(header)}
-                      title={`Filter: ${operator}`}
                     >
+                      <title>{`Filter: ${operator}`}</title>
                       {OperatorIcon}
                     </svg>
                   )}

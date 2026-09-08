@@ -69,7 +69,7 @@ export default function ProxyCard({
       )}
 
       {/* ── Card Header ── */}
-      <div className="bg-navbar border-border relative border-b p-6">
+      <div className="bg-navbar border-border relative border-b px-6 py-8">
         {/* Highlighted Banner Badge (Overlay pinned to top - zero layout shift) */}
         <AnimatePresence initial={false}>
           {isHighlighted && (

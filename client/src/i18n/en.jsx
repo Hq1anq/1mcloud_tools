@@ -440,7 +440,7 @@ const en = {
   'account.discountHeading': 'Current Discount Level',
   'account.discountVps': 'VPS Discount',
   'account.discountProxy': 'Proxy Discount',
-  'account.discountDedicate': 'Dedicate Discount',
+  'account.discountGpu': 'GPU Discount',
 
   // Add Funds Dialog
   'addfunds.title': 'Add Funds',

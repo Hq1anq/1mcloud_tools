@@ -67,21 +67,21 @@ export default function VpsPrice() {
   return (
     <main className="bg-body text-text-primary min-h-screen">
       {/* Hero Banner (Aurora Glow & Radar Rings) */}
-      <section className="bg-linear-to-b from-surface via-surface to-body border-border/40 relative overflow-hidden border-b px-6 py-10 md:px-8 md:py-12">
+      <section className="from-surface via-surface to-body border-border/40 relative overflow-hidden border-b bg-linear-to-b px-6 py-10 md:px-8 md:py-12">
         {/* Aurora glow layers */}
-        <div className="pointer-events-none absolute -top-24 right-10 h-64 w-80 rounded-full bg-linear-to-tr from-primary/25 via-purple-500/20 to-sky-400/25 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-10 right-60 size-48 rounded-full bg-cyan-400/15 blur-2xl" />
+        <div className="from-primary/25 pointer-events-none absolute -top-24 right-10 h-64 w-80 rounded-full bg-linear-to-tr via-purple-500/20 to-sky-400/25 blur-3xl" />
+        <div className="pointer-events-none absolute right-60 -bottom-10 size-48 rounded-full bg-cyan-400/15 blur-2xl" />
 
         {/* Concentric radar rings anchored on the right */}
         <div className="relative z-10 mx-auto max-w-380">
-          <div className="border-primary/15 pointer-events-none absolute -right-10 top-1/2 -translate-y-1/2 size-64 rounded-full border" />
-          <div className="border-primary/10 pointer-events-none absolute -right-20 top-1/2 -translate-y-1/2 size-84 rounded-full border" />
-          <div className="border-primary/5 pointer-events-none absolute -right-32 top-1/2 -translate-y-1/2 size-108 rounded-full border" />
+          <div className="border-primary/15 pointer-events-none absolute top-1/2 -right-10 size-64 -translate-y-1/2 rounded-full border" />
+          <div className="border-primary/10 pointer-events-none absolute top-1/2 -right-20 size-84 -translate-y-1/2 rounded-full border" />
+          <div className="border-primary/5 pointer-events-none absolute top-1/2 -right-32 size-108 -translate-y-1/2 rounded-full border" />
 
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
             <div>
               <div className="mb-3">
-                <span className="bg-linear-to-r from-primary/20 to-purple-500/20 text-primary border-primary/30 inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-xs font-bold tracking-wide">
+                <span className="from-primary/20 text-primary border-primary/30 inline-flex items-center gap-2 rounded-full border bg-linear-to-r to-purple-500/20 px-3.5 py-1 text-xs font-bold tracking-wide">
                   <span className="relative flex size-2">
                     <span className="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75" />
                     <span className="bg-primary relative inline-flex size-2 rounded-full" />
@@ -99,9 +99,9 @@ export default function VpsPrice() {
 
               {/* Feature pills row */}
               <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="bg-body/60 border-border/60 text-text-secondary inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium">
+                <span className="bg-body/60 border-border/60 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium">
                   <svg
-                    className="size-3.5 text-primary shrink-0"
+                    className="text-primary size-3.5 shrink-0"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -113,9 +113,9 @@ export default function VpsPrice() {
                   </svg>
                   {t('vpsPrice.pillDDoS')}
                 </span>
-                <span className="bg-body/60 border-border/60 text-text-secondary inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium">
+                <span className="bg-body/60 border-border/60 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium">
                   <svg
-                    className="size-3.5 text-primary shrink-0"
+                    className="text-primary size-3.5 shrink-0"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -129,9 +129,9 @@ export default function VpsPrice() {
                   </svg>
                   {t('vpsPrice.pillStorage')}
                 </span>
-                <span className="bg-body/60 border-border/60 text-text-secondary inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium">
+                <span className="bg-body/60 border-border/60 inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium">
                   <svg
-                    className="size-3.5 text-primary shrink-0"
+                    className="text-primary size-3.5 shrink-0"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -147,7 +147,7 @@ export default function VpsPrice() {
             </div>
 
             {/* Glowing Server Icon Badge */}
-            <div className="hidden md:flex relative size-24 items-center justify-center rounded-2xl border border-primary/30 bg-primary/10 shadow-[0_0_35px_rgba(74,163,255,0.25)] backdrop-blur-md">
+            <div className="border-primary/30 bg-primary/10 relative hidden size-24 items-center justify-center rounded-2xl border shadow-[0_0_35px_rgba(74,163,255,0.25)] backdrop-blur-md md:flex">
               <ServerIcon className="text-primary size-12" />
               <span className="bg-primary absolute -top-1.5 -right-1.5 flex size-4 items-center justify-center rounded-full text-white shadow-xs">
                 <svg

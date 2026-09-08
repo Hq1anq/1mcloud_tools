@@ -30,7 +30,7 @@ const DEFAULT_PROFILE = {
   is_verified: true,
   discount_vps: '0%',
   discount_proxy: '0%',
-  discount_dedicate: '0%',
+  discount_gpu: '0%',
 }
 
 export default function AccountPage() {
@@ -73,7 +73,7 @@ export default function AccountPage() {
 
   const discountVps = parseDiscount(profile.discount_vps)
   const discountProxy = parseDiscount(profile.discount_proxy)
-  const discountDedicate = parseDiscount(profile.discount_dedicate)
+  const discountGpu = parseDiscount(profile.discount_gpu)
 
   return (
     <div className="flex flex-1 justify-center px-4 py-5 md:px-6 lg:px-40">
@@ -289,7 +289,7 @@ export default function AccountPage() {
             label={t('account.discountProxy')}
             value={discountProxy}
           />
-          {/* Dedicate Discount */}
+          {/* Gpu Discount */}
           <DiscountCard
             icon={
               <svg
@@ -306,8 +306,8 @@ export default function AccountPage() {
               </svg>
             }
             colorVar="var(--orange)"
-            label={t('account.discountDedicate')}
-            value={discountDedicate}
+            label={t('account.discountGpu')}
+            value={discountGpu}
           />
         </div>
       </div>

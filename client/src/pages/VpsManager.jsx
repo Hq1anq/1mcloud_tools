@@ -94,9 +94,6 @@ export default function VpsManager({ onBuySuccessRef }) {
   // Data from Zustand store
   const queryClient = useQueryClient()
   const data = useVpsStore((s) => s.data)
-  const receivedData = useVpsStore((s) => s.receivedData)
-  const renderingReceived = useVpsStore((s) => s.renderingReceived)
-  const setRenderingReceived = useVpsStore((s) => s.setRenderingReceived)
   const rawUpdateRowBySid = useVpsStore((s) => s.updateRowBySid)
   const handleBuySuccessStore = useVpsStore((s) => s.handleBuySuccess)
   const rawSyncToDb = useVpsStore((s) => s.syncToDb)
@@ -125,8 +122,6 @@ export default function VpsManager({ onBuySuccessRef }) {
     if (queryResponse?.data) {
       useVpsStore.setState({
         data: queryResponse.data,
-        receivedData: queryResponse.data,
-        renderingReceived: true,
         isLoading: isQueryLoading,
       })
     }
@@ -885,9 +880,6 @@ export default function VpsManager({ onBuySuccessRef }) {
           setPage(1)
           clearSelection()
         }}
-        receivedData={receivedData}
-        renderingReceived={renderingReceived}
-        setRenderingReceived={setRenderingReceived}
         onAutoRenewToggle={async (sid, newState) => {
           // Optimistic Update
           updateRowBySid(sid, () => ({ is_auto_renew: newState }))

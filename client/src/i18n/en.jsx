@@ -457,7 +457,7 @@ const en = {
   'vpsManager.title': 'VPS Manager',
   'vpsManager.resetPassword': 'Reset Password',
   to: 'to',
-  'vpsManager.autoFix': 'Auto Fix',
+  autoFix: 'Auto Fix',
   'vpsManager.upgrade': 'Upgrade',
 
   'popConfirm.on': 'On',

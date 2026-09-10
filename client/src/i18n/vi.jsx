@@ -456,7 +456,7 @@ const vi = {
   'vpsManager.title': 'Quản lý VPS',
   'vpsManager.resetPassword': 'Đặt lại mật khẩu',
   to: 'thành',
-  'vpsManager.autoFix': 'Sửa lỗi tự động',
+  autoFix: 'Sửa lỗi tự động',
   'vpsManager.upgrade': 'Nâng cấp',
   'manager.comingSoon': 'Sắp ra mắt',
 

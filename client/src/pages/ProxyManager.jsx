@@ -1424,7 +1424,6 @@ export default function ProxyManager({ onBuySuccessRef }) {
           }
         }}
         isLoading={isFetching}
-        useFilter={true}
         headers={[
           'control',
           'ip_port',

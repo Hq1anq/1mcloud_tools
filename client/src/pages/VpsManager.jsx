@@ -907,7 +907,6 @@ export default function VpsManager({ onBuySuccessRef }) {
           }
         }}
         isLoading={isFetching}
-        useFilter={true}
         headers={[
           'control',
           'plan_number',
